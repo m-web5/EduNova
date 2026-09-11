@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — Exams & Grading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
+    --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
+    --success-600:#16A34A; --success-50:#ECFDF3;
+    --warning-600:#D97706; --warning-50:#FFFBEB;
+    --danger-600:#DC2626; --danger-50:#FEF2F2;
+    --slate-600:#64748B; --slate-50:#F1F5F9;
+    --surface:#FFFFFF; --bg:#F6F7FB; --border:#E6E9F0;
+    --text-900:#0F172A; --text-600:#5B6472; --text-400:#94A0B2;
+    --radius-md:10px; --radius-lg:14px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+    --shadow-md:0 8px 30px rgba(15,23,42,.12);
+    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827; --bg:#0B1220; --border:#1F2937;
+    --text-900:#F1F5F9; --text-600:#9AA5B4; --text-400:#6B7686;
+    --indigo-50:#1E1B4B; --success-50:#052E1B; --warning-50:#3A2A04; --danger-50:#3A0D0D; --slate-50:#1E293B;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 8px 30px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:var(--font-en); background:var(--bg); color:var(--text-900); font-size:14px; }
+  html[dir="rtl"] body{ font-family:var(--font-ar); }
+  a{ text-decoration:none; color:inherit; } button{ font-family:inherit; cursor:pointer; border:none; }
+  .app{ display:flex; min-height:100vh; }
+
+  .sidebar{ width:248px; flex-shrink:0; background:var(--surface); border-inline-end:1px solid var(--border); display:flex; flex-direction:column; height:100vh; position:sticky; top:0; }
+  .brand{ display:flex; align-items:center; gap:10px; padding:20px 18px; border-bottom:1px solid var(--border); }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--navy-800); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; flex-shrink:0; }
+  .brand-text{ font-weight:700; font-size:15px; letter-spacing:-.01em; }
+  .brand-text span{ display:block; font-size:11px; font-weight:500; color:var(--text-400); }
+  .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
+  .nav-section-title{ font-size:11px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.04em; padding:14px 10px 6px; }
+  .nav-item{ display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:9px; color:var(--text-600); font-size:13.5px; font-weight:500; margin-bottom:1px; white-space:nowrap; }
+  .nav-item svg{ flex-shrink:0; width:18px; height:18px; }
+  .nav-item:hover{ background:var(--bg); color:var(--text-900); }
+  .nav-item.active{ background:var(--indigo-50); color:var(--indigo-600); font-weight:600; }
+  .sidebar-footer{ padding:12px; border-top:1px solid var(--border); display:flex; align-items:center; gap:9px; }
+  .avatar-sm{ width:32px; height:32px; border-radius:8px; background:var(--navy-700); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .footer-meta .name{ font-size:13px; font-weight:600; } .footer-meta .role{ font-size:11.5px; color:var(--text-400); }
+
+  .main{ flex:1; min-width:0; }
+  .topbar{ height:64px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; padding:0 22px; position:sticky; top:0; z-index:20; }
+  .icon-btn{ width:36px; height:36px; border-radius:9px; background:transparent; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-600); flex-shrink:0; }
+  .icon-btn:hover{ background:var(--bg); }
+  .lang-toggle, .theme-toggle{ height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .topbar-right{ display:flex; align-items:center; gap:10px; margin-inline-start:auto; }
+
+  .content{ padding:24px 28px 60px; max-width:1400px; }
+  .breadcrumb{ font-size:12.5px; color:var(--text-400); margin-bottom:8px; }
+  .breadcrumb b{ color:var(--text-600); font-weight:600; }
+  .page-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .page-head h1{ font-size:20px; font-weight:800; letter-spacing:-.01em; }
+  .page-head p{ color:var(--text-600); font-size:13.5px; margin-top:3px; }
+  .btn{ display:inline-flex; align-items:center; gap:7px; padding:0 16px; height:38px; border-radius:9px; font-size:13.5px; font-weight:700; }
+  .btn-primary{ background:var(--indigo-600); color:#fff; } .btn-primary:hover{ background:#4338CA; }
+  .btn-outline{ background:var(--surface); border:1px solid var(--border); color:var(--text-600); } .btn-outline:hover{ background:var(--bg); }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
+
+  .tabs-row{ display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); }
+  .tab-link{ padding:10px 4px; margin-inline-end:22px; font-size:13.5px; font-weight:600; color:var(--text-400); border-bottom:2px solid transparent; }
+  .tab-link.active{ color:var(--indigo-600); border-color:var(--indigo-600); }
+
+  .exam-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:1100px){ .exam-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:700px){ .exam-grid{ grid-template-columns:1fr; } }
+  .exam-card{ padding:18px; cursor:pointer; transition:box-shadow .15s ease, transform .15s ease; }
+  .exam-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-2px); }
+  .exam-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+  .exam-subject{ font-size:15px; font-weight:700; }
+  .exam-class{ font-size:12px; color:var(--text-400); margin-top:2px; }
+  .badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:11px; font-weight:700; }
+  .badge-success{ background:var(--success-50); color:var(--success-600); }
+  .badge-warning{ background:var(--warning-50); color:var(--warning-600); }
+  .badge-slate{ background:var(--slate-50); color:var(--slate-600); }
+  .exam-meta{ display:flex; flex-direction:column; gap:6px; font-size:12.5px; color:var(--text-600); margin-top:12px; }
+  .exam-meta div{ display:flex; align-items:center; gap:7px; }
+  .exam-meta svg{ color:var(--text-400); flex-shrink:0; }
+  .exam-progress{ margin-top:14px; }
+  .prog-bar{ height:6px; border-radius:99px; background:var(--border); overflow:hidden; }
+  .prog-bar > div{ height:100%; background:var(--indigo-600); }
+  .prog-label{ display:flex; justify-content:space-between; font-size:11px; color:var(--text-400); margin-top:5px; }
+
+  /* modal */
+  .overlay{ position:fixed; inset:0; background:rgba(11,18,32,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .overlay.show{ display:flex; }
+  .modal{ background:var(--surface); border-radius:var(--radius-lg); width:100%; max-width:560px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-md); }
+  .modal.wide{ max-width:820px; }
+  .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); }
+  .modal-head h3{ font-size:15.5px; font-weight:700; }
+  .modal-body{ padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.full{ grid-column:1 / -1; }
+  .field label{ font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .field input, .field select{ height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 12px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
+  .field input:focus, .field select:focus{ outline:2px solid var(--indigo-500); outline-offset:1px; background:var(--surface); }
+  .field .err{ font-size:11px; color:var(--danger-600); display:none; }
+  .field.invalid input{ border-color:var(--danger-600); }
+  .field.invalid .err{ display:block; }
+  .modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 20px; border-top:1px solid var(--border); }
+
+  /* grade entry table */
+  .grade-table-wrap{ padding:0 20px 20px; }
+  table{ width:100%; border-collapse:collapse; }
+  thead th{ text-align:start; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--text-400); padding:10px 8px; border-bottom:1px solid var(--border); }
+  tbody td{ padding:9px 8px; border-bottom:1px solid var(--border); font-size:13px; }
+  tbody tr:last-child td{ border-bottom:none; }
+  .score-input{ width:64px; height:32px; border-radius:7px; border:1px solid var(--border); background:var(--bg); padding:0 8px; font-size:13px; font-family:inherit; }
+  .score-input:focus{ outline:2px solid var(--indigo-500); background:var(--surface); }
+  .grade-chip{ font-weight:700; font-size:12.5px; }
+  .grade-chip.A{ color:var(--success-600); } .grade-chip.B{ color:#2563EB; } .grade-chip.C{ color:var(--warning-600); } .grade-chip.D{ color:var(--danger-600); }
+
+  .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; }
+  .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); }
+
+  @media (max-width:760px){ .sidebar{ display:none; } .content{ padding:16px; } .modal-body{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">E</div><div class="brand-text">EduSuite<span>School ERP</span></div></div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">SM</div>
+      <div class="footer-meta"><div class="name" data-en="Sara Al-Mutairi" data-ar="سارة المطيري">Sara Al-Mutairi</div><div class="role" data-en="School Admin" data-ar="مدير المدرسة">School Admin</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
+      <div class="topbar-right">
+        <button class="lang-toggle" id="langToggle">العربية</button>
+        <button class="theme-toggle" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+        <div class="avatar-sm" style="width:32px;height:32px;">SM</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb"><span data-en="Dashboard" data-ar="لوحة التحكم">Dashboard</span> / <b data-en="Exams" data-ar="الامتحانات">Exams</b></div>
+      <div class="page-head">
+        <div>
+          <h1 data-en="Exams & Grading" data-ar="الامتحانات والدرجات">Exams & Grading</h1>
+          <p data-en="Create exams, enter grades, and generate report cards." data-ar="أنشئ الامتحانات، أدخل الدرجات، وأصدر بطاقات التقارير.">Create exams, enter grades, and generate report cards.</p>
+        </div>
+        <button class="btn btn-primary" id="createExamBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Create Exam" data-ar="إنشاء امتحان">Create Exam</span></button>
+      </div>
+
+      <div class="tabs-row">
+        <div class="tab-link active" data-filter="all" data-en="All Exams" data-ar="جميع الامتحانات">All Exams</div>
+        <div class="tab-link" data-filter="upcoming" data-en="Upcoming" data-ar="قادمة">Upcoming</div>
+        <div class="tab-link" data-filter="ongoing" data-en="Grading" data-ar="قيد التصحيح">Grading</div>
+        <div class="tab-link" data-filter="done" data-en="Completed" data-ar="مكتملة">Completed</div>
+      </div>
+
+      <div class="exam-grid" id="examGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE EXAM MODAL -->
+<div class="overlay" id="createOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 data-en="Create Exam" data-ar="إنشاء امتحان">Create Exam</h3>
+      <button class="icon-btn" id="closeCreate"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form id="examForm">
+      <div class="modal-body">
+        <div class="field full" id="f-title">
+          <label data-en="Exam Title" data-ar="عنوان الامتحان">Exam Title</label>
+          <input type="text" id="examTitle" data-ph-en="e.g. Mid-Term Mathematics" data-ph-ar="مثال: منتصف الفصل - رياضيات" placeholder="e.g. Mid-Term Mathematics">
+          <span class="err" data-en="Exam title is required" data-ar="عنوان الامتحان مطلوب">Exam title is required</span>
+        </div>
+        <div class="field">
+          <label data-en="Subject" data-ar="المادة">Subject</label>
+          <select><option>Math</option><option>Science</option><option>English</option><option>Arabic</option></select>
+        </div>
+        <div class="field">
+          <label data-en="Class" data-ar="الفصل">Class</label>
+          <select><option>Grade 5 - A</option><option>Grade 5 - B</option><option>Grade 6 - A</option></select>
+        </div>
+        <div class="field" id="f-date">
+          <label data-en="Exam Date" data-ar="تاريخ الامتحان">Exam Date</label>
+          <input type="date" id="examDate">
+          <span class="err" data-en="Exam date is required" data-ar="تاريخ الامتحان مطلوب">Exam date is required</span>
+        </div>
+        <div class="field">
+          <label data-en="Max Score" data-ar="الدرجة القصوى">Max Score</label>
+          <input type="number" id="examMax" value="100">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" id="cancelCreate" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+        <button type="submit" class="btn btn-primary" data-en="Create Exam" data-ar="إنشاء الامتحان">Create Exam</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- GRADE ENTRY MODAL -->
+<div class="overlay" id="gradeOverlay">
+  <div class="modal wide">
+    <div class="modal-head">
+      <div>
+        <h3 id="gradeExamTitle">Mid-Term Mathematics</h3>
+        <p style="font-size:12px;color:var(--text-400);margin-top:2px;" id="gradeExamSub">Grade 5 - A · Max score 100</p>
+      </div>
+      <button class="icon-btn" id="closeGrade"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="grade-table-wrap">
+      <table>
+        <thead><tr>
+          <th data-en="Student" data-ar="الطالب">Student</th>
+          <th data-en="Score" data-ar="الدرجة">Score</th>
+          <th data-en="Percentage" data-ar="النسبة">Percentage</th>
+          <th data-en="Grade" data-ar="التقدير">Grade</th>
+          <th data-en="Remarks" data-ar="ملاحظات">Remarks</th>
+        </tr></thead>
+        <tbody id="gradeBody"></tbody>
+      </table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" id="cancelGrade" data-en="Close" data-ar="إغلاق">Close</button>
+      <button class="btn btn-primary" id="saveGrades" data-en="Save Grades" data-ar="حفظ الدرجات">Save Grades</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const state = { lang:'en', theme:'light' };
+
+const navSections = [
+  { g:{en:'Overview',ar:'نظرة عامة'}, items:[{en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'}]},
+  { g:{en:'People',ar:'الأشخاص'}, items:[
+    {en:'Students',ar:'الطلاب', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+    {en:'Teachers',ar:'المعلمون', icon:'M22 10v6M2 10l10-5 10 5-10 5-10-5z'},
+  ]},
+  { g:{en:'Academics',ar:'الشؤون الأكاديمية'}, items:[
+    {en:'Classes',ar:'الفصول', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
+    {en:'Attendance',ar:'الحضور والغياب', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
+    {en:'Exams',ar:'الامتحانات', active:true, icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'},
+    {en:'Timetable',ar:'الجدول الدراسي', icon:'M21 8a9 9 0 1 1-9-9M21 3v5h-5'},
+  ]},
+  { g:{en:'Operations',ar:'العمليات'}, items:[
+    {en:'Fees & Payments',ar:'الرسوم والمدفوعات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
+    {en:'Reports',ar:'التقارير', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
+    {en:'Settings',ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
+  ]},
+];
+const navList = document.getElementById('navList');
+navSections.forEach(sec=>{
+  const t = document.createElement('div'); t.className='nav-section-title'; t.setAttribute('data-en',sec.g.en); t.setAttribute('data-ar',sec.g.ar); t.textContent=sec.g.en; navList.appendChild(t);
+  sec.items.forEach(it=>{
+    const a = document.createElement('a'); a.href='#'; a.className='nav-item'+(it.active?' active':'');
+    a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
+    navList.appendChild(a);
+  });
+});
+
+const exams = [
+  { id:1, en:'Mid-Term Mathematics', ar:'منتصف الفصل - رياضيات', klass:'Grade 5 - A', subEn:'Math', subAr:'رياضيات', date:'May 28, 2026', status:'upcoming', max:100 },
+  { id:2, en:'Science Quiz — Chapter 4', ar:'اختبار العلوم — الفصل 4', klass:'Grade 6 - B', subEn:'Science', subAr:'علوم', date:'May 12, 2026', status:'ongoing', max:50, graded:14, total:28 },
+  { id:3, en:'English Final Exam', ar:'اختبار الإنجليزية النهائي', klass:'Grade 4 - A', subEn:'English', subAr:'إنجليزي', date:'Apr 30, 2026', status:'done', max:100, graded:30, total:30 },
+  { id:4, en:'Arabic Reading Assessment', ar:'تقييم القراءة العربية', klass:'Grade 3 - C', subEn:'Arabic', subAr:'عربي', date:'Jun 3, 2026', status:'upcoming', max:100 },
+  { id:5, en:'Science Mid-Term', ar:'منتصف الفصل - علوم', klass:'Grade 5 - B', subEn:'Science', subAr:'علوم', date:'May 20, 2026', status:'ongoing', max:100, graded:9, total:27 },
+  { id:6, en:'Math Final Exam', ar:'اختبار الرياضيات النهائي', klass:'Grade 6 - A', subEn:'Math', subAr:'رياضيات', date:'Apr 22, 2026', status:'done', max:100, graded:25, total:25 },
+];
+
+const statusMeta = {
+  upcoming:{en:'Upcoming',ar:'قادم', cls:'badge-slate'},
+  ongoing:{en:'Grading',ar:'قيد التصحيح', cls:'badge-warning'},
+  done:{en:'Completed',ar:'مكتمل', cls:'badge-success'},
+};
+
+const examGrid = document.getElementById('examGrid');
+function renderExams(filter){
+  examGrid.innerHTML = '';
+  exams.filter(e=> filter==='all' || e.status===filter).forEach(ex=>{
+    const sm = statusMeta[ex.status];
+    const card = document.createElement('div');
+    card.className = 'card exam-card';
+    let progressHtml = '';
+    if(ex.status !== 'upcoming'){
+      const pct = Math.round((ex.graded/ex.total)*100);
+      progressHtml = `<div class="exam-progress"><div class="prog-bar"><div style="width:${pct}%"></div></div>
+        <div class="prog-label"><span>${ex.graded}/${ex.total} <span data-en="graded" data-ar="تم تصحيحه">graded</span></span><span>${pct}%</span></div></div>`;
+    }
+    card.innerHTML = `
+      <div class="exam-top">
+        <div><div class="exam-subject" data-en="${ex.en}" data-ar="${ex.ar}">${ex.en}</div><div class="exam-class">${ex.klass}</div></div>
+        <span class="badge ${sm.cls}" data-en="${sm.en}" data-ar="${sm.ar}">${sm.en}</span>
+      </div>
+      <div class="exam-meta">
+        <div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${ex.date}</div>
+        <div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span data-en="${ex.subEn}" data-ar="${ex.subAr}">${ex.subEn}</span> · <span data-en="Max" data-ar="أقصى">Max</span> ${ex.max}</div>
+      </div>
+      ${progressHtml}
+    `;
+    card.addEventListener('click', ()=> openGrade(ex));
+    examGrid.appendChild(card);
+  });
+  applyLang(state.lang);
+}
+renderExams('all');
+
+document.querySelectorAll('.tab-link').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-link').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    renderExams(tab.dataset.filter);
+  });
+});
+
+// create exam modal
+const createOverlay = document.getElementById('createOverlay');
+document.getElementById('createExamBtn').addEventListener('click', ()=> createOverlay.classList.add('show'));
+document.getElementById('closeCreate').addEventListener('click', ()=> createOverlay.classList.remove('show'));
+document.getElementById('cancelCreate').addEventListener('click', ()=> createOverlay.classList.remove('show'));
+createOverlay.addEventListener('click', (e)=>{ if(e.target===createOverlay) createOverlay.classList.remove('show'); });
+
+document.getElementById('examForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const titleField = document.getElementById('f-title');
+  const dateField = document.getElementById('f-date');
+  const title = document.getElementById('examTitle').value.trim();
+  const date = document.getElementById('examDate').value;
+  titleField.classList.toggle('invalid', !title); if(!title) valid=false;
+  dateField.classList.toggle('invalid', !date); if(!date) valid=false;
+  if(!valid) return;
+  createOverlay.classList.remove('show');
+  showToast(state.lang==='ar' ? 'تم إنشاء الامتحان بنجاح' : 'Exam created successfully');
+  e.target.reset();
+});
+
+// grade entry
+const students7 = [
+  { en:'Yousef Al-Amri', ar:'يوسف العمري' }, { en:'Lina Farouk', ar:'لينا فاروق' },
+  { en:'Omar Saleh', ar:'عمر صالح' }, { en:'Maryam Nasser', ar:'مريم ناصر' },
+  { en:'Adam Khalifa', ar:'آدم خليفة' },
+];
+const gradeOverlay = document.getElementById('gradeOverlay');
+function gradeLetter(pct){
+  if(pct>=90) return 'A'; if(pct>=80) return 'B'; if(pct>=70) return 'C'; return 'D';
+}
+function openGrade(ex){
+  document.getElementById('gradeExamTitle').textContent = state.lang==='ar' ? ex.ar : ex.en;
+  document.getElementById('gradeExamSub').textContent = `${ex.klass} · ${state.lang==='ar'?'الدرجة القصوى':'Max score'} ${ex.max}`;
+  const body = document.getElementById('gradeBody');
+  body.innerHTML = '';
+  students7.forEach((s,i)=>{
+    const score = Math.floor(Math.random()*30)+65;
+    const pct = Math.round((score/ex.max)*100);
+    const g = gradeLetter(pct);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-en="${s.en}" data-ar="${s.ar}">${s.en}</td>
+      <td><input type="number" class="score-input" value="${score}" data-max="${ex.max}" min="0" max="${ex.max}"></td>
+      <td class="pct-cell">${pct}%</td>
+      <td class="grade-chip ${g}">${g}</td>
+      <td><input type="text" placeholder="—" style="border:none;background:transparent;font-size:12.5px;width:100%;font-family:inherit;color:var(--text-600);" data-ph-en="Add remark…" data-ph-ar="أضف ملاحظة…"></td>
+    `;
+    body.appendChild(tr);
+  });
+  applyLang(state.lang);
+  gradeOverlay.classList.add('show');
+}
+gradeOverlay.addEventListener('input', (e)=>{
+  if(!e.target.classList.contains('score-input')) return;
+  const tr = e.target.closest('tr');
+  const max = parseInt(e.target.dataset.max);
+  let val = parseInt(e.target.value); if(isNaN(val)) val = 0;
+  val = Math.max(0, Math.min(max, val));
+  const pct = Math.round((val/max)*100);
+  const g = gradeLetter(pct);
+  tr.querySelector('.pct-cell').textContent = pct + '%';
+  const chip = tr.querySelector('.grade-chip');
+  chip.textContent = g; chip.className = 'grade-chip ' + g;
+});
+document.getElementById('closeGrade').addEventListener('click', ()=> gradeOverlay.classList.remove('show'));
+document.getElementById('cancelGrade').addEventListener('click', ()=> gradeOverlay.classList.remove('show'));
+document.getElementById('saveGrades').addEventListener('click', ()=>{
+  gradeOverlay.classList.remove('show');
+  showToast(state.lang==='ar' ? 'تم حفظ الدرجات بنجاح' : 'Grades saved successfully');
+});
+gradeOverlay.addEventListener('click', (e)=>{ if(e.target===gradeOverlay) gradeOverlay.classList.remove('show'); });
+
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2800);
+}
+
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = lang==='ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(v!==null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{ el.placeholder = lang==='ar' ? el.getAttribute('data-ph-ar') : el.getAttribute('data-ph-en'); });
+  document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
+  btn.setAttribute('data-ar', theme==='dark'?'فاتح':'داكن');
+  btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+</script>
+</body>
+</html>

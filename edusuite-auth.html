@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
+    --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
+    --success-600:#16A34A; --success-50:#ECFDF3;
+    --warning-600:#D97706;
+    --danger-600:#DC2626; --danger-50:#FEF2F2;
+    --surface:#FFFFFF; --bg:#F6F7FB; --border:#E6E9F0;
+    --text-900:#0F172A; --text-600:#5B6472; --text-400:#94A0B2;
+    --radius-lg:14px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+    --shadow-md:0 20px 50px rgba(15,23,42,.14);
+    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827; --bg:#0B1220; --border:#1F2937;
+    --text-900:#F1F5F9; --text-600:#9AA5B4; --text-400:#6B7686;
+    --indigo-50:#1E1B4B; --success-50:#052E1B; --danger-50:#3A0D0D;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 20px 50px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:var(--font-en); background:var(--bg); color:var(--text-900); font-size:14px; min-height:100vh; }
+  html[dir="rtl"] body{ font-family:var(--font-ar); }
+  a{ text-decoration:none; } button{ font-family:inherit; cursor:pointer; border:none; }
+
+  .shell{ display:grid; grid-template-columns:1fr 1fr; min-height:100vh; }
+  @media (max-width:900px){ .shell{ grid-template-columns:1fr; } .brand-panel{ display:none; } }
+
+  /* left brand panel */
+  .brand-panel{
+    background:var(--navy-800); color:#fff; padding:48px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;
+  }
+  .brand-panel::before{
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(600px 400px at 15% 10%, rgba(79,70,229,.35), transparent 60%),
+                radial-gradient(500px 400px at 90% 90%, rgba(99,102,241,.22), transparent 60%);
+  }
+  .brand-panel > *{ position:relative; z-index:1; }
+  .brand-row{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{ width:36px; height:36px; border-radius:9px; background:#fff; color:var(--navy-800); display:flex; align-items:center; justify-content:center; font-weight:800; }
+  .brand-row b{ font-size:16px; font-weight:700; }
+  .brand-quote{ max-width:420px; }
+  .brand-quote h2{ font-size:26px; font-weight:800; line-height:1.35; letter-spacing:-.01em; margin-bottom:16px; }
+  .brand-quote p{ font-size:13.5px; color:rgba(255,255,255,.65); line-height:1.7; }
+  .brand-stats{ display:flex; gap:28px; }
+  .brand-stats div b{ font-size:20px; display:block; font-weight:800; }
+  .brand-stats div span{ font-size:11.5px; color:rgba(255,255,255,.55); }
+
+  /* right form panel */
+  .form-panel{ display:flex; align-items:center; justify-content:center; padding:30px; }
+  .form-wrap{ width:100%; max-width:380px; }
+  .top-controls{ display:flex; justify-content:flex-end; gap:8px; margin-bottom:22px; }
+  .mini-btn{ height:32px; padding:0 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:11.5px; font-weight:700; color:var(--text-600); }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); padding:30px 28px; }
+  .form-head h1{ font-size:21px; font-weight:800; letter-spacing:-.01em; margin-bottom:6px; }
+  .form-head p{ font-size:13px; color:var(--text-600); margin-bottom:24px; }
+
+  .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:15px; }
+  .field label{ font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .input-wrap{ position:relative; }
+  .input-wrap input{ width:100%; height:42px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 12px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
+  .input-wrap input:focus{ outline:2px solid var(--indigo-500); outline-offset:1px; background:var(--surface); }
+  .input-wrap .toggle-eye{ position:absolute; inset-inline-end:12px; top:50%; transform:translateY(-50%); color:var(--text-400); background:none; }
+  .field .err{ font-size:11.5px; color:var(--danger-600); display:none; }
+  .field.invalid input{ border-color:var(--danger-600); }
+  .field.invalid .err{ display:block; }
+
+  .row-between{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; font-size:12.5px; }
+  .checkbox-row{ display:flex; align-items:center; gap:7px; color:var(--text-600); }
+  .checkbox-row input{ width:15px; height:15px; accent-color:var(--indigo-600); }
+  .link{ color:var(--indigo-600); font-weight:700; }
+  .link:hover{ text-decoration:underline; }
+
+  .btn{ width:100%; height:44px; border-radius:9px; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-primary{ background:var(--indigo-600); color:#fff; }
+  .btn-primary:hover{ background:#4338CA; }
+  .btn-primary:disabled{ opacity:.65; cursor:not-allowed; }
+  .btn-outline{ background:var(--surface); border:1px solid var(--border); color:var(--text-900); }
+  .btn-outline:hover{ background:var(--bg); }
+
+  .divider{ display:flex; align-items:center; gap:10px; margin:18px 0; font-size:11.5px; color:var(--text-400); }
+  .divider::before, .divider::after{ content:''; flex:1; height:1px; background:var(--border); }
+
+  .switch-line{ text-align:center; font-size:13px; color:var(--text-600); margin-top:20px; }
+
+  .spinner{ width:16px; height:16px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; display:none; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .strength-bar{ display:flex; gap:4px; margin-top:6px; }
+  .strength-bar div{ height:4px; flex:1; border-radius:2px; background:var(--border); }
+  .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; }
+  .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); }
+
+  .step{ display:none; }
+  .step.active{ display:block; }
+  .step-dots{ display:flex; gap:6px; margin-bottom:20px; }
+  .step-dots div{ height:4px; flex:1; border-radius:2px; background:var(--border); }
+  .step-dots div.done{ background:var(--indigo-600); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="brand-panel">
+    <div class="brand-row"><div class="brand-mark">E</div><b>EduSuite</b></div>
+    <div class="brand-quote">
+      <h2 data-en="One platform for your entire school, from admissions to graduation." data-ar="منصة واحدة لمدرستك بأكملها، من القبول حتى التخرج.">One platform for your entire school, from admissions to graduation.</h2>
+      <p data-en="Attendance, grades, fees, and communication — all in one place, built for modern schools." data-ar="الحضور، الدرجات، الرسوم، والتواصل — كل ذلك في مكان واحد، مصمم للمدارس الحديثة.">Attendance, grades, fees, and communication — all in one place, built for modern schools.</p>
+    </div>
+    <div class="brand-stats">
+      <div><b>1,200+</b><span data-en="Schools" data-ar="مدرسة">Schools</span></div>
+      <div><b>340K+</b><span data-en="Students managed" data-ar="طالب تتم إدارتهم">Students managed</span></div>
+      <div><b>99.9%</b><span data-en="Uptime" data-ar="نسبة التشغيل">Uptime</span></div>
+    </div>
+  </div>
+
+  <div class="form-panel">
+    <div class="form-wrap">
+      <div class="top-controls">
+        <button class="mini-btn" id="langToggle">العربية</button>
+        <button class="mini-btn" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="card step active" id="loginStep">
+        <div class="form-head">
+          <h1 data-en="Welcome back" data-ar="مرحبًا بعودتك">Welcome back</h1>
+          <p data-en="Sign in to your school workspace." data-ar="سجّل الدخول إلى مساحة عمل مدرستك.">Sign in to your school workspace.</p>
+        </div>
+        <form id="loginForm" novalidate>
+          <div class="field" id="li-email">
+            <label data-en="Email" data-ar="البريد الإلكتروني">Email</label>
+            <div class="input-wrap"><input type="email" id="loginEmail" data-ph-en="you@school.com" data-ph-ar="you@school.com" placeholder="you@school.com"></div>
+            <span class="err" data-en="Enter a valid email address" data-ar="أدخل بريدًا إلكترونيًا صحيحًا">Enter a valid email address</span>
+          </div>
+          <div class="field" id="li-pass">
+            <label data-en="Password" data-ar="كلمة المرور">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="loginPassword" data-ph-en="Enter your password" data-ph-ar="أدخل كلمة المرور" placeholder="Enter your password">
+              <button type="button" class="toggle-eye" data-target="loginPassword">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <span class="err" data-en="Password is required" data-ar="كلمة المرور مطلوبة">Password is required</span>
+          </div>
+          <div class="row-between">
+            <label class="checkbox-row"><input type="checkbox"><span data-en="Remember me" data-ar="تذكرني">Remember me</span></label>
+            <a href="#" class="link" data-en="Forgot password?" data-ar="نسيت كلمة المرور؟">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn btn-primary" id="loginSubmit">
+            <span data-en="Sign in" data-ar="تسجيل الدخول">Sign in</span>
+            <div class="spinner" id="loginSpinner"></div>
+          </button>
+        </form>
+        <div class="divider" data-en="OR" data-ar="أو">OR</div>
+        <button class="btn btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.27c0-.79-.07-1.54-.19-2.27H12v4.3h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.56-5.17 3.56-8.66z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.87-3c-1.08.72-2.46 1.15-4.06 1.15-3.12 0-5.77-2.11-6.72-4.94H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.28 14.3a7.2 7.2 0 0 1 0-4.6v-3.1H1.3a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.75c1.76 0 3.34.6 4.59 1.8l3.44-3.44C17.94 1.19 15.24 0 12 0A12 12 0 0 0 1.3 6.6l3.98 3.1C6.23 6.86 8.88 4.75 12 4.75z"/></svg>
+          <span data-en="Continue with Google" data-ar="المتابعة عبر Google">Continue with Google</span>
+        </button>
+        <div class="switch-line">
+          <span data-en="Don't have an account?" data-ar="ليس لديك حساب؟">Don't have an account?</span>
+          <a href="#" class="link" id="goRegister" data-en=" Create one" data-ar=" أنشئ حسابًا"> Create one</a>
+        </div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="card step" id="registerStep">
+        <div class="form-head">
+          <h1 data-en="Create your school account" data-ar="أنشئ حساب مدرستك">Create your school account</h1>
+          <p data-en="Step 1 of 2 — basic information." data-ar="الخطوة 1 من 2 — المعلومات الأساسية." id="stepLabel">Step 1 of 2 — basic information.</p>
+        </div>
+        <div class="step-dots"><div class="done" id="dot1"></div><div id="dot2"></div></div>
+
+        <form id="registerForm" novalidate>
+          <div class="step active" data-regstep="1">
+            <div class="field" id="rg-school">
+              <label data-en="School Name" data-ar="اسم المدرسة">School Name</label>
+              <div class="input-wrap"><input type="text" id="schoolName" data-ph-en="e.g. Riyadh International School" data-ph-ar="مثال: مدرسة الرياض العالمية" placeholder="e.g. Riyadh International School"></div>
+              <span class="err" data-en="School name is required" data-ar="اسم المدرسة مطلوب">School name is required</span>
+            </div>
+            <div class="field" id="rg-name">
+              <label data-en="Your Full Name" data-ar="اسمك الكامل">Your Full Name</label>
+              <div class="input-wrap"><input type="text" id="adminName" data-ph-en="e.g. Sara Al-Mutairi" data-ph-ar="مثال: سارة المطيري" placeholder="e.g. Sara Al-Mutairi"></div>
+              <span class="err" data-en="Full name is required" data-ar="الاسم الكامل مطلوب">Full name is required</span>
+            </div>
+            <button type="button" class="btn btn-primary" id="toStep2">
+              <span data-en="Continue" data-ar="متابعة">Continue</span>
+            </button>
+          </div>
+
+          <div class="step" data-regstep="2">
+            <div class="field" id="rg-email">
+              <label data-en="Work Email" data-ar="البريد الإلكتروني للعمل">Work Email</label>
+              <div class="input-wrap"><input type="email" id="regEmail" data-ph-en="you@school.com" data-ph-ar="you@school.com" placeholder="you@school.com"></div>
+              <span class="err" data-en="Enter a valid email address" data-ar="أدخل بريدًا إلكترونيًا صحيحًا">Enter a valid email address</span>
+            </div>
+            <div class="field" id="rg-pass">
+              <label data-en="Password" data-ar="كلمة المرور">Password</label>
+              <div class="input-wrap">
+                <input type="password" id="regPassword" data-ph-en="At least 8 characters" data-ph-ar="8 أحرف على الأقل" placeholder="At least 8 characters">
+                <button type="button" class="toggle-eye" data-target="regPassword">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <div class="strength-bar"><div id="bar1"></div><div id="bar2"></div><div id="bar3"></div></div>
+              <span class="err" data-en="Password must be at least 8 characters" data-ar="يجب أن تتكون كلمة المرور من 8 أحرف على الأقل">Password must be at least 8 characters</span>
+            </div>
+            <label class="checkbox-row" style="margin-bottom:16px;">
+              <input type="checkbox" id="agreeTerms">
+              <span data-en="I agree to the Terms and Privacy Policy" data-ar="أوافق على الشروط وسياسة الخصوصية">I agree to the Terms and Privacy Policy</span>
+            </label>
+            <div style="display:flex; gap:10px;">
+              <button type="button" class="btn btn-outline" id="backStep1" style="flex:1;" data-en="Back" data-ar="رجوع">Back</button>
+              <button type="submit" class="btn btn-primary" id="registerSubmit" style="flex:2;">
+                <span data-en="Create Account" data-ar="إنشاء الحساب">Create Account</span>
+                <div class="spinner" id="registerSpinner"></div>
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="switch-line">
+          <span data-en="Already have an account?" data-ar="لديك حساب بالفعل؟">Already have an account?</span>
+          <a href="#" class="link" id="goLogin" data-en=" Sign in" data-ar=" تسجيل الدخول"> Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const state = { lang:'en', theme:'light' };
+
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = lang==='ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(v!==null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{ el.placeholder = lang==='ar' ? el.getAttribute('data-ph-ar') : el.getAttribute('data-ph-en'); });
+  document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
+  btn.setAttribute('data-ar', theme==='dark'?'فاتح':'داكن');
+  btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+
+// step switching (login <-> register)
+function showStep(id){
+  document.querySelectorAll('.form-wrap > .step').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+document.getElementById('goRegister').addEventListener('click', (e)=>{ e.preventDefault(); showStep('registerStep'); });
+document.getElementById('goLogin').addEventListener('click', (e)=>{ e.preventDefault(); showStep('loginStep'); });
+
+// password visibility
+document.querySelectorAll('.toggle-eye').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const input = document.getElementById(btn.dataset.target);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  });
+});
+
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2800);
+}
+
+// LOGIN validation
+document.getElementById('loginForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const emailField = document.getElementById('li-email');
+  const passField = document.getElementById('li-pass');
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  emailField.classList.toggle('invalid', !emailOk); if(!emailOk) valid=false;
+  passField.classList.toggle('invalid', !pass); if(!pass) valid=false;
+  if(!valid) return;
+
+  const btn = document.getElementById('loginSubmit');
+  const spinner = document.getElementById('loginSpinner');
+  btn.disabled = true; spinner.style.display='inline-block';
+  setTimeout(()=>{
+    btn.disabled = false; spinner.style.display='none';
+    showToast(state.lang==='ar' ? 'تم تسجيل الدخول بنجاح' : 'Signed in successfully');
+  }, 1200);
+});
+
+// REGISTER step 1 -> 2
+document.getElementById('toStep2').addEventListener('click', ()=>{
+  let valid = true;
+  const schoolField = document.getElementById('rg-school');
+  const nameField = document.getElementById('rg-name');
+  const school = document.getElementById('schoolName').value.trim();
+  const name = document.getElementById('adminName').value.trim();
+  schoolField.classList.toggle('invalid', !school); if(!school) valid=false;
+  nameField.classList.toggle('invalid', !name); if(!name) valid=false;
+  if(!valid) return;
+
+  document.querySelector('#registerForm .step[data-regstep="1"]').classList.remove('active');
+  document.querySelector('#registerForm .step[data-regstep="2"]').classList.add('active');
+  document.getElementById('dot2').classList.add('done');
+  document.getElementById('stepLabel').setAttribute('data-en','Step 2 of 2 — account access.');
+  document.getElementById('stepLabel').setAttribute('data-ar','الخطوة 2 من 2 — الوصول إلى الحساب.');
+  applyLang(state.lang);
+});
+document.getElementById('backStep1').addEventListener('click', ()=>{
+  document.querySelector('#registerForm .step[data-regstep="2"]').classList.remove('active');
+  document.querySelector('#registerForm .step[data-regstep="1"]').classList.add('active');
+  document.getElementById('dot2').classList.remove('done');
+  document.getElementById('stepLabel').setAttribute('data-en','Step 1 of 2 — basic information.');
+  document.getElementById('stepLabel').setAttribute('data-ar','الخطوة 1 من 2 — المعلومات الأساسية.');
+  applyLang(state.lang);
+});
+
+// password strength
+document.getElementById('regPassword').addEventListener('input', (e)=>{
+  const v = e.target.value;
+  let score = 0;
+  if(v.length >= 8) score++;
+  if(/[A-Z]/.test(v) && /[0-9]/.test(v)) score++;
+  if(/[^A-Za-z0-9]/.test(v) && v.length >= 10) score++;
+  const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3')];
+  const colors = ['#DC2626', '#D97706', '#16A34A'];
+  bars.forEach((b,i)=>{ b.style.background = i < score ? colors[score-1] : ''; });
+});
+
+// REGISTER submit
+document.getElementById('registerForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const emailField = document.getElementById('rg-email');
+  const passField = document.getElementById('rg-pass');
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPassword').value;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const passOk = pass.length >= 8;
+
+  emailField.classList.toggle('invalid', !emailOk); if(!emailOk) valid=false;
+  passField.classList.toggle('invalid', !passOk); if(!passOk) valid=false;
+  if(!document.getElementById('agreeTerms').checked){ valid = false; }
+  if(!valid) return;
+
+  const btn = document.getElementById('registerSubmit');
+  const spinner = document.getElementById('registerSpinner');
+  btn.disabled = true; spinner.style.display='inline-block';
+  setTimeout(()=>{
+    btn.disabled = false; spinner.style.display='none';
+    showToast(state.lang==='ar' ? 'تم إنشاء الحساب بنجاح' : 'Account created successfully');
+  }, 1200);
+});
+</script>
+</body>
+</html>

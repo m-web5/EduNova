@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — Attendance</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
+    --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
+    --success-600:#16A34A; --success-50:#ECFDF3;
+    --warning-600:#D97706; --warning-50:#FFFBEB;
+    --danger-600:#DC2626; --danger-50:#FEF2F2;
+    --slate-600:#64748B; --slate-50:#F1F5F9;
+    --surface:#FFFFFF; --bg:#F6F7FB; --border:#E6E9F0;
+    --text-900:#0F172A; --text-600:#5B6472; --text-400:#94A0B2;
+    --radius-md:10px; --radius-lg:14px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+    --shadow-md:0 8px 30px rgba(15,23,42,.12);
+    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827; --bg:#0B1220; --border:#1F2937;
+    --text-900:#F1F5F9; --text-600:#9AA5B4; --text-400:#6B7686;
+    --indigo-50:#1E1B4B; --success-50:#052E1B; --warning-50:#3A2A04; --danger-50:#3A0D0D; --slate-50:#1E293B;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 8px 30px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:var(--font-en); background:var(--bg); color:var(--text-900); font-size:14px; }
+  html[dir="rtl"] body{ font-family:var(--font-ar); }
+  a{ text-decoration:none; color:inherit; } button{ font-family:inherit; cursor:pointer; border:none; }
+  .app{ display:flex; min-height:100vh; }
+
+  .sidebar{ width:248px; flex-shrink:0; background:var(--surface); border-inline-end:1px solid var(--border); display:flex; flex-direction:column; height:100vh; position:sticky; top:0; }
+  .brand{ display:flex; align-items:center; gap:10px; padding:20px 18px; border-bottom:1px solid var(--border); }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--navy-800); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; flex-shrink:0; }
+  .brand-text{ font-weight:700; font-size:15px; letter-spacing:-.01em; }
+  .brand-text span{ display:block; font-size:11px; font-weight:500; color:var(--text-400); }
+  .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
+  .nav-section-title{ font-size:11px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.04em; padding:14px 10px 6px; }
+  .nav-item{ display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:9px; color:var(--text-600); font-size:13.5px; font-weight:500; margin-bottom:1px; white-space:nowrap; }
+  .nav-item svg{ flex-shrink:0; width:18px; height:18px; }
+  .nav-item:hover{ background:var(--bg); color:var(--text-900); }
+  .nav-item.active{ background:var(--indigo-50); color:var(--indigo-600); font-weight:600; }
+  .sidebar-footer{ padding:12px; border-top:1px solid var(--border); display:flex; align-items:center; gap:9px; }
+  .avatar-sm{ width:32px; height:32px; border-radius:8px; background:var(--navy-700); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .footer-meta .name{ font-size:13px; font-weight:600; } .footer-meta .role{ font-size:11.5px; color:var(--text-400); }
+
+  .main{ flex:1; min-width:0; }
+  .topbar{ height:64px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; padding:0 22px; position:sticky; top:0; z-index:20; }
+  .icon-btn{ width:36px; height:36px; border-radius:9px; background:transparent; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-600); flex-shrink:0; }
+  .icon-btn:hover{ background:var(--bg); }
+  .lang-toggle, .theme-toggle{ height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .topbar-right{ display:flex; align-items:center; gap:10px; margin-inline-start:auto; }
+
+  .content{ padding:24px 28px 60px; max-width:1400px; }
+  .breadcrumb{ font-size:12.5px; color:var(--text-400); margin-bottom:8px; }
+  .breadcrumb b{ color:var(--text-600); font-weight:600; }
+  .page-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .page-head h1{ font-size:20px; font-weight:800; letter-spacing:-.01em; }
+  .page-head p{ color:var(--text-600); font-size:13.5px; margin-top:3px; }
+  .btn{ display:inline-flex; align-items:center; gap:7px; padding:0 16px; height:38px; border-radius:9px; font-size:13.5px; font-weight:700; }
+  .btn-primary{ background:var(--indigo-600); color:#fff; }
+  .btn-primary:hover{ background:#4338CA; }
+  .btn-primary:disabled{ opacity:.55; cursor:not-allowed; }
+  .btn-outline{ background:var(--surface); border:1px solid var(--border); color:var(--text-600); }
+  .btn-outline:hover{ background:var(--bg); }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
+
+  .stat-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:18px; }
+  .stat-card{ padding:16px 18px; display:flex; align-items:center; gap:12px; }
+  .stat-icon{ width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .icon-blue{ background:#EAF1FF; color:#2563EB; } .icon-green{ background:var(--success-50); color:var(--success-600); }
+  .icon-amber{ background:var(--warning-50); color:var(--warning-600); } .icon-red{ background:var(--danger-50); color:var(--danger-600); }
+  .stat-label{ font-size:12px; color:var(--text-600); font-weight:600; } .stat-value{ font-size:19px; font-weight:800; }
+
+  .toolbar{ display:flex; align-items:center; gap:12px; padding:16px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .select-field{ display:flex; align-items:center; gap:8px; }
+  .select-field label{ font-size:12px; font-weight:700; color:var(--text-400); }
+  .select-field select, .select-field input{ height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 12px; font-size:13px; font-weight:600; color:var(--text-900); font-family:inherit; }
+  .toolbar-right{ margin-inline-start:auto; display:flex; gap:8px; }
+
+  .bulk-mark{ display:flex; gap:8px; padding:12px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .status-btn{
+    display:flex; align-items:center; gap:6px; height:34px; padding:0 13px; border-radius:9px; border:1px solid var(--border);
+    background:var(--surface); font-size:12.5px; font-weight:700; color:var(--text-600);
+  }
+  .status-btn:hover{ background:var(--bg); }
+  .status-btn.present-all:hover{ border-color:var(--success-600); color:var(--success-600); }
+
+  table{ width:100%; border-collapse:collapse; }
+  thead th{ text-align:start; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--text-400); padding:12px 18px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  tbody td{ padding:11px 18px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--bg); }
+  .student-cell{ display:flex; align-items:center; gap:10px; }
+  .student-avatar{ width:32px; height:32px; border-radius:8px; background:var(--indigo-600); color:#fff; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; flex-shrink:0; }
+  .student-name{ font-weight:700; } .student-sub{ font-size:11px; color:var(--text-400); }
+
+  .status-group{ display:flex; gap:6px; }
+  .status-pill{
+    width:34px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    display:flex; align-items:center; justify-content:center; color:var(--text-400); transition:all .12s ease;
+  }
+  .status-pill:hover{ background:var(--bg); }
+  .status-pill.p.on{ background:var(--success-50); border-color:var(--success-600); color:var(--success-600); }
+  .status-pill.a.on{ background:var(--danger-50); border-color:var(--danger-600); color:var(--danger-600); }
+  .status-pill.l.on{ background:var(--warning-50); border-color:var(--warning-600); color:var(--warning-600); }
+  .status-pill.e.on{ background:var(--slate-50); border-color:var(--slate-600); color:var(--slate-600); }
+
+  .save-bar{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-top:1px solid var(--border); flex-wrap:wrap; gap:10px; }
+  .save-note{ font-size:12.5px; color:var(--text-400); display:flex; align-items:center; gap:6px; }
+  .save-note svg{ color:var(--warning-600); }
+
+  .side-col{ display:flex; flex-direction:column; gap:16px; }
+  .panel{ padding:18px; }
+  .panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .panel-head h3{ font-size:14.5px; font-weight:700; }
+
+  .legend-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--text-600); margin-top:10px; }
+  .legend-dot{ width:9px; height:9px; border-radius:3px; display:inline-block; margin-inline-end:5px; }
+
+  .layout{ display:grid; grid-template-columns:2.2fr 1fr; gap:16px; align-items:start; }
+  @media (max-width:1100px){ .layout{ grid-template-columns:1fr; } .stat-strip{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:760px){ .sidebar{ display:none; } .content{ padding:16px; } table{ min-width:520px; } .card{ overflow-x:auto; } }
+
+  .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; }
+  .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">E</div><div class="brand-text">EduSuite<span>School ERP</span></div></div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">SM</div>
+      <div class="footer-meta"><div class="name" data-en="Sara Al-Mutairi" data-ar="سارة المطيري">Sara Al-Mutairi</div><div class="role" data-en="School Admin" data-ar="مدير المدرسة">School Admin</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
+      <div class="topbar-right">
+        <button class="lang-toggle" id="langToggle">العربية</button>
+        <button class="theme-toggle" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+        <div class="avatar-sm" style="width:32px;height:32px;">SM</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb"><span data-en="Dashboard" data-ar="لوحة التحكم">Dashboard</span> / <b data-en="Attendance" data-ar="الحضور">Attendance</b></div>
+      <div class="page-head">
+        <div>
+          <h1 data-en="Daily Attendance" data-ar="الحضور اليومي">Daily Attendance</h1>
+          <p data-en="Mark and review student attendance for the selected class and date." data-ar="سجّل وراجع حضور الطلاب للفصل والتاريخ المحددين.">Mark and review student attendance for the selected class and date.</p>
+        </div>
+        <button class="btn btn-outline"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span data-en="Export" data-ar="تصدير">Export</span></button>
+      </div>
+
+      <div class="stat-strip">
+        <div class="card stat-card"><div class="stat-icon icon-green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="stat-label" data-en="Present" data-ar="حاضر">Present</div><div class="stat-value" id="presentCount">26</div></div></div>
+        <div class="card stat-card"><div class="stat-icon icon-red"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div><div class="stat-label" data-en="Absent" data-ar="غائب">Absent</div><div class="stat-value" id="absentCount">2</div></div></div>
+        <div class="card stat-card"><div class="stat-icon icon-amber"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="stat-label" data-en="Late" data-ar="متأخر">Late</div><div class="stat-value" id="lateCount">1</div></div></div>
+        <div class="card stat-card"><div class="stat-icon icon-blue"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="stat-label" data-en="Attendance Rate" data-ar="نسبة الحضور">Attendance Rate</div><div class="stat-value" id="rateCount">90%</div></div></div>
+      </div>
+
+      <div class="layout">
+        <div class="card">
+          <div class="toolbar">
+            <div class="select-field">
+              <label data-en="Class" data-ar="الفصل">Class</label>
+              <select id="classSelect"><option>Grade 5 - A</option><option>Grade 5 - B</option><option>Grade 6 - A</option></select>
+            </div>
+            <div class="select-field">
+              <label data-en="Date" data-ar="التاريخ">Date</label>
+              <input type="date" id="dateInput" value="2026-09-11">
+            </div>
+            <div class="toolbar-right">
+              <span style="font-size:12px;color:var(--text-400);" data-en="29 students" data-ar="29 طالبًا" id="studentCountLabel">29 students</span>
+            </div>
+          </div>
+
+          <div class="bulk-mark">
+            <button class="status-btn present-all" id="markAllPresent">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              <span data-en="Mark All Present" data-ar="تعليم الكل حاضر">Mark All Present</span>
+            </button>
+            <button class="status-btn" id="clearAll">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+              <span data-en="Clear All" data-ar="مسح الكل">Clear All</span>
+            </button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th data-en="Student" data-ar="الطالب">Student</th>
+                <th data-en="Status" data-ar="الحالة">Status</th>
+                <th data-en="Note" data-ar="ملاحظة">Note</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceBody"></tbody>
+          </table>
+
+          <div class="save-bar">
+            <div class="save-note" id="unsavedNote" style="display:none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+              <span data-en="You have unsaved changes" data-ar="لديك تغييرات غير محفوظة">You have unsaved changes</span>
+            </div>
+            <div style="margin-inline-start:auto; display:flex; gap:10px;">
+              <button class="btn btn-outline" data-en="Discard" data-ar="تجاهل" id="discardBtn">Discard</button>
+              <button class="btn btn-primary" id="saveAttendance" disabled>
+                <span data-en="Save Attendance" data-ar="حفظ الحضور">Save Attendance</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-col">
+          <div class="card panel">
+            <div class="panel-head"><h3 data-en="This Week" data-ar="هذا الأسبوع">This Week</h3></div>
+            <canvas id="weekChart" height="140"></canvas>
+            <div class="legend-row">
+              <span><span class="legend-dot" style="background:#16A34A"></span><span data-en="Present" data-ar="حاضر">Present</span></span>
+              <span><span class="legend-dot" style="background:#DC2626"></span><span data-en="Absent" data-ar="غائب">Absent</span></span>
+              <span><span class="legend-dot" style="background:#D97706"></span><span data-en="Late" data-ar="متأخر">Late</span></span>
+            </div>
+          </div>
+
+          <div class="card panel">
+            <div class="panel-head"><h3 data-en="Attendance Settings" data-ar="إعدادات الحضور">Attendance Settings</h3></div>
+            <div style="font-size:12.8px; color:var(--text-600); line-height:1.9;">
+              <div data-en="Late threshold: after 8:15 AM" data-ar="حد التأخير: بعد الساعة 8:15 صباحًا">Late threshold: after 8:15 AM</div>
+              <div data-en="Auto-notify parents on absence" data-ar="إشعار تلقائي لأولياء الأمور عند الغياب">Auto-notify parents on absence</div>
+              <div data-en="Attendance locks after 24 hours" data-ar="يُغلق تعديل الحضور بعد 24 ساعة">Attendance locks after 24 hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const state = { lang:'en', theme:'light' };
+
+const navSections = [
+  { g:{en:'Overview',ar:'نظرة عامة'}, items:[{en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'}]},
+  { g:{en:'People',ar:'الأشخاص'}, items:[
+    {en:'Students',ar:'الطلاب', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+    {en:'Teachers',ar:'المعلمون', icon:'M22 10v6M2 10l10-5 10 5-10 5-10-5z'},
+  ]},
+  { g:{en:'Academics',ar:'الشؤون الأكاديمية'}, items:[
+    {en:'Classes',ar:'الفصول', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
+    {en:'Attendance',ar:'الحضور والغياب', active:true, icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
+    {en:'Exams',ar:'الامتحانات', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'},
+    {en:'Timetable',ar:'الجدول الدراسي', icon:'M21 8a9 9 0 1 1-9-9M21 3v5h-5'},
+  ]},
+  { g:{en:'Operations',ar:'العمليات'}, items:[
+    {en:'Fees & Payments',ar:'الرسوم والمدفوعات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
+    {en:'Reports',ar:'التقارير', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
+    {en:'Settings',ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
+  ]},
+];
+const navList = document.getElementById('navList');
+navSections.forEach(sec=>{
+  const t = document.createElement('div'); t.className='nav-section-title'; t.setAttribute('data-en',sec.g.en); t.setAttribute('data-ar',sec.g.ar); t.textContent=sec.g.en; navList.appendChild(t);
+  sec.items.forEach(it=>{
+    const a = document.createElement('a'); a.href='#'; a.className='nav-item'+(it.active?' active':'');
+    a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
+    navList.appendChild(a);
+  });
+});
+
+const roster = [
+  { en:'Yousef Al-Amri', ar:'يوسف العمري', id:'STU-2451' },
+  { en:'Lina Farouk', ar:'لينا فاروق', id:'STU-2452' },
+  { en:'Omar Saleh', ar:'عمر صالح', id:'STU-2453' },
+  { en:'Maryam Nasser', ar:'مريم ناصر', id:'STU-2454' },
+  { en:'Adam Khalifa', ar:'آدم خليفة', id:'STU-2455' },
+  { en:'Noor Al-Din', ar:'نور الدين', id:'STU-2456' },
+  { en:'Hana Rashid', ar:'هناء راشد', id:'STU-2457' },
+];
+const initialStatus = ['p','p','a','p','l','p','p'];
+
+function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+const tbody = document.getElementById('attendanceBody');
+let dirty = false;
+
+function render(){
+  tbody.innerHTML = '';
+  roster.forEach((s,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="student-cell">
+          <div class="student-avatar">${initials(s.en)}</div>
+          <div><div class="student-name" data-en="${s.en}" data-ar="${s.ar}">${s.en}</div><div class="student-sub">${s.id}</div></div>
+        </div>
+      </td>
+      <td>
+        <div class="status-group" data-idx="${i}">
+          <button class="status-pill p" data-status="p" title="Present"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></button>
+          <button class="status-pill a" data-status="a" title="Absent"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <button class="status-pill l" data-status="l" title="Late"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></button>
+          <button class="status-pill e" data-status="e" title="Excused"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>
+        </div>
+      </td>
+      <td><input type="text" placeholder="—" style="border:none;background:transparent;font-size:12.5px;color:var(--text-600);width:100%;font-family:inherit;" data-ph-en="Add a note…" data-ph-ar="أضف ملاحظة…"></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  setStatuses(initialStatus);
+  applyLang(state.lang);
+  updateStats();
+}
+
+function setStatuses(arr){
+  document.querySelectorAll('.status-group').forEach((g,i)=>{
+    g.querySelectorAll('.status-pill').forEach(p=> p.classList.toggle('on', p.dataset.status === arr[i]));
+  });
+}
+function getStatuses(){
+  return Array.from(document.querySelectorAll('.status-group')).map(g=>{
+    const on = g.querySelector('.status-pill.on');
+    return on ? on.dataset.status : null;
+  });
+}
+function updateStats(){
+  const arr = getStatuses();
+  const p = arr.filter(s=>s==='p').length, a = arr.filter(s=>s==='a').length, l = arr.filter(s=>s==='l').length;
+  document.getElementById('presentCount').textContent = p;
+  document.getElementById('absentCount').textContent = a;
+  document.getElementById('lateCount').textContent = l;
+  const rate = arr.length ? Math.round(((p+l)/arr.length)*100) : 0;
+  document.getElementById('rateCount').textContent = rate + '%';
+}
+function markDirty(){
+  dirty = true;
+  document.getElementById('unsavedNote').style.display = 'flex';
+  document.getElementById('saveAttendance').disabled = false;
+}
+
+tbody.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.status-pill');
+  if(!btn) return;
+  const group = btn.parentElement;
+  const alreadyOn = btn.classList.contains('on');
+  group.querySelectorAll('.status-pill').forEach(p=>p.classList.remove('on'));
+  if(!alreadyOn) btn.classList.add('on');
+  updateStats();
+  markDirty();
+});
+
+document.getElementById('markAllPresent').addEventListener('click', ()=>{
+  setStatuses(roster.map(()=> 'p'));
+  updateStats(); markDirty();
+});
+document.getElementById('clearAll').addEventListener('click', ()=>{
+  setStatuses(roster.map(()=> null));
+  updateStats(); markDirty();
+});
+document.getElementById('discardBtn').addEventListener('click', ()=>{
+  setStatuses(initialStatus);
+  updateStats();
+  dirty = false;
+  document.getElementById('unsavedNote').style.display = 'none';
+  document.getElementById('saveAttendance').disabled = true;
+});
+document.getElementById('saveAttendance').addEventListener('click', ()=>{
+  dirty = false;
+  document.getElementById('unsavedNote').style.display = 'none';
+  document.getElementById('saveAttendance').disabled = true;
+  showToast(state.lang==='ar' ? 'تم حفظ سجل الحضور بنجاح' : 'Attendance saved successfully');
+});
+
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2800);
+}
+
+render();
+
+// week chart
+new Chart(document.getElementById('weekChart'), {
+  type:'bar',
+  data:{
+    labels:['Sun','Mon','Tue','Wed','Thu'],
+    datasets:[
+      { label:'Present', data:[26,27,25,26,26], backgroundColor:'#16A34A', borderRadius:4, stack:'a' },
+      { label:'Absent', data:[2,1,3,2,2], backgroundColor:'#DC2626', borderRadius:4, stack:'a' },
+      { label:'Late', data:[1,1,1,1,1], backgroundColor:'#D97706', borderRadius:4, stack:'a' },
+    ]
+  },
+  options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{display:false} }, y:{ grid:{color:'rgba(148,160,178,.15)'}, ticks:{stepSize:10} } } }
+});
+
+// lang / theme
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = lang==='ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(v!==null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{ el.placeholder = lang==='ar' ? el.getAttribute('data-ph-ar') : el.getAttribute('data-ph-en'); });
+  document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
+  btn.setAttribute('data-ar', theme==='dark'?'فاتح':'داكن');
+  btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+</script>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — School ERP</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220;
+    --navy-800:#0F172A;
+    --navy-700:#1E293B;
+    --indigo-600:#4F46E5;
+    --indigo-500:#6366F1;
+    --indigo-50:#EEF0FF;
+    --success-600:#16A34A;
+    --success-50:#ECFDF3;
+    --warning-600:#D97706;
+    --warning-50:#FFFBEB;
+    --danger-600:#DC2626;
+    --danger-50:#FEF2F2;
+    --surface:#FFFFFF;
+    --bg:#F6F7FB;
+    --border:#E6E9F0;
+    --text-900:#0F172A;
+    --text-600:#5B6472;
+    --text-400:#94A0B2;
+    --radius-md:10px;
+    --radius-lg:14px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+    --shadow-md:0 4px 14px rgba(15,23,42,.06);
+    --font-en:'Plus Jakarta Sans', sans-serif;
+    --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827;
+    --bg:#0B1220;
+    --border:#1F2937;
+    --text-900:#F1F5F9;
+    --text-600:#9AA5B4;
+    --text-400:#6B7686;
+    --indigo-50:#1E1B4B;
+    --success-50:#052E1B;
+    --warning-50:#3A2A04;
+    --danger-50:#3A0D0D;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow-md:0 4px 18px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: var(--font-en);
+    background: var(--bg);
+    color: var(--text-900);
+    font-size:14px;
+    transition: background .2s ease, color .2s ease;
+  }
+  html[dir="rtl"] body{ font-family: var(--font-ar); }
+
+  a{ text-decoration:none; color:inherit; }
+  button{ font-family:inherit; cursor:pointer; border:none; }
+
+  .app{ display:flex; min-height:100vh; }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width:248px; flex-shrink:0;
+    background:var(--surface);
+    border-inline-end:1px solid var(--border);
+    display:flex; flex-direction:column;
+    height:100vh; position:sticky; top:0;
+    transition: transform .25s ease, width .2s ease;
+  }
+  .sidebar.collapsed{ width:76px; }
+  .sidebar.collapsed .label, .sidebar.collapsed .brand-text, .sidebar.collapsed .nav-section-title{ display:none; }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    padding:20px 18px; border-bottom:1px solid var(--border);
+  }
+  .brand-mark{
+    width:34px; height:34px; border-radius:9px;
+    background: var(--navy-800);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:800; font-size:15px; flex-shrink:0;
+  }
+  .brand-text{ font-weight:700; font-size:15px; letter-spacing:-.01em; }
+  .brand-text span{ display:block; font-size:11px; font-weight:500; color:var(--text-400); }
+
+  .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
+  .nav-section-title{
+    font-size:11px; font-weight:700; color:var(--text-400);
+    text-transform:uppercase; letter-spacing:.04em;
+    padding:14px 10px 6px;
+  }
+  .nav-item{
+    display:flex; align-items:center; gap:11px;
+    padding:9px 11px; border-radius:9px; color:var(--text-600);
+    font-size:13.5px; font-weight:500; margin-bottom:1px;
+    transition:background .15s ease, color .15s ease;
+    white-space:nowrap; overflow:hidden;
+  }
+  .nav-item svg{ flex-shrink:0; width:18px; height:18px; }
+  .nav-item:hover{ background:var(--bg); color:var(--text-900); }
+  .nav-item.active{ background:var(--indigo-50); color:var(--indigo-600); font-weight:600; }
+
+  .sidebar-footer{
+    padding:12px; border-top:1px solid var(--border);
+    display:flex; align-items:center; gap:9px;
+  }
+  .avatar-sm{
+    width:32px; height:32px; border-radius:8px; background:var(--navy-700);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; flex-shrink:0;
+  }
+  .footer-meta{ overflow:hidden; }
+  .footer-meta .name{ font-size:13px; font-weight:600; }
+  .footer-meta .role{ font-size:11.5px; color:var(--text-400); }
+
+  /* ---------- MAIN ---------- */
+  .main{ flex:1; min-width:0; }
+  .topbar{
+    height:64px; background:var(--surface); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:14px; padding:0 22px;
+    position:sticky; top:0; z-index:5;
+  }
+  .icon-btn{
+    width:36px; height:36px; border-radius:9px; background:transparent;
+    border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
+    color:var(--text-600); flex-shrink:0; transition: background .15s ease;
+  }
+  .icon-btn:hover{ background:var(--bg); }
+  .search-wrap{
+    flex:1; max-width:420px; position:relative;
+  }
+  .search-wrap input{
+    width:100%; height:38px; border-radius:9px; border:1px solid var(--border);
+    background:var(--bg); padding:0 14px 0 38px; font-size:13.5px; color:var(--text-900);
+    font-family:inherit;
+  }
+  html[dir="rtl"] .search-wrap input{ padding:0 38px 0 14px; }
+  .search-wrap input:focus{ outline:2px solid var(--indigo-500); outline-offset:1px; background:var(--surface); }
+  .search-wrap svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-400); width:16px; height:16px; }
+  html[dir="rtl"] .search-wrap svg{ left:auto; right:12px; }
+
+  .year-select{
+    height:38px; border:1px solid var(--border); border-radius:9px; background:var(--surface);
+    padding:0 12px; font-size:13px; font-weight:600; color:var(--text-900); display:flex; align-items:center; gap:6px;
+  }
+  .topbar-right{ display:flex; align-items:center; gap:10px; margin-inline-start:auto; }
+  .badge-dot{
+    position:absolute; top:-3px; right:-3px; background:var(--danger-600); color:#fff;
+    font-size:9.5px; font-weight:700; width:16px; height:16px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; border:2px solid var(--surface);
+  }
+  html[dir="rtl"] .badge-dot{ right:auto; left:-3px; }
+  .icon-btn-wrap{ position:relative; }
+  .profile-chip{
+    display:flex; align-items:center; gap:8px; padding:5px 8px 5px 5px; border-radius:9px;
+    border:1px solid var(--border); background:var(--surface);
+  }
+  html[dir="rtl"] .profile-chip{ padding:5px 5px 5px 8px; }
+  .lang-toggle, .theme-toggle{
+    height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border);
+    background:var(--surface); font-size:12.5px; font-weight:700; color:var(--text-600);
+  }
+
+  .content{ padding:24px 28px 60px; max-width:1400px; }
+  .page-head{ margin-bottom:20px; }
+  .page-head h1{ font-size:20px; font-weight:800; letter-spacing:-.01em; }
+  .page-head p{ color:var(--text-600); font-size:13.5px; margin-top:3px; }
+
+  /* stat cards */
+  .grid-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:18px; }
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+  }
+  .stat-card{ padding:18px; }
+  .stat-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+  .stat-icon{ width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .stat-label{ font-size:12.5px; color:var(--text-600); font-weight:600; margin-bottom:6px; }
+  .stat-value{ font-size:24px; font-weight:800; letter-spacing:-.02em; }
+  .stat-delta{ font-size:11.5px; font-weight:700; margin-top:8px; display:flex; align-items:center; gap:4px; }
+  .stat-delta.up{ color:var(--success-600); }
+  .stat-delta span.muted{ color:var(--text-400); font-weight:500; }
+
+  .icon-blue{ background:#EAF1FF; color:#2563EB; }
+  .icon-green{ background:var(--success-50); color:var(--success-600); }
+  .icon-purple{ background:#F1EAFE; color:#7C3AED; }
+  .icon-amber{ background:var(--warning-50); color:var(--warning-600); }
+
+  /* mid row */
+  .grid-mid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:16px; margin-bottom:16px; align-items:start; }
+  .panel{ padding:18px 18px 8px; }
+  .panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .panel-head h3{ font-size:14.5px; font-weight:700; }
+  .panel-select{
+    font-size:12px; font-weight:600; border:1px solid var(--border); border-radius:7px;
+    padding:5px 9px; background:var(--surface); color:var(--text-600);
+  }
+  .legend-row{ display:flex; align-items:center; gap:14px; margin-bottom:10px; font-size:12px; color:var(--text-600); }
+  .legend-dot{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-inline-end:5px; }
+
+  .donut-wrap{ display:flex; flex-direction:column; align-items:center; }
+  .donut-center{ margin-top:-118px; text-align:center; pointer-events:none; }
+  .donut-center b{ font-size:22px; display:block; }
+  .donut-center span{ font-size:11.5px; color:var(--text-600); }
+  .grade-list{ width:100%; margin-top:10px; }
+  .grade-row{ display:flex; align-items:center; justify-content:space-between; padding:6px 2px; font-size:12.5px; }
+  .grade-row .gname{ display:flex; align-items:center; gap:8px; color:var(--text-600); font-weight:500; }
+  .grade-row b{ font-weight:700; }
+
+  .event-item{ display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); }
+  .event-item:last-child{ border-bottom:none; }
+  .event-date{
+    width:44px; height:44px; border-radius:9px; background:var(--indigo-50); color:var(--indigo-600);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .event-date b{ font-size:14px; line-height:1; }
+  .event-date span{ font-size:9.5px; font-weight:700; text-transform:uppercase; }
+  .event-title{ font-size:13px; font-weight:600; }
+  .event-meta{ font-size:11.5px; color:var(--text-400); margin-top:2px; }
+
+  /* bottom row */
+  .grid-bottom{ display:grid; grid-template-columns:1.2fr 1fr 1.1fr; gap:16px; }
+  .activity-item{ display:flex; gap:11px; padding:11px 0; border-bottom:1px solid var(--border); }
+  .activity-item:last-child{ border-bottom:none; }
+  .activity-icon{ width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .activity-text{ font-size:12.8px; font-weight:500; }
+  .activity-time{ font-size:11px; color:var(--text-400); margin-top:2px; }
+
+  .fee-donut-wrap{ display:flex; align-items:center; gap:18px; padding-bottom:14px; }
+  .fee-stats{ flex:1; display:flex; flex-direction:column; gap:10px; }
+  .fee-stat-row{ display:flex; align-items:center; justify-content:between; gap:8px; font-size:12.5px; }
+  .fee-stat-row .fdot{ width:8px; height:8px; border-radius:50%; margin-inline-end:7px; }
+  .fee-stat-row .flabel{ color:var(--text-600); flex:1; }
+  .fee-stat-row b{ font-size:14px; }
+
+  .quick-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding-bottom:16px; }
+  .quick-btn{
+    display:flex; flex-direction:column; align-items:center; gap:7px; padding:14px 6px;
+    border:1px solid var(--border); border-radius:11px; background:var(--surface);
+    font-size:11.5px; font-weight:600; color:var(--text-600); transition:background .15s ease, border-color .15s ease;
+  }
+  .quick-btn:hover{ background:var(--bg); border-color:var(--indigo-500); color:var(--indigo-600); }
+  .quick-btn .qi{ width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+
+  @media (max-width: 1180px){
+    .grid-stats{ grid-template-columns:repeat(2,1fr); }
+    .grid-mid, .grid-bottom{ grid-template-columns:1fr; }
+  }
+  @media (max-width: 760px){
+    .sidebar{ position:fixed; z-index:30; transform:translateX(-100%); }
+    html[dir="rtl"] .sidebar{ transform:translateX(100%); }
+    .sidebar.mobile-open{ transform:translateX(0); }
+    .grid-stats{ grid-template-columns:1fr 1fr; }
+    .content{ padding:16px; }
+    .search-wrap{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">E</div>
+      <div class="brand-text" id="brandText">EduSuite<span id="brandSub">School ERP</span></div>
+    </div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">SM</div>
+      <div class="footer-meta">
+        <div class="name" data-en="Sara Al-Mutairi" data-ar="سارة المطيري">Sara Al-Mutairi</div>
+        <div class="role" data-en="School Admin" data-ar="مدير المدرسة">School Admin</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn" id="sidebarToggle" title="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" data-ph-en="Search students, teachers, invoices…" data-ph-ar="ابحث عن طلاب، معلمين، فواتير…" placeholder="Search students, teachers, invoices…">
+      </div>
+      <div class="year-select">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        2025 – 2026
+      </div>
+      <div class="topbar-right">
+        <button class="lang-toggle" id="langToggle">العربية</button>
+        <button class="theme-toggle" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+        <div class="icon-btn-wrap">
+          <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+          <span class="badge-dot">5</span>
+        </div>
+        <div class="icon-btn-wrap">
+          <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></button>
+          <span class="badge-dot">3</span>
+        </div>
+        <div class="profile-chip">
+          <div class="avatar-sm" style="width:28px;height:28px;font-size:11px;">SM</div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-head">
+        <h1 data-en="Welcome back, Sara 👋" data-ar="أهلاً بعودتك، سارة 👋">Welcome back, Sara 👋</h1>
+        <p data-en="Here's what's happening at Riyadh International School today." data-ar="إليك آخر مستجدات مدرسة الرياض العالمية اليوم.">Here's what's happening at Riyadh International School today.</p>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="grid-stats">
+        <div class="card stat-card">
+          <div class="stat-top">
+            <div><div class="stat-label" data-en="Total Students" data-ar="إجمالي الطلاب">Total Students</div><div class="stat-value">1,245</div></div>
+            <div class="stat-icon icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          </div>
+          <div class="stat-delta up">↑ 12.5% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-top">
+            <div><div class="stat-label" data-en="Total Teachers" data-ar="إجمالي المعلمين">Total Teachers</div><div class="stat-value">86</div></div>
+            <div class="stat-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div>
+          </div>
+          <div class="stat-delta up">↑ 8.3% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-top">
+            <div><div class="stat-label" data-en="Attendance Rate" data-ar="نسبة الحضور">Attendance Rate</div><div class="stat-value">94.6%</div></div>
+            <div class="stat-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          </div>
+          <div class="stat-delta up">↑ 2.1% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-top">
+            <div><div class="stat-label" data-en="Monthly Revenue" data-ar="الإيرادات الشهرية">Monthly Revenue</div><div class="stat-value">$24,350</div></div>
+            <div class="stat-icon icon-amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          </div>
+          <div class="stat-delta up">↑ 15.2% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+      </div>
+
+      <!-- MID ROW -->
+      <div class="grid-mid">
+        <div class="card panel">
+          <div class="panel-head">
+            <h3 data-en="Attendance Overview" data-ar="نظرة عامة على الحضور">Attendance Overview</h3>
+            <select class="panel-select"><option data-en="This Month" data-ar="هذا الشهر">This Month</option></select>
+          </div>
+          <canvas id="attendanceChart" height="150"></canvas>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-head">
+            <h3 data-en="Students By Grade" data-ar="الطلاب حسب الصف">Students By Grade</h3>
+          </div>
+          <div class="donut-wrap">
+            <canvas id="gradeChart" width="170" height="170"></canvas>
+            <div class="donut-center"><b>1,245</b><span data-en="Total Students" data-ar="إجمالي الطلاب">Total Students</span></div>
+          </div>
+          <div class="grade-list" id="gradeList"></div>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-head">
+            <h3 data-en="Upcoming Events" data-ar="الفعاليات القادمة">Upcoming Events</h3>
+            <a href="#" style="font-size:12px;color:var(--indigo-600);font-weight:700;" data-en="View All" data-ar="عرض الكل">View All</a>
+          </div>
+          <div id="eventsList"></div>
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW -->
+      <div class="grid-bottom">
+        <div class="card panel">
+          <div class="panel-head"><h3 data-en="Recent Activities" data-ar="الأنشطة الأخيرة">Recent Activities</h3></div>
+          <div id="activityList"></div>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-head">
+            <h3 data-en="Fee Collection" data-ar="تحصيل الرسوم">Fee Collection</h3>
+            <select class="panel-select"><option data-en="This Month" data-ar="هذا الشهر">This Month</option></select>
+          </div>
+          <div class="fee-donut-wrap">
+            <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
+              <canvas id="feeChart" width="110" height="110"></canvas>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <b style="font-size:18px;">75%</b>
+                <span style="font-size:9.5px;color:var(--text-600);" data-en="Collected" data-ar="محصّل">Collected</span>
+              </div>
+            </div>
+            <div class="fee-stats">
+              <div class="fee-stat-row"><span class="fdot" style="background:var(--indigo-600);"></span><span class="flabel" data-en="Collected" data-ar="محصّل">Collected</span><b>$18,262</b></div>
+              <div class="fee-stat-row"><span class="fdot" style="background:var(--warning-600);"></span><span class="flabel" data-en="Pending" data-ar="معلّق">Pending</span><b>$5,120</b></div>
+              <div class="fee-stat-row"><span class="fdot" style="background:var(--danger-600);"></span><span class="flabel" data-en="Overdue" data-ar="متأخر">Overdue</span><b>$968</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card panel">
+          <div class="panel-head"><h3 data-en="Quick Actions" data-ar="إجراءات سريعة">Quick Actions</h3></div>
+          <div class="quick-grid" id="quickGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = { lang: 'en', theme: 'light' };
+
+const navItems = [
+  { group:{en:'Overview', ar:'نظرة عامة'}, items:[
+    { en:'Dashboard', ar:'لوحة التحكم', active:true, icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10' },
+  ]},
+  { group:{en:'People', ar:'الأشخاص'}, items:[
+    { en:'Students', ar:'الطلاب', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
+    { en:'Teachers', ar:'المعلمون', icon:'M22 10v6M2 10l10-5 10 5-10 5-10-5z' },
+    { en:'Parents', ar:'أولياء الأمور', icon:'M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87m5-4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
+  ]},
+  { group:{en:'Academics', ar:'الشؤون الأكاديمية'}, items:[
+    { en:'Classes', ar:'الفصول', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z' },
+    { en:'Subjects', ar:'المواد', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z' },
+    { en:'Attendance', ar:'الحضور والغياب', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' },
+    { en:'Exams', ar:'الامتحانات', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M9 15h6 M9 11h6' },
+    { en:'Assignments', ar:'الواجبات', icon:'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' },
+    { en:'Timetable', ar:'الجدول الدراسي', icon:'M21 8a9 9 0 1 1-9-9M21 3v5h-5' },
+  ]},
+  { group:{en:'Operations', ar:'العمليات'}, items:[
+    { en:'Fees & Payments', ar:'الرسوم والمدفوعات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+    { en:'Library', ar:'المكتبة', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z' },
+    { en:'Transport', ar:'النقل المدرسي', icon:'M3 17h1m16 0h1M5 17a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0M3 10h18l-2-6H5l-2 6zm0 0v7h18v-7' },
+    { en:'Events', ar:'الفعاليات', icon:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z' },
+  ]},
+  { group:{en:'Insights', ar:'الرؤى'}, items:[
+    { en:'Communication', ar:'التواصل', icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' },
+    { en:'Reports', ar:'التقارير', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3' },
+    { en:'Staff', ar:'الموظفون', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
+    { en:'Settings', ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z' },
+  ]},
+];
+
+const navListEl = document.getElementById('navList');
+navItems.forEach(section=>{
+  const title = document.createElement('div');
+  title.className='nav-section-title';
+  title.setAttribute('data-en', section.group.en);
+  title.setAttribute('data-ar', section.group.ar);
+  title.textContent = section.group.en;
+  navListEl.appendChild(title);
+  section.items.forEach(it=>{
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'nav-item' + (it.active ? ' active':'');
+    a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span class="label" data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
+    navListEl.appendChild(a);
+  });
+});
+
+const events = [
+  { m:{en:'MAY',ar:'مايو'}, d:'20', en:'Parent Meeting', ar:'اجتماع أولياء الأمور', enT:'May 20 · 10:00 AM', arT:'20 مايو · 10:00 ص' },
+  { m:{en:'MAY',ar:'مايو'}, d:'24', en:'Science Exhibition', ar:'معرض العلوم', enT:'May 24 · 9:00 AM', arT:'24 مايو · 9:00 ص' },
+  { m:{en:'JUN',ar:'يونيو'}, d:'05', en:'Sports Day', ar:'اليوم الرياضي', enT:'Jun 5 · 8:00 AM', arT:'5 يونيو · 8:00 ص' },
+];
+const eventsList = document.getElementById('eventsList');
+events.forEach(ev=>{
+  const div = document.createElement('div');
+  div.className='event-item';
+  div.innerHTML = `<div class="event-date"><b>${ev.d}</b><span data-en="${ev.m.en}" data-ar="${ev.m.ar}">${ev.m.en}</span></div>
+    <div><div class="event-title" data-en="${ev.en}" data-ar="${ev.ar}">${ev.en}</div><div class="event-meta" data-en="${ev.enT}" data-ar="${ev.arT}">${ev.enT}</div></div>`;
+  eventsList.appendChild(div);
+});
+
+const activities = [
+  { color:'icon-blue', en:'New student Lina Farouk was registered', ar:'تم تسجيل الطالبة لينا فاروق', t:'5m' },
+  { color:'icon-green', en:'Fee payment of $240 received from Omar Saleh', ar:'تم استلام دفعة رسوم بقيمة 240$ من عمر صالح', t:'1h' },
+  { color:'icon-purple', en:'Science assignment posted for Grade 5', ar:'تم نشر واجب العلوم لصف خامس', t:'3h' },
+  { color:'icon-amber', en:'Parent meeting scheduled for May 20', ar:'تم جدولة اجتماع أولياء أمور في 20 مايو', t:'5h' },
+];
+const activityList = document.getElementById('activityList');
+activities.forEach(a=>{
+  const div = document.createElement('div');
+  div.className='activity-item';
+  div.innerHTML = `<div class="activity-icon ${a.color}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div>
+    <div><div class="activity-text" data-en="${a.en}" data-ar="${a.ar}">${a.en}</div><div class="activity-time">${a.t} <span data-en="ago" data-ar="مضت">ago</span></div></div>`;
+  activityList.appendChild(div);
+});
+
+const quickActions = [
+  { en:'Add Student', ar:'إضافة طالب', c:'icon-blue' },
+  { en:'Add Teacher', ar:'إضافة معلم', c:'icon-green' },
+  { en:'Create Class', ar:'إنشاء فصل', c:'icon-purple' },
+  { en:'Take Attendance', ar:'تسجيل الحضور', c:'icon-blue' },
+  { en:'Create Exam', ar:'إنشاء امتحان', c:'icon-amber' },
+  { en:'Record Payment', ar:'تسجيل دفعة', c:'icon-green' },
+];
+const quickGrid = document.getElementById('quickGrid');
+quickActions.forEach(q=>{
+  const btn = document.createElement('button');
+  btn.className='quick-btn';
+  btn.innerHTML = `<div class="qi ${q.c}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><span data-en="${q.en}" data-ar="${q.ar}">${q.en}</span>`;
+  quickGrid.appendChild(btn);
+});
+
+const gradeData = [
+  { en:'Grade 1', ar:'الصف الأول', v:235, color:'#EF476F' },
+  { en:'Grade 2', ar:'الصف الثاني', v:220, color:'#16A34A' },
+  { en:'Grade 3', ar:'الصف الثالث', v:210, color:'#7C3AED' },
+  { en:'Grade 4', ar:'الصف الرابع', v:195, color:'#D97706' },
+  { en:'Grade 5', ar:'الصف الخامس', v:185, color:'#0EA5E9' },
+];
+const gradeList = document.getElementById('gradeList');
+gradeData.forEach(g=>{
+  const pct = ((g.v/1245)*100).toFixed(1);
+  const row = document.createElement('div');
+  row.className='grade-row';
+  row.innerHTML = `<span class="gname"><span class="legend-dot" style="background:${g.color}"></span><span data-en="${g.en}" data-ar="${g.ar}">${g.en}</span></span><b>${g.v} (${pct}%)</b>`;
+  gradeList.appendChild(row);
+});
+
+// ---- CHARTS ----
+const attendanceCtx = document.getElementById('attendanceChart');
+const attendanceChart = new Chart(attendanceCtx, {
+  type:'line',
+  data:{
+    labels:['1','5','10','15','20','25','30'],
+    datasets:[
+      { label:'Students', data:[91,88,93,82,90,95,92], borderColor:'#4F46E5', backgroundColor:'rgba(79,70,229,.08)', tension:.4, fill:true, pointRadius:0, borderWidth:2 },
+      { label:'Teachers', data:[95,93,96,91,94,97,96], borderColor:'#16A34A', backgroundColor:'rgba(22,163,74,.06)', tension:.4, fill:true, pointRadius:0, borderWidth:2 },
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{ legend:{ display:true, position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, font:{size:11} } } },
+    scales:{ y:{ min:0, max:100, grid:{color:'rgba(148,160,178,.15)'}, ticks:{callback:v=>v+'%'} }, x:{ grid:{display:false} } }
+  }
+});
+
+const gradeCtx = document.getElementById('gradeChart');
+new Chart(gradeCtx, {
+  type:'doughnut',
+  data:{ labels:gradeData.map(g=>g.en), datasets:[{ data:gradeData.map(g=>g.v), backgroundColor:gradeData.map(g=>g.color), borderWidth:0 }] },
+  options:{ cutout:'72%', plugins:{ legend:{display:false} } }
+});
+
+const feeCtx = document.getElementById('feeChart');
+new Chart(feeCtx, {
+  type:'doughnut',
+  data:{ datasets:[{ data:[75,21,4], backgroundColor:['#4F46E5','#D97706','#DC2626'], borderWidth:0 }] },
+  options:{ cutout:'70%', plugins:{ legend:{display:false} } }
+});
+
+// ---- LANG / THEME TOGGLES ----
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const val = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(val !== null) el.textContent = val;
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{
+    el.placeholder = lang === 'ar' ? el.getAttribute('data-ph-ar') : el.getAttribute('data-ph-en');
+  });
+  document.getElementById('langToggle').textContent = lang === 'ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang === 'en' ? 'ar' : 'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme === 'dark' ? 'Light' : 'Dark');
+  btn.setAttribute('data-ar', theme === 'dark' ? 'فاتح' : 'داكن');
+  btn.textContent = state.lang === 'ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme === 'light' ? 'dark' : 'light'));
+
+document.getElementById('sidebarToggle').addEventListener('click', ()=>{
+  const sb = document.getElementById('sidebar');
+  if(window.innerWidth <= 760){ sb.classList.toggle('mobile-open'); }
+  else { sb.classList.toggle('collapsed'); }
+});
+</script>
+</body>
+</html>

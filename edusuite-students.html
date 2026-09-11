@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — Students</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
+    --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
+    --success-600:#16A34A; --success-50:#ECFDF3;
+    --warning-600:#D97706; --warning-50:#FFFBEB;
+    --danger-600:#DC2626; --danger-50:#FEF2F2;
+    --surface:#FFFFFF; --bg:#F6F7FB; --border:#E6E9F0;
+    --text-900:#0F172A; --text-600:#5B6472; --text-400:#94A0B2;
+    --radius-md:10px; --radius-lg:14px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+    --shadow-md:0 8px 30px rgba(15,23,42,.12);
+    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827; --bg:#0B1220; --border:#1F2937;
+    --text-900:#F1F5F9; --text-600:#9AA5B4; --text-400:#6B7686;
+    --indigo-50:#1E1B4B; --success-50:#052E1B; --warning-50:#3A2A04; --danger-50:#3A0D0D;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 8px 30px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:var(--font-en); background:var(--bg); color:var(--text-900); font-size:14px; }
+  html[dir="rtl"] body{ font-family:var(--font-ar); }
+  a{ text-decoration:none; color:inherit; } button{ font-family:inherit; cursor:pointer; border:none; }
+  .app{ display:flex; min-height:100vh; }
+
+  /* sidebar (shared shell) */
+  .sidebar{ width:248px; flex-shrink:0; background:var(--surface); border-inline-end:1px solid var(--border);
+    display:flex; flex-direction:column; height:100vh; position:sticky; top:0; }
+  .brand{ display:flex; align-items:center; gap:10px; padding:20px 18px; border-bottom:1px solid var(--border); }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--navy-800); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; flex-shrink:0; }
+  .brand-text{ font-weight:700; font-size:15px; letter-spacing:-.01em; }
+  .brand-text span{ display:block; font-size:11px; font-weight:500; color:var(--text-400); }
+  .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
+  .nav-section-title{ font-size:11px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.04em; padding:14px 10px 6px; }
+  .nav-item{ display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:9px; color:var(--text-600); font-size:13.5px; font-weight:500; margin-bottom:1px; white-space:nowrap; }
+  .nav-item svg{ flex-shrink:0; width:18px; height:18px; }
+  .nav-item:hover{ background:var(--bg); color:var(--text-900); }
+  .nav-item.active{ background:var(--indigo-50); color:var(--indigo-600); font-weight:600; }
+  .sidebar-footer{ padding:12px; border-top:1px solid var(--border); display:flex; align-items:center; gap:9px; }
+  .avatar-sm{ width:32px; height:32px; border-radius:8px; background:var(--navy-700); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .footer-meta .name{ font-size:13px; font-weight:600; } .footer-meta .role{ font-size:11.5px; color:var(--text-400); }
+
+  .main{ flex:1; min-width:0; }
+  .topbar{ height:64px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; padding:0 22px; position:sticky; top:0; z-index:20; }
+  .icon-btn{ width:36px; height:36px; border-radius:9px; background:transparent; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-600); flex-shrink:0; }
+  .icon-btn:hover{ background:var(--bg); }
+  .lang-toggle, .theme-toggle{ height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .topbar-right{ display:flex; align-items:center; gap:10px; margin-inline-start:auto; }
+
+  .content{ padding:24px 28px 60px; max-width:1400px; }
+  .breadcrumb{ font-size:12.5px; color:var(--text-400); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .breadcrumb b{ color:var(--text-600); font-weight:600; }
+  .page-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .page-head h1{ font-size:20px; font-weight:800; letter-spacing:-.01em; }
+  .page-head p{ color:var(--text-600); font-size:13.5px; margin-top:3px; }
+  .btn{ display:inline-flex; align-items:center; gap:7px; padding:0 16px; height:38px; border-radius:9px; font-size:13.5px; font-weight:700; }
+  .btn-primary{ background:var(--indigo-600); color:#fff; }
+  .btn-primary:hover{ background:#4338CA; }
+  .btn-outline{ background:var(--surface); border:1px solid var(--border); color:var(--text-600); }
+  .btn-outline:hover{ background:var(--bg); }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
+
+  /* stat strip */
+  .stat-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:18px; }
+  .stat-card{ padding:16px 18px; display:flex; align-items:center; gap:12px; }
+  .stat-icon{ width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .icon-blue{ background:#EAF1FF; color:#2563EB; } .icon-green{ background:var(--success-50); color:var(--success-600); }
+  .icon-amber{ background:var(--warning-50); color:var(--warning-600); } .icon-red{ background:var(--danger-50); color:var(--danger-600); }
+  .stat-label{ font-size:12px; color:var(--text-600); font-weight:600; } .stat-value{ font-size:19px; font-weight:800; }
+
+  /* toolbar */
+  .toolbar{ display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .search-box{ position:relative; flex:1; min-width:220px; max-width:340px; }
+  .search-box input{ width:100%; height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 14px 0 36px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
+  html[dir="rtl"] .search-box input{ padding:0 36px 0 14px; }
+  .search-box svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-400); }
+  html[dir="rtl"] .search-box svg{ left:auto; right:11px; }
+  .filter-chip{ display:flex; align-items:center; gap:6px; height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:13px; font-weight:600; color:var(--text-600); }
+  .filter-chip:hover{ background:var(--bg); }
+  .toolbar-right{ margin-inline-start:auto; display:flex; align-items:center; gap:8px; }
+
+  .bulkbar{ display:none; align-items:center; gap:12px; padding:10px 18px; background:var(--indigo-50); border-bottom:1px solid var(--border); font-size:13px; font-weight:600; color:var(--indigo-600); }
+  .bulkbar.show{ display:flex; }
+  .bulkbar .btn{ height:30px; padding:0 10px; font-size:12px; }
+
+  table{ width:100%; border-collapse:collapse; }
+  thead th{ text-align:start; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--text-400); padding:12px 18px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  tbody td{ padding:13px 18px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--bg); }
+  .student-cell{ display:flex; align-items:center; gap:10px; }
+  .student-avatar{ width:34px; height:34px; border-radius:9px; background:var(--indigo-600); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .student-name{ font-weight:700; } .student-sub{ font-size:11.5px; color:var(--text-400); }
+  .badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:11.5px; font-weight:700; }
+  .badge-success{ background:var(--success-50); color:var(--success-600); }
+  .badge-warning{ background:var(--warning-50); color:var(--warning-600); }
+  .badge-danger{ background:var(--danger-50); color:var(--danger-600); }
+  .progress-mini{ width:60px; height:6px; border-radius:99px; background:var(--border); overflow:hidden; display:inline-block; margin-inline-end:6px; vertical-align:middle; }
+  .progress-mini > div{ height:100%; background:var(--success-600); }
+  .row-actions{ display:flex; align-items:center; gap:4px; }
+  .icon-btn-sm{ width:28px; height:28px; border-radius:7px; border:1px solid transparent; background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-400); }
+  .icon-btn-sm:hover{ background:var(--bg); color:var(--text-900); border-color:var(--border); }
+  .chk{ width:16px; height:16px; accent-color:var(--indigo-600); }
+
+  .pagination{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; font-size:12.5px; color:var(--text-600); flex-wrap:wrap; gap:10px; }
+  .page-btns{ display:flex; align-items:center; gap:4px; }
+  .page-btn{ width:30px; height:30px; border-radius:7px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:600; color:var(--text-600); }
+  .page-btn.active{ background:var(--indigo-600); border-color:var(--indigo-600); color:#fff; }
+  .page-btn:hover:not(.active){ background:var(--bg); }
+
+  /* modal */
+  .overlay{ position:fixed; inset:0; background:rgba(11,18,32,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .overlay.show{ display:flex; }
+  .modal{ background:var(--surface); border-radius:var(--radius-lg); width:100%; max-width:560px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-md); }
+  .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); }
+  .modal-head h3{ font-size:15.5px; font-weight:700; }
+  .modal-body{ padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.full{ grid-column:1 / -1; }
+  .field label{ font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .field label .req{ color:var(--danger-600); }
+  .field input, .field select{ height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 12px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
+  .field input:focus, .field select:focus{ outline:2px solid var(--indigo-500); outline-offset:1px; background:var(--surface); }
+  .field .hint{ font-size:11px; color:var(--text-400); }
+  .field .err{ font-size:11px; color:var(--danger-600); display:none; }
+  .field.invalid input{ border-color:var(--danger-600); }
+  .field.invalid .err{ display:block; }
+  .modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 20px; border-top:1px solid var(--border); }
+
+  /* drawer (student profile) */
+  .drawer-overlay{ position:fixed; inset:0; background:rgba(11,18,32,.4); display:none; z-index:50; }
+  .drawer-overlay.show{ display:block; }
+  .drawer{ position:fixed; top:0; bottom:0; inset-inline-end:0; width:440px; max-width:92vw; background:var(--surface); box-shadow:var(--shadow-md); transform:translateX(100%); transition:transform .25s ease; z-index:51; overflow-y:auto; }
+  html[dir="rtl"] .drawer{ transform:translateX(-100%); }
+  .drawer.show{ transform:translateX(0); }
+  .drawer-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); }
+  .drawer-profile{ display:flex; align-items:center; gap:14px; padding:22px 20px; border-bottom:1px solid var(--border); }
+  .drawer-avatar{ width:58px; height:58px; border-radius:14px; background:var(--indigo-600); color:#fff; display:flex; align-items:center; justify-content:center; font-size:19px; font-weight:800; }
+  .drawer-profile h4{ font-size:15.5px; font-weight:700; } .drawer-profile p{ font-size:12.5px; color:var(--text-400); margin-top:2px; }
+  .tabs{ display:flex; gap:4px; padding:0 20px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab{ padding:11px 4px; font-size:13px; font-weight:600; color:var(--text-400); border-bottom:2px solid transparent; white-space:nowrap; }
+  .tab.active{ color:var(--indigo-600); border-color:var(--indigo-600); }
+  .tab-panel{ padding:18px 20px; display:none; }
+  .tab-panel.active{ display:block; }
+  .info-row{ display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .info-row:last-child{ border-bottom:none; }
+  .info-row span:first-child{ color:var(--text-400); }
+  .info-row span:last-child{ font-weight:600; }
+  .mini-stat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .mini-stat{ border:1px solid var(--border); border-radius:10px; padding:12px; }
+  .mini-stat .v{ font-size:17px; font-weight:800; } .mini-stat .l{ font-size:11px; color:var(--text-400); margin-top:2px; }
+
+  .empty-state{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; color:var(--text-400); }
+  .empty-state svg{ margin-bottom:14px; opacity:.6; }
+  .empty-state h4{ font-size:14.5px; color:var(--text-900); font-weight:700; margin-bottom:4px; }
+  .empty-state p{ font-size:12.5px; max-width:280px; }
+
+  .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; display:flex; flex-direction:column; gap:8px; }
+  .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); animation:slideIn .2s ease; }
+  @keyframes slideIn{ from{ transform:translateY(10px); opacity:0;} to{ transform:translateY(0); opacity:1;} }
+
+  @media (max-width:900px){
+    .modal-body{ grid-template-columns:1fr; }
+    .stat-strip{ grid-template-columns:1fr 1fr; }
+    table{ min-width:720px; }
+    .card{ overflow-x:auto; }
+  }
+  @media (max-width:760px){
+    .sidebar{ display:none; }
+    .content{ padding:16px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">E</div><div class="brand-text">EduSuite<span>School ERP</span></div></div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">SM</div>
+      <div class="footer-meta"><div class="name" data-en="Sara Al-Mutairi" data-ar="سارة المطيري">Sara Al-Mutairi</div><div class="role" data-en="School Admin" data-ar="مدير المدرسة">School Admin</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
+      <div class="topbar-right">
+        <button class="lang-toggle" id="langToggle">العربية</button>
+        <button class="theme-toggle" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+        <div class="avatar-sm" style="width:32px;height:32px;">SM</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb"><span data-en="Dashboard" data-ar="لوحة التحكم">Dashboard</span> / <b data-en="Students" data-ar="الطلاب">Students</b></div>
+      <div class="page-head">
+        <div>
+          <h1 data-en="Students" data-ar="الطلاب">Students</h1>
+          <p data-en="Manage all enrolled students, their classes, and records." data-ar="إدارة جميع الطلاب المسجلين، فصولهم، وسجلاتهم.">Manage all enrolled students, their classes, and records.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline" id="importBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-en="Import" data-ar="استيراد">Import</span></button>
+          <button class="btn btn-primary" id="addStudentBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Add Student" data-ar="إضافة طالب">Add Student</span></button>
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="card stat-card"><div class="stat-icon icon-blue"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="stat-label" data-en="Total Students" data-ar="إجمالي الطلاب">Total Students</div><div class="stat-value">1,245</div></div></div>
+        <div class="card stat-card"><div class="stat-icon icon-green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="stat-label" data-en="Active" data-ar="نشط">Active</div><div class="stat-value">1,198</div></div></div>
+        <div class="card stat-card"><div class="stat-icon icon-amber"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="stat-label" data-en="Pending Fees" data-ar="رسوم معلّقة">Pending Fees</div><div class="stat-value">142</div></div></div>
+        <div class="card stat-card"><div class="stat-icon icon-red"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div><div><div class="stat-label" data-en="Inactive" data-ar="غير نشط">Inactive</div><div class="stat-value">47</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" data-ph-en="Search by name or ID…" data-ph-ar="ابحث بالاسم أو الرقم…" placeholder="Search by name or ID…">
+          </div>
+          <button class="filter-chip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg><span data-en="Class" data-ar="الفصل">Class</span></button>
+          <button class="filter-chip"><span data-en="Status" data-ar="الحالة">Status</span></button>
+          <div class="toolbar-right">
+            <button class="icon-btn" title="Export"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
+          </div>
+        </div>
+
+        <div class="bulkbar" id="bulkbar">
+          <span id="bulkCount">0 <span data-en="selected" data-ar="محدد">selected</span></span>
+          <button class="btn btn-outline" data-en="Export" data-ar="تصدير">Export</button>
+          <button class="btn btn-outline" data-en="Send Message" data-ar="إرسال رسالة">Send Message</button>
+          <button class="btn btn-outline" style="color:var(--danger-600);" data-en="Delete" data-ar="حذف">Delete</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="chk" id="checkAll"></th>
+              <th data-en="Student" data-ar="الطالب">Student</th>
+              <th data-en="Class" data-ar="الفصل">Class</th>
+              <th data-en="Parent" data-ar="ولي الأمر">Parent</th>
+              <th data-en="Attendance" data-ar="الحضور">Attendance</th>
+              <th data-en="Fees" data-ar="الرسوم">Fees</th>
+              <th data-en="Status" data-ar="الحالة">Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="studentsBody"></tbody>
+        </table>
+
+        <div class="pagination">
+          <span data-en="Showing 1–8 of 1,245 students" data-ar="عرض 1–8 من أصل 1,245 طالب">Showing 1–8 of 1,245 students</span>
+          <div class="page-btns">
+            <button class="page-btn">‹</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">…</button>
+            <button class="page-btn">156</button>
+            <button class="page-btn">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STUDENT MODAL -->
+<div class="overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 data-en="Add New Student" data-ar="إضافة طالب جديد">Add New Student</h3>
+      <button class="icon-btn" id="closeModal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form id="studentForm">
+      <div class="modal-body">
+        <div class="field" id="f-name">
+          <label data-en="Full Name" data-ar="الاسم الكامل">Full Name</label>
+          <input type="text" id="fullName" data-ph-en="e.g. Yousef Al-Amri" data-ph-ar="مثال: يوسف العمري" placeholder="e.g. Yousef Al-Amri">
+          <span class="err" data-en="Full name is required" data-ar="الاسم الكامل مطلوب">Full name is required</span>
+        </div>
+        <div class="field" id="f-dob">
+          <label data-en="Date of Birth" data-ar="تاريخ الميلاد">Date of Birth</label>
+          <input type="date" id="dob">
+          <span class="err" data-en="Date of birth is required" data-ar="تاريخ الميلاد مطلوب">Date of birth is required</span>
+        </div>
+        <div class="field">
+          <label data-en="Class" data-ar="الفصل">Class</label>
+          <select id="klass"><option data-en="Grade 5 - A" data-ar="الصف الخامس - أ">Grade 5 - A</option><option data-en="Grade 5 - B" data-ar="الصف الخامس - ب">Grade 5 - B</option><option data-en="Grade 6 - A" data-ar="الصف السادس - أ">Grade 6 - A</option></select>
+        </div>
+        <div class="field">
+          <label data-en="Gender" data-ar="الجنس">Gender</label>
+          <select><option data-en="Male" data-ar="ذكر">Male</option><option data-en="Female" data-ar="أنثى">Female</option></select>
+        </div>
+        <div class="field full" id="f-parent">
+          <label data-en="Parent Email" data-ar="بريد ولي الأمر">Parent Email</label>
+          <input type="email" id="parentEmail" data-ph-en="parent@email.com" data-ph-ar="parent@email.com" placeholder="parent@email.com">
+          <span class="hint" data-en="An invite will be sent to link the parent account." data-ar="سيتم إرسال دعوة لربط حساب ولي الأمر.">An invite will be sent to link the parent account.</span>
+          <span class="err" data-en="Enter a valid email address" data-ar="أدخل بريدًا إلكترونيًا صحيحًا">Enter a valid email address</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" id="cancelModal" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+        <button type="submit" class="btn btn-primary" data-en="Save Student" data-ar="حفظ الطالب">Save Student</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- STUDENT PROFILE DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span data-en="Student Profile" data-ar="ملف الطالب">Student Profile</span>
+    <button class="icon-btn" id="closeDrawer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="drawer-profile">
+    <div class="drawer-avatar" id="drawerAvatar">YA</div>
+    <div>
+      <h4 id="drawerName">Yousef Al-Amri</h4>
+      <p id="drawerMeta">STU-2451 · Grade 5 - A</p>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="overview" data-en="Overview" data-ar="نظرة عامة">Overview</div>
+    <div class="tab" data-tab="attendance" data-en="Attendance" data-ar="الحضور">Attendance</div>
+    <div class="tab" data-tab="grades" data-en="Grades" data-ar="الدرجات">Grades</div>
+    <div class="tab" data-tab="fees" data-en="Fees" data-ar="الرسوم">Fees</div>
+    <div class="tab" data-tab="docs" data-en="Documents" data-ar="المستندات">Documents</div>
+  </div>
+
+  <div class="tab-panel active" data-panel="overview">
+    <div class="mini-stat-grid">
+      <div class="mini-stat"><div class="v">94%</div><div class="l" data-en="Attendance" data-ar="الحضور">Attendance</div></div>
+      <div class="mini-stat"><div class="v">A-</div><div class="l" data-en="Avg. Grade" data-ar="متوسط الدرجات">Avg. Grade</div></div>
+    </div>
+    <div class="info-row"><span data-en="Student ID" data-ar="رقم الطالب">Student ID</span><span>STU-2451</span></div>
+    <div class="info-row"><span data-en="Date of Birth" data-ar="تاريخ الميلاد">Date of Birth</span><span>12 Mar 2015</span></div>
+    <div class="info-row"><span data-en="Gender" data-ar="الجنس">Gender</span><span data-en="Male" data-ar="ذكر">Male</span></div>
+    <div class="info-row"><span data-en="Class" data-ar="الفصل">Class</span><span>Grade 5 - A</span></div>
+    <div class="info-row"><span data-en="Parent" data-ar="ولي الأمر">Parent</span><span>Khalid Al-Amri</span></div>
+    <div class="info-row"><span data-en="Contact" data-ar="التواصل">Contact</span><span>+966 5X XXX XXXX</span></div>
+    <div class="info-row"><span data-en="Enrolled" data-ar="تاريخ التسجيل">Enrolled</span><span>Sep 2023</span></div>
+  </div>
+  <div class="tab-panel" data-panel="attendance">
+    <div class="empty-state">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <h4 data-en="Attendance history" data-ar="سجل الحضور">Attendance history</h4>
+      <p data-en="Full attendance log will appear here once the Attendance module is connected." data-ar="سيظهر سجل الحضور الكامل هنا عند ربط وحدة الحضور.">Full attendance log will appear here once the Attendance module is connected.</p>
+    </div>
+  </div>
+  <div class="tab-panel" data-panel="grades">
+    <div class="info-row"><span>Math</span><span>92 / A</span></div>
+    <div class="info-row"><span>Science</span><span>88 / B+</span></div>
+    <div class="info-row"><span>English</span><span>95 / A</span></div>
+    <div class="info-row"><span>Arabic</span><span>90 / A-</span></div>
+  </div>
+  <div class="tab-panel" data-panel="fees">
+    <div class="info-row"><span data-en="Term Fee" data-ar="رسوم الفصل">Term Fee</span><span>$1,200</span></div>
+    <div class="info-row"><span data-en="Paid" data-ar="مدفوع">Paid</span><span style="color:var(--success-600)">$900</span></div>
+    <div class="info-row"><span data-en="Balance" data-ar="الرصيد المتبقي">Balance</span><span style="color:var(--warning-600)">$300</span></div>
+  </div>
+  <div class="tab-panel" data-panel="docs">
+    <div class="empty-state">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <h4 data-en="No documents yet" data-ar="لا توجد مستندات بعد">No documents yet</h4>
+      <p data-en="Upload the student's ID, certificates, or medical records." data-ar="ارفع هوية الطالب أو الشهادات أو السجلات الطبية.">Upload the student's ID, certificates, or medical records.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const state = { lang:'en', theme:'light' };
+
+const navSections = [
+  { g:{en:'Overview',ar:'نظرة عامة'}, items:[{en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'}]},
+  { g:{en:'People',ar:'الأشخاص'}, items:[
+    {en:'Students',ar:'الطلاب', active:true, icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+    {en:'Teachers',ar:'المعلمون', icon:'M22 10v6M2 10l10-5 10 5-10 5-10-5z'},
+    {en:'Parents',ar:'أولياء الأمور', icon:'M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87m5-4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+  ]},
+  { g:{en:'Academics',ar:'الشؤون الأكاديمية'}, items:[
+    {en:'Classes',ar:'الفصول', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
+    {en:'Attendance',ar:'الحضور والغياب', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
+    {en:'Exams',ar:'الامتحانات', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'},
+    {en:'Timetable',ar:'الجدول الدراسي', icon:'M21 8a9 9 0 1 1-9-9M21 3v5h-5'},
+  ]},
+  { g:{en:'Operations',ar:'العمليات'}, items:[
+    {en:'Fees & Payments',ar:'الرسوم والمدفوعات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
+    {en:'Reports',ar:'التقارير', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
+    {en:'Settings',ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
+  ]},
+];
+const navList = document.getElementById('navList');
+navSections.forEach(sec=>{
+  const t = document.createElement('div'); t.className='nav-section-title'; t.setAttribute('data-en',sec.g.en); t.setAttribute('data-ar',sec.g.ar); t.textContent=sec.g.en; navList.appendChild(t);
+  sec.items.forEach(it=>{
+    const a = document.createElement('a'); a.href='#'; a.className='nav-item'+(it.active?' active':'');
+    a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
+    navList.appendChild(a);
+  });
+});
+
+const students = [
+  { id:'STU-2451', en:'Yousef Al-Amri', ar:'يوسف العمري', klass:'Grade 5 - A', parentEn:'Khalid Al-Amri', parentAr:'خالد العمري', att:94, fee:'paid', status:'active' },
+  { id:'STU-2452', en:'Lina Farouk', ar:'لينا فاروق', klass:'Grade 3 - B', parentEn:'Farouk Hassan', parentAr:'فاروق حسن', att:88, fee:'pending', status:'active' },
+  { id:'STU-2453', en:'Omar Saleh', ar:'عمر صالح', klass:'Grade 6 - A', parentEn:'Saleh Omar', parentAr:'صالح عمر', att:76, fee:'overdue', status:'active' },
+  { id:'STU-2454', en:'Maryam Nasser', ar:'مريم ناصر', klass:'Grade 1 - C', parentEn:'Nasser Ali', parentAr:'ناصر علي', att:98, fee:'paid', status:'active' },
+  { id:'STU-2455', en:'Adam Khalifa', ar:'آدم خليفة', klass:'Grade 4 - A', parentEn:'Khalifa Ahmad', parentAr:'خليفة أحمد', att:91, fee:'paid', status:'active' },
+  { id:'STU-2456', en:'Noor Al-Din', ar:'نور الدين', klass:'Grade 2 - B', parentEn:'Al-Din Yousef', parentAr:'الدين يوسف', att:65, fee:'overdue', status:'inactive' },
+  { id:'STU-2457', en:'Hana Rashid', ar:'هناء راشد', klass:'Grade 5 - B', parentEn:'Rashid Salem', parentAr:'راشد سالم', att:96, fee:'paid', status:'active' },
+  { id:'STU-2458', en:'Zaid Mansour', ar:'زيد منصور', klass:'Grade 6 - B', parentEn:'Mansour Fahad', parentAr:'منصور فهد', att:83, fee:'pending', status:'active' },
+];
+
+const feeBadge = { paid:{en:'Paid',ar:'مدفوع',cls:'badge-success'}, pending:{en:'Pending',ar:'معلّق',cls:'badge-warning'}, overdue:{en:'Overdue',ar:'متأخر',cls:'badge-danger'} };
+const statusBadge = { active:{en:'Active',ar:'نشط',cls:'badge-success'}, inactive:{en:'Inactive',ar:'غير نشط',cls:'badge-danger'} };
+
+const tbody = document.getElementById('studentsBody');
+function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function renderStudents(){
+  tbody.innerHTML = '';
+  students.forEach(s=>{
+    const fb = feeBadge[s.fee], sb = statusBadge[s.status];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="checkbox" class="chk row-chk"></td>
+      <td>
+        <div class="student-cell" style="cursor:pointer;">
+          <div class="student-avatar">${initials(s.en)}</div>
+          <div>
+            <div class="student-name" data-en="${s.en}" data-ar="${s.ar}">${s.en}</div>
+            <div class="student-sub">${s.id}</div>
+          </div>
+        </div>
+      </td>
+      <td>${s.klass}</td>
+      <td data-en="${s.parentEn}" data-ar="${s.parentAr}">${s.parentEn}</td>
+      <td><span class="progress-mini"><div style="width:${s.att}%"></div></span>${s.att}%</td>
+      <td><span class="badge ${fb.cls}" data-en="${fb.en}" data-ar="${fb.ar}">${fb.en}</span></td>
+      <td><span class="badge ${sb.cls}" data-en="${sb.en}" data-ar="${sb.ar}">${sb.en}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn-sm view-btn" title="View"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="icon-btn-sm" title="Edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+          <button class="icon-btn-sm" title="Delete" style="color:var(--danger-600)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+        </div>
+      </td>`;
+    tr.querySelector('.student-cell').addEventListener('click', ()=> openDrawer(s));
+    tr.querySelector('.view-btn').addEventListener('click', (e)=>{ e.stopPropagation(); openDrawer(s); });
+    tbody.appendChild(tr);
+  });
+  applyLang(state.lang);
+}
+renderStudents();
+
+// bulk select
+const bulkbar = document.getElementById('bulkbar');
+const bulkCount = document.getElementById('bulkCount');
+function updateBulk(){
+  const checked = document.querySelectorAll('.row-chk:checked').length;
+  bulkbar.classList.toggle('show', checked > 0);
+  bulkCount.childNodes[0].textContent = checked + ' ';
+}
+document.getElementById('checkAll').addEventListener('change', (e)=>{
+  document.querySelectorAll('.row-chk').forEach(c=> c.checked = e.target.checked);
+  updateBulk();
+});
+tbody.addEventListener('change', (e)=>{ if(e.target.classList.contains('row-chk')) updateBulk(); });
+
+// search filter
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#studentsBody tr').forEach(tr=>{
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+
+// modal
+const modalOverlay = document.getElementById('modalOverlay');
+document.getElementById('addStudentBtn').addEventListener('click', ()=> modalOverlay.classList.add('show'));
+document.getElementById('closeModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
+document.getElementById('cancelModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
+modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) modalOverlay.classList.remove('show'); });
+
+document.getElementById('studentForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const nameField = document.getElementById('f-name');
+  const dobField = document.getElementById('f-dob');
+  const parentField = document.getElementById('f-parent');
+  const name = document.getElementById('fullName').value.trim();
+  const dob = document.getElementById('dob').value;
+  const email = document.getElementById('parentEmail').value.trim();
+
+  nameField.classList.toggle('invalid', !name); if(!name) valid=false;
+  dobField.classList.toggle('invalid', !dob); if(!dob) valid=false;
+  const emailOk = email === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  parentField.classList.toggle('invalid', !emailOk); if(!emailOk) valid=false;
+
+  if(!valid) return;
+  modalOverlay.classList.remove('show');
+  showToast(state.lang==='ar' ? 'تمت إضافة الطالب بنجاح' : 'Student added successfully');
+  e.target.reset();
+});
+
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2800);
+}
+
+// drawer
+const drawer = document.getElementById('drawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
+function openDrawer(s){
+  document.getElementById('drawerAvatar').textContent = initials(s.en);
+  document.getElementById('drawerName').textContent = state.lang==='ar' ? s.ar : s.en;
+  document.getElementById('drawerMeta').textContent = `${s.id} · ${s.klass}`;
+  drawer.classList.add('show'); drawerOverlay.classList.add('show');
+}
+function closeDrawerFn(){ drawer.classList.remove('show'); drawerOverlay.classList.remove('show'); }
+document.getElementById('closeDrawer').addEventListener('click', closeDrawerFn);
+drawerOverlay.addEventListener('click', closeDrawerFn);
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector(`.tab-panel[data-panel="${tab.dataset.tab}"]`).classList.add('active');
+  });
+});
+
+// lang / theme
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = lang==='ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(v!==null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{ el.placeholder = lang==='ar' ? el.getAttribute('data-ph-ar') : el.getAttribute('data-ph-en'); });
+  document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
+  btn.setAttribute('data-ar', theme==='dark'?'فاتح':'داكن');
+  btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+</script>
+</body>
+</html>
