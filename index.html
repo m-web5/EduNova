@@ -150,6 +150,33 @@
   .footer-col a{ display:block; font-size:13px; color:var(--text-600); margin-bottom:10px; }
   .footer-col a:hover{ color:var(--text-900); }
   .footer-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--text-400); padding-top:22px; border-top:1px solid var(--border); }
+
+  /* ---- VISUAL UPLOAD (9:16 interface image) ---- */
+  .visual-upload{
+    position:relative; width:100%; max-width:260px; aspect-ratio:9/16; margin:0 auto;
+    border:2px dashed var(--border); border-radius:20px; overflow:hidden; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    background-color:var(--surface); background-size:cover; background-position:center; background-repeat:no-repeat;
+    box-shadow:var(--shadow-sm); transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .visual-upload:hover{ border-color:var(--indigo-500); box-shadow:var(--shadow-md); }
+  .visual-upload input[type="file"]{ display:none; }
+  .visual-upload .upload-icon{ width:40px; height:40px; border-radius:11px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; }
+  .visual-upload .upload-hint{ font-size:12px; font-weight:700; color:var(--text-600); text-align:center; padding:0 16px; }
+  .visual-upload .upload-file{ font-size:10.5px; color:var(--text-400); }
+  .visual-upload.has-image .upload-icon,
+  .visual-upload.has-image .upload-hint,
+  .visual-upload.has-image .upload-file{ display:none; }
+  .visual-upload.has-image{ border-style:solid; }
+  .visual-upload-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+
+  /* ---- SCROLL REVEAL ---- */
+  .reveal{
+    opacity:0; transform:translateY(56px);
+    transition:opacity 1.1s cubic-bezier(.16,.84,.44,1), transform 1.1s cubic-bezier(.16,.84,.44,1);
+    will-change:opacity, transform;
+  }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
 </style>
 </head>
 <body>
@@ -174,14 +201,14 @@
 <header class="hero">
   <div class="wrap hero-inner">
     <div>
-      <div class="eyebrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg><span data-en="Built for modern schools" data-ar="مصممة للمدارس الحديثة">Built for modern schools</span></div>
-      <h1 data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></h1>
-      <p data-en="Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents." data-ar="الحضور، الدرجات، الرسوم، الجداول، والتواصل — كل ذلك في نظام واحد مترابط، مصمم للإداريين والمعلمين والطلاب وأولياء الأمور.">Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents.</p>
-      <div class="hero-ctas">
+      <div class="eyebrow reveal"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg><span data-en="Built for modern schools" data-ar="مصممة للمدارس الحديثة">Built for modern schools</span></div>
+      <h1 class="reveal" style="transition-delay:.08s" data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></h1>
+      <p class="reveal" style="transition-delay:.16s" data-en="Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents." data-ar="الحضور، الدرجات، الرسوم، الجداول، والتواصل — كل ذلك في نظام واحد مترابط، مصمم للإداريين والمعلمين والطلاب وأولياء الأمور.">Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents.</p>
+      <div class="hero-ctas reveal" style="transition-delay:.24s">
         <a href="#" class="btn btn-primary" data-en="Start Free Trial" data-ar="ابدأ تجربة مجانية">Start Free Trial</a>
         <a href="#" class="btn" style="background:var(--surface);border:1px solid var(--border);color:var(--text-900);" data-en="Book a Demo" data-ar="احجز عرضًا توضيحيًا">Book a Demo</a>
       </div>
-      <div class="trust-row">
+      <div class="trust-row reveal" style="transition-delay:.32s">
         <div class="stat"><b>1,200+</b><span data-en="Schools" data-ar="مدرسة">Schools</span></div>
         <div class="trust-divider"></div>
         <div class="stat"><b>340K+</b><span data-en="Students managed" data-ar="طالب تتم إدارتهم">Students managed</span></div>
@@ -191,6 +218,14 @@
     </div>
 
     <div class="hero-visual">
+      <div class="visual-upload-wrap reveal" style="transition-delay:.2s">
+        <label class="visual-upload" id="edu1Box" for="edu1Input">
+          <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div class="upload-hint" data-en="Upload interface image (9:16)" data-ar="ارفع صورة الواجهة (9:16)">Upload interface image (9:16)</div>
+          <div class="upload-file">edu1.jpg</div>
+          <input type="file" id="edu1Input" accept="image/*" onchange="handleVisualUpload(this,'edu1Box')">
+        </label>
+      </div>
       <div class="float-badge fb1"><span class="dot"></span><span data-en="Attendance saved" data-ar="تم حفظ الحضور">Attendance saved</span></div>
       <div class="mock-card">
         <div class="mock-top">
@@ -232,9 +267,17 @@
 
 <section class="section" id="roles" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <div class="section-tag" data-en="For Everyone" data-ar="لكل الأدوار">For Everyone</div>
       <h2 data-en="One login, a tailored view for every role" data-ar="تسجيل دخول واحد، وواجهة مخصصة لكل دور">One login, a tailored view for every role</h2>
+    </div>
+    <div class="visual-upload-wrap reveal" style="transition-delay:.1s; margin-bottom:36px;">
+      <label class="visual-upload" id="edu2Box" for="edu2Input">
+        <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="upload-hint" data-en="Upload interface image (9:16)" data-ar="ارفع صورة الواجهة (9:16)">Upload interface image (9:16)</div>
+        <div class="upload-file">edu2.jpg</div>
+        <input type="file" id="edu2Input" accept="image/*" onchange="handleVisualUpload(this,'edu2Box')">
+      </label>
     </div>
     <div class="roles-grid" id="rolesGrid"></div>
   </div>
@@ -308,9 +351,10 @@ const features = [
   { icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z', en:'Built-in Communication', ar:'تواصل مدمج', enD:'Announcements and messages that reach teachers, students, and parents.', arD:'إعلانات ورسائل تصل إلى المعلمين والطلاب وأولياء الأمور.' },
 ];
 const featureGrid = document.getElementById('featureGrid');
-features.forEach(f=>{
+features.forEach((f,i)=>{
   const card = document.createElement('div');
-  card.className = 'feature-card';
+  card.className = 'feature-card reveal';
+  card.style.transitionDelay = (i*0.08)+'s';
   card.innerHTML = `<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${f.icon}"/></svg></div>
     <h3 data-en="${f.en}" data-ar="${f.ar}">${f.en}</h3>
     <p data-en="${f.enD}" data-ar="${f.arD}">${f.enD}</p>`;
@@ -324,9 +368,10 @@ const roles = [
   { color:'#7C3AED', en:'Parent', ar:'ولي الأمر', enD:'Track your child, anytime', arD:'تابع طفلك في أي وقت' },
 ];
 const rolesGrid = document.getElementById('rolesGrid');
-roles.forEach(r=>{
+roles.forEach((r,i)=>{
   const card = document.createElement('div');
-  card.className = 'role-card';
+  card.className = 'role-card reveal';
+  card.style.transitionDelay = (i*0.08)+'s';
   card.innerHTML = `<div class="role-avatar" style="background:${r.color}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
     <h4 data-en="${r.en}" data-ar="${r.ar}">${r.en}</h4>
     <p data-en="${r.enD}" data-ar="${r.arD}">${r.enD}</p>`;
@@ -342,9 +387,10 @@ const plans = [
     feats:[ ['Unlimited students','عدد غير محدود من الطلاب'], ['Multi-branch support','دعم متعدد الفروع'], ['Custom integrations','تكاملات مخصصة'], ['Dedicated manager','مدير حساب مخصص'] ] },
 ];
 const pricingGrid = document.getElementById('pricingGrid');
-plans.forEach(p=>{
+plans.forEach((p,i)=>{
   const card = document.createElement('div');
-  card.className = 'price-card' + (p.featured ? ' featured':'');
+  card.className = 'price-card reveal' + (p.featured ? ' featured':'');
+  card.style.transitionDelay = (i*0.08)+'s';
   const featsHtml = p.feats.map(f=>`<li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="${f[0]}" data-ar="${f[1]}">${f[0]}</span></li>`).join('');
   card.innerHTML = `
     ${p.featured ? `<div class="price-badge" data-en="Most Popular" data-ar="الأكثر شيوعًا">Most Popular</div>` : ''}
@@ -378,6 +424,38 @@ function applyTheme(theme){
   btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
 }
 document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+
+/* ---- Interface image upload (edu1.jpg / edu2.jpg, 9:16) ---- */
+function handleVisualUpload(input, boxId){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const box = document.getElementById(boxId);
+    box.style.backgroundImage = `url(${e.target.result})`;
+    box.classList.add('has-image');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---- Scroll reveal: elements rise from bottom to top slowly on scroll ---- */
+function initScrollReveal(){
+  const revealEls = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    revealEls.forEach(el=> el.classList.add('visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.15, rootMargin:'0px 0px -60px 0px' });
+  revealEls.forEach(el=> io.observe(el));
+}
+initScrollReveal();
 </script>
 </body>
 </html>
