@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — School ERP Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
+    --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
+    --success-600:#16A34A; --success-50:#ECFDF3;
+    --warning-600:#D97706;
+    --danger-600:#DC2626;
+    --surface:#FFFFFF; --bg:#F6F7FB; --border:#E6E9F0;
+    --text-900:#0F172A; --text-600:#5B6472; --text-400:#94A0B2;
+    --radius-lg:16px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+    --shadow-md:0 20px 50px rgba(15,23,42,.10);
+    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827; --bg:#0B1220; --border:#1F2937;
+    --text-900:#F1F5F9; --text-600:#9AA5B4; --text-400:#6B7686;
+    --indigo-50:#1E1B4B; --success-50:#052E1B;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 20px 50px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{ font-family:var(--font-en); background:var(--bg); color:var(--text-900); font-size:15px; line-height:1.6; }
+  html[dir="rtl"] body{ font-family:var(--font-ar); }
+  a{ text-decoration:none; color:inherit; } button{ font-family:inherit; cursor:pointer; border:none; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1160px; margin:0 auto; padding:0 24px; }
+
+  /* ---- NAV ---- */
+  .nav{
+    position:sticky; top:0; z-index:40; background:rgba(255,255,255,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  [data-theme="dark"] .nav{ background:rgba(17,24,39,.85); }
+  .nav-inner{ display:flex; align-items:center; gap:28px; height:68px; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:800; font-size:17px; }
+  .brand-mark{ width:32px; height:32px; border-radius:9px; background:var(--navy-800); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .nav-links{ display:flex; align-items:center; gap:24px; font-size:13.5px; font-weight:600; color:var(--text-600); }
+  .nav-links a:hover{ color:var(--text-900); }
+  .nav-right{ margin-inline-start:auto; display:flex; align-items:center; gap:10px; }
+  .mini-btn{ height:34px; padding:0 11px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:12px; font-weight:700; color:var(--text-600); }
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:0 18px; height:40px; border-radius:9px; font-size:13.5px; font-weight:700; white-space:nowrap; }
+  .btn-primary{ background:var(--indigo-600); color:#fff; } .btn-primary:hover{ background:#4338CA; }
+  .btn-ghost{ color:var(--text-900); font-weight:700; font-size:13.5px; }
+  @media (max-width:860px){ .nav-links{ display:none; } }
+
+  /* ---- HERO ---- */
+  .hero{ position:relative; overflow:hidden; padding:80px 0 60px; }
+  .hero::before{
+    content:''; position:absolute; top:-200px; inset-inline-end:-160px; width:640px; height:640px; border-radius:50%;
+    background: radial-gradient(circle, rgba(79,70,229,.20), transparent 65%); z-index:0;
+  }
+  .hero-inner{ position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center; }
+  @media (max-width:900px){ .hero-inner{ grid-template-columns:1fr; } }
+  .eyebrow{ display:inline-flex; align-items:center; gap:7px; padding:6px 13px; border-radius:99px; background:var(--indigo-50); color:var(--indigo-600); font-size:12px; font-weight:700; margin-bottom:20px; }
+  .hero h1{ font-size:44px; font-weight:800; letter-spacing:-.02em; line-height:1.15; margin-bottom:18px; }
+  @media (max-width:600px){ .hero h1{ font-size:32px; } }
+  .hero h1 span{ color:var(--indigo-600); }
+  .hero p{ font-size:16px; color:var(--text-600); max-width:480px; margin-bottom:28px; }
+  .hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:34px; }
+  .hero-ctas .btn{ height:46px; padding:0 22px; font-size:14px; }
+  .trust-row{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .trust-row .stat{ }
+  .trust-row .stat b{ font-size:19px; font-weight:800; display:block; }
+  .trust-row .stat span{ font-size:11.5px; color:var(--text-400); }
+  .trust-divider{ width:1px; height:30px; background:var(--border); }
+
+  .hero-visual{ position:relative; }
+  .mock-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-md); padding:20px; }
+  .mock-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .mock-title{ font-size:13px; font-weight:700; color:var(--text-600); }
+  .mock-dots{ display:flex; gap:5px; }
+  .mock-dots span{ width:8px; height:8px; border-radius:50%; background:var(--border); }
+  .mock-stats{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .mock-stat{ background:var(--bg); border-radius:10px; padding:12px; }
+  .mock-stat .v{ font-size:18px; font-weight:800; } .mock-stat .l{ font-size:10.5px; color:var(--text-400); margin-top:2px; }
+  .mock-chart{ height:90px; border-radius:10px; background:linear-gradient(180deg, rgba(79,70,229,.12), transparent); position:relative; overflow:hidden; }
+  .mock-chart svg{ position:absolute; bottom:0; left:0; width:100%; }
+  .float-badge{ position:absolute; background:var(--surface); border:1px solid var(--border); border-radius:11px; box-shadow:var(--shadow-md); padding:10px 13px; display:flex; align-items:center; gap:9px; font-size:12px; font-weight:700; }
+  .float-badge.fb1{ top:-16px; inset-inline-start:-18px; }
+  .float-badge.fb2{ bottom:-14px; inset-inline-end:-14px; }
+  .float-badge .dot{ width:9px; height:9px; border-radius:50%; background:var(--success-600); }
+  @media (max-width:600px){ .float-badge{ display:none; } }
+
+  .logos{ padding:34px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .logos p{ text-align:center; font-size:12px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.06em; margin-bottom:20px; }
+  .logos-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; opacity:.55; font-weight:800; font-size:15px; color:var(--text-600); }
+
+  /* ---- FEATURES ---- */
+  .section{ padding:80px 0; }
+  .section-head{ text-align:center; max-width:600px; margin:0 auto 46px; }
+  .section-tag{ font-size:12px; font-weight:700; color:var(--indigo-600); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px; }
+  .section-head h2{ font-size:30px; font-weight:800; letter-spacing:-.01em; margin-bottom:12px; }
+  .section-head p{ color:var(--text-600); font-size:14.5px; }
+
+  .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media (max-width:900px){ .feature-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .feature-grid{ grid-template-columns:1fr; } }
+  .feature-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:box-shadow .2s ease, transform .2s ease; }
+  .feature-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-3px); }
+  .feature-icon{ width:42px; height:42px; border-radius:11px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .feature-card h3{ font-size:15.5px; font-weight:700; margin-bottom:8px; }
+  .feature-card p{ font-size:13px; color:var(--text-600); }
+
+  /* ---- ROLES ---- */
+  .roles-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:900px){ .roles-grid{ grid-template-columns:1fr 1fr; } }
+  .role-card{ text-align:center; padding:26px 18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); }
+  .role-avatar{ width:52px; height:52px; border-radius:14px; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; color:#fff; }
+  .role-card h4{ font-size:14.5px; font-weight:700; margin-bottom:5px; }
+  .role-card p{ font-size:12px; color:var(--text-400); }
+
+  /* ---- PRICING ---- */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:stretch; }
+  @media (max-width:900px){ .pricing-grid{ grid-template-columns:1fr; } }
+  .price-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; display:flex; flex-direction:column; }
+  .price-card.featured{ border-color:var(--indigo-600); box-shadow:var(--shadow-md); position:relative; }
+  .price-badge{ position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--indigo-600); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:99px; }
+  .price-card h3{ font-size:16px; font-weight:700; margin-bottom:4px; }
+  .price-card .sub{ font-size:12.5px; color:var(--text-400); margin-bottom:18px; }
+  .price-amount{ font-size:34px; font-weight:800; margin-bottom:2px; }
+  .price-amount span{ font-size:13px; font-weight:600; color:var(--text-400); }
+  .price-features{ list-style:none; margin:20px 0 24px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .price-features li{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--text-600); }
+  .price-features svg{ color:var(--success-600); flex-shrink:0; }
+
+  /* ---- CTA ---- */
+  .cta-band{ background:var(--navy-800); color:#fff; border-radius:24px; padding:56px 40px; text-align:center; position:relative; overflow:hidden; }
+  .cta-band::before{ content:''; position:absolute; inset:0; background:radial-gradient(500px 300px at 20% 20%, rgba(79,70,229,.35), transparent 60%); }
+  .cta-band > *{ position:relative; z-index:1; }
+  .cta-band h2{ font-size:28px; font-weight:800; margin-bottom:12px; }
+  .cta-band p{ color:rgba(255,255,255,.65); font-size:14.5px; margin-bottom:26px; }
+  .cta-btns{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-white{ background:#fff; color:var(--navy-800); height:46px; padding:0 22px; font-size:14px; }
+  .btn-outline-white{ background:transparent; border:1px solid rgba(255,255,255,.3); color:#fff; height:46px; padding:0 22px; font-size:14px; }
+
+  /* ---- FOOTER ---- */
+  footer{ border-top:1px solid var(--border); padding:44px 0 28px; }
+  .footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:30px; margin-bottom:34px; }
+  @media (max-width:760px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
+  .footer-col h5{ font-size:12px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.05em; margin-bottom:14px; }
+  .footer-col a{ display:block; font-size:13px; color:var(--text-600); margin-bottom:10px; }
+  .footer-col a:hover{ color:var(--text-900); }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--text-400); padding-top:22px; border-top:1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><div class="brand-mark">E</div>EduSuite</div>
+    <div class="nav-links">
+      <a href="#features" data-en="Features" data-ar="المزايا">Features</a>
+      <a href="#roles" data-en="For Everyone" data-ar="لكل الأدوار">For Everyone</a>
+      <a href="#pricing" data-en="Pricing" data-ar="الأسعار">Pricing</a>
+    </div>
+    <div class="nav-right">
+      <button class="mini-btn" id="langToggle">العربية</button>
+      <button class="mini-btn" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+      <a href="#" class="btn-ghost" data-en="Sign in" data-ar="تسجيل الدخول">Sign in</a>
+      <a href="#" class="btn btn-primary" data-en="Get Started" data-ar="ابدأ الآن">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg><span data-en="Built for modern schools" data-ar="مصممة للمدارس الحديثة">Built for modern schools</span></div>
+      <h1 data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></h1>
+      <p data-en="Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents." data-ar="الحضور، الدرجات، الرسوم، الجداول، والتواصل — كل ذلك في نظام واحد مترابط، مصمم للإداريين والمعلمين والطلاب وأولياء الأمور.">Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-primary" data-en="Start Free Trial" data-ar="ابدأ تجربة مجانية">Start Free Trial</a>
+        <a href="#" class="btn" style="background:var(--surface);border:1px solid var(--border);color:var(--text-900);" data-en="Book a Demo" data-ar="احجز عرضًا توضيحيًا">Book a Demo</a>
+      </div>
+      <div class="trust-row">
+        <div class="stat"><b>1,200+</b><span data-en="Schools" data-ar="مدرسة">Schools</span></div>
+        <div class="trust-divider"></div>
+        <div class="stat"><b>340K+</b><span data-en="Students managed" data-ar="طالب تتم إدارتهم">Students managed</span></div>
+        <div class="trust-divider"></div>
+        <div class="stat"><b>99.9%</b><span data-en="Uptime" data-ar="نسبة التشغيل">Uptime</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="float-badge fb1"><span class="dot"></span><span data-en="Attendance saved" data-ar="تم حفظ الحضور">Attendance saved</span></div>
+      <div class="mock-card">
+        <div class="mock-top">
+          <div class="mock-title" data-en="School Overview" data-ar="نظرة عامة على المدرسة">School Overview</div>
+          <div class="mock-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="mock-stats">
+          <div class="mock-stat"><div class="v">1,245</div><div class="l" data-en="Students" data-ar="الطلاب">Students</div></div>
+          <div class="mock-stat"><div class="v">94.6%</div><div class="l" data-en="Attendance" data-ar="الحضور">Attendance</div></div>
+        </div>
+        <div class="mock-chart">
+          <svg viewBox="0 0 300 90" preserveAspectRatio="none"><path d="M0 70 C 40 40, 70 60, 100 45 C 140 25, 170 50, 210 30 C 250 15, 270 35, 300 20 L300 90 L0 90 Z" fill="rgba(79,70,229,.18)"/><path d="M0 70 C 40 40, 70 60, 100 45 C 140 25, 170 50, 210 30 C 250 15, 270 35, 300 20" fill="none" stroke="#4F46E5" stroke-width="2.5"/></svg>
+        </div>
+      </div>
+      <div class="float-badge fb2"><span class="dot" style="background:#D97706"></span><span data-en="Fee collected: $18,262" data-ar="تم تحصيل: 18,262$">Fee collected: $18,262</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="logos">
+  <div class="wrap">
+    <p data-en="Trusted by education groups across the region" data-ar="موثوقة من قبل مجموعات تعليمية في المنطقة">Trusted by education groups across the region</p>
+    <div class="logos-row">
+      <span>Al-Noor Group</span><span>Future Learning</span><span>Horizon Schools</span><span>Legacy Academies</span><span>Green Valley Ed.</span>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag" data-en="Features" data-ar="المزايا">Features</div>
+      <h2 data-en="Everything your school needs, connected" data-ar="كل ما تحتاجه مدرستك، في مكان واحد">Everything your school needs, connected</h2>
+      <p data-en="From daily attendance to financial reports, EduSuite replaces spreadsheets and scattered tools with one clean system." data-ar="من الحضور اليومي إلى التقارير المالية، تستبدل EduSuite جداول البيانات والأدوات المتفرقة بنظام واحد منظم.">From daily attendance to financial reports, EduSuite replaces spreadsheets and scattered tools with one clean system.</p>
+    </div>
+    <div class="feature-grid" id="featureGrid"></div>
+  </div>
+</section>
+
+<section class="section" id="roles" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag" data-en="For Everyone" data-ar="لكل الأدوار">For Everyone</div>
+      <h2 data-en="One login, a tailored view for every role" data-ar="تسجيل دخول واحد، وواجهة مخصصة لكل دور">One login, a tailored view for every role</h2>
+    </div>
+    <div class="roles-grid" id="rolesGrid"></div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag" data-en="Pricing" data-ar="الأسعار">Pricing</div>
+      <h2 data-en="Simple pricing that scales with your school" data-ar="أسعار بسيطة تنمو مع مدرستك">Simple pricing that scales with your school</h2>
+      <p data-en="All plans include core academic, attendance, and communication tools." data-ar="جميع الباقات تشمل الأدوات الأساسية للشؤون الأكاديمية والحضور والتواصل.">All plans include core academic, attendance, and communication tools.</p>
+    </div>
+    <div class="pricing-grid" id="pricingGrid"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="cta-band">
+      <h2 data-en="Ready to modernize your school?" data-ar="جاهز لتحديث مدرستك؟">Ready to modernize your school?</h2>
+      <p data-en="Join 1,200+ schools already running on EduSuite." data-ar="انضم إلى أكثر من 1,200 مدرسة تعمل بالفعل على EduSuite.">Join 1,200+ schools already running on EduSuite.</p>
+      <div class="cta-btns">
+        <a href="#" class="btn btn-white" data-en="Start Free Trial" data-ar="ابدأ تجربة مجانية">Start Free Trial</a>
+        <a href="#" class="btn btn-outline-white" data-en="Talk to Sales" data-ar="تحدث مع المبيعات">Talk to Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="brand" style="margin-bottom:12px;"><div class="brand-mark">E</div>EduSuite</div>
+        <p style="font-size:13px;color:var(--text-600);max-width:220px;" data-en="The complete school management platform for modern institutions." data-ar="منصة إدارة المدارس المتكاملة للمؤسسات التعليمية الحديثة.">The complete school management platform for modern institutions.</p>
+      </div>
+      <div class="footer-col">
+        <h5 data-en="Product" data-ar="المنتج">Product</h5>
+        <a href="#features" data-en="Features" data-ar="المزايا">Features</a>
+        <a href="#pricing" data-en="Pricing" data-ar="الأسعار">Pricing</a>
+        <a href="#" data-en="Security" data-ar="الأمان">Security</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-en="Company" data-ar="الشركة">Company</h5>
+        <a href="#" data-en="About" data-ar="من نحن">About</a>
+        <a href="#" data-en="Careers" data-ar="الوظائف">Careers</a>
+        <a href="#" data-en="Contact" data-ar="تواصل معنا">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-en="Legal" data-ar="قانوني">Legal</h5>
+        <a href="#" data-en="Privacy Policy" data-ar="سياسة الخصوصية">Privacy Policy</a>
+        <a href="#" data-en="Terms of Service" data-ar="شروط الخدمة">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-en="© 2026 EduSuite. All rights reserved." data-ar="© 2026 EduSuite. جميع الحقوق محفوظة.">© 2026 EduSuite. All rights reserved.</span>
+      <span data-en="Made for modern schools" data-ar="صُنعت للمدارس الحديثة">Made for modern schools</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const state = { lang:'en', theme:'light' };
+
+const features = [
+  { icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', en:'Smart Attendance', ar:'حضور ذكي', enD:'Mark attendance in seconds with live stats and automatic parent alerts.', arD:'سجّل الحضور خلال ثوانٍ مع إحصائيات حية وتنبيهات تلقائية لأولياء الأمور.' },
+  { icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', en:'Exams & Grading', ar:'الامتحانات والدرجات', enD:'Create exams, enter grades, and auto-generate report cards.', arD:'أنشئ الامتحانات، أدخل الدرجات، وأصدر بطاقات التقارير تلقائيًا.' },
+  { icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6', en:'Fees & Payments', ar:'الرسوم والمدفوعات', enD:'Track invoices, collect payments, and monitor overdue balances.', arD:'تتبّع الفواتير، حصّل المدفوعات، وراقب الأرصدة المتأخرة.' },
+  { icon:'M21 8a9 9 0 1 1-9-9M21 3v5h-5', en:'Timetables', ar:'الجداول الدراسية', enD:'Build conflict-free schedules for classes, teachers, and rooms.', arD:'أنشئ جداول خالية من التعارض للفصول والمعلمين والقاعات.' },
+  { icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z', en:'Library & Resources', ar:'المكتبة والموارد', enD:'Manage books, borrowing, and returns with overdue tracking.', arD:'أدر الكتب والاستعارة والإرجاع مع تتبّع المتأخرات.' },
+  { icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z', en:'Built-in Communication', ar:'تواصل مدمج', enD:'Announcements and messages that reach teachers, students, and parents.', arD:'إعلانات ورسائل تصل إلى المعلمين والطلاب وأولياء الأمور.' },
+];
+const featureGrid = document.getElementById('featureGrid');
+features.forEach(f=>{
+  const card = document.createElement('div');
+  card.className = 'feature-card';
+  card.innerHTML = `<div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${f.icon}"/></svg></div>
+    <h3 data-en="${f.en}" data-ar="${f.ar}">${f.en}</h3>
+    <p data-en="${f.enD}" data-ar="${f.arD}">${f.enD}</p>`;
+  featureGrid.appendChild(card);
+});
+
+const roles = [
+  { color:'#4F46E5', en:'School Admin', ar:'مدير المدرسة', enD:'Full control over your school', arD:'تحكم كامل بمدرستك' },
+  { color:'#16A34A', en:'Teacher', ar:'المعلم', enD:'Classes, grading & assignments', arD:'الفصول والدرجات والواجبات' },
+  { color:'#D97706', en:'Student', ar:'الطالب', enD:'Grades, timetable & homework', arD:'الدرجات والجدول والواجبات' },
+  { color:'#7C3AED', en:'Parent', ar:'ولي الأمر', enD:'Track your child, anytime', arD:'تابع طفلك في أي وقت' },
+];
+const rolesGrid = document.getElementById('rolesGrid');
+roles.forEach(r=>{
+  const card = document.createElement('div');
+  card.className = 'role-card';
+  card.innerHTML = `<div class="role-avatar" style="background:${r.color}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+    <h4 data-en="${r.en}" data-ar="${r.ar}">${r.en}</h4>
+    <p data-en="${r.enD}" data-ar="${r.arD}">${r.enD}</p>`;
+  rolesGrid.appendChild(card);
+});
+
+const plans = [
+  { en:'Starter', ar:'أساسية', enSub:'For small schools', arSub:'للمدارس الصغيرة', price:99, featured:false,
+    feats:[ ['Up to 300 students','حتى 300 طالب'], ['Attendance & Grading','الحضور والدرجات'], ['Email support','دعم عبر البريد'] ] },
+  { en:'Professional', ar:'احترافية', enSub:'For growing schools', arSub:'للمدارس المتنامية', price:249, featured:true,
+    feats:[ ['Up to 1,500 students','حتى 1,500 طالب'], ['Fees & Payments','الرسوم والمدفوعات'], ['Library & Transport','المكتبة والنقل'], ['Priority support','دعم ذو أولوية'] ] },
+  { en:'Enterprise', ar:'مؤسسية', enSub:'For large institutions', arSub:'للمؤسسات الكبيرة', price:499, featured:false,
+    feats:[ ['Unlimited students','عدد غير محدود من الطلاب'], ['Multi-branch support','دعم متعدد الفروع'], ['Custom integrations','تكاملات مخصصة'], ['Dedicated manager','مدير حساب مخصص'] ] },
+];
+const pricingGrid = document.getElementById('pricingGrid');
+plans.forEach(p=>{
+  const card = document.createElement('div');
+  card.className = 'price-card' + (p.featured ? ' featured':'');
+  const featsHtml = p.feats.map(f=>`<li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="${f[0]}" data-ar="${f[1]}">${f[0]}</span></li>`).join('');
+  card.innerHTML = `
+    ${p.featured ? `<div class="price-badge" data-en="Most Popular" data-ar="الأكثر شيوعًا">Most Popular</div>` : ''}
+    <h3 data-en="${p.en}" data-ar="${p.ar}">${p.en}</h3>
+    <div class="sub" data-en="${p.enSub}" data-ar="${p.arSub}">${p.enSub}</div>
+    <div class="price-amount">$${p.price}<span data-en="/month" data-ar="/شهريًا">/month</span></div>
+    <ul class="price-features">${featsHtml}</ul>
+    <a href="#" class="btn ${p.featured?'btn-primary':''}" style="${p.featured?'':'border:1px solid var(--border);color:var(--text-900);'}" data-en="Get Started" data-ar="ابدأ الآن">Get Started</a>
+  `;
+  pricingGrid.appendChild(card);
+});
+
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = lang==='ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(v!==null) el.innerHTML = v;
+  });
+  document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
+  btn.setAttribute('data-ar', theme==='dark'?'فاتح':'داكن');
+  btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+</script>
+</body>
+</html>

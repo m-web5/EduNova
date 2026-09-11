@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduSuite — Platform Admin</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
+    --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
+    --success-600:#16A34A; --success-50:#ECFDF3;
+    --warning-600:#D97706; --warning-50:#FFFBEB;
+    --danger-600:#DC2626; --danger-50:#FEF2F2;
+    --slate-600:#64748B; --slate-50:#F1F5F9;
+    --surface:#FFFFFF; --bg:#F6F7FB; --border:#E6E9F0;
+    --text-900:#0F172A; --text-600:#5B6472; --text-400:#94A0B2;
+    --radius-md:10px; --radius-lg:14px;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+    --shadow-md:0 8px 30px rgba(15,23,42,.12);
+    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+  }
+  [data-theme="dark"]{
+    --surface:#111827; --bg:#0B1220; --border:#1F2937;
+    --text-900:#F1F5F9; --text-600:#9AA5B4; --text-400:#6B7686;
+    --indigo-50:#1E1B4B; --success-50:#052E1B; --warning-50:#3A2A04; --danger-50:#3A0D0D; --slate-50:#1E293B;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 8px 30px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:var(--font-en); background:var(--bg); color:var(--text-900); font-size:14px; }
+  html[dir="rtl"] body{ font-family:var(--font-ar); }
+  a{ text-decoration:none; color:inherit; } button{ font-family:inherit; cursor:pointer; border:none; }
+  .app{ display:flex; min-height:100vh; }
+
+  /* super-admin sidebar: distinct dark theme to signal platform-level context */
+  .sidebar{ width:252px; flex-shrink:0; background:var(--navy-900); color:#fff; display:flex; flex-direction:column; height:100vh; position:sticky; top:0; }
+  .brand{ display:flex; align-items:center; gap:10px; padding:20px 18px; border-bottom:1px solid rgba(255,255,255,.08); }
+  .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--indigo-600); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; flex-shrink:0; }
+  .brand-text{ font-weight:700; font-size:15px; letter-spacing:-.01em; }
+  .brand-text span{ display:block; font-size:11px; font-weight:500; color:rgba(255,255,255,.45); }
+  .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
+  .nav-section-title{ font-size:11px; font-weight:700; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.04em; padding:14px 10px 6px; }
+  .nav-item{ display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:9px; color:rgba(255,255,255,.65); font-size:13.5px; font-weight:500; margin-bottom:1px; white-space:nowrap; }
+  .nav-item svg{ flex-shrink:0; width:18px; height:18px; }
+  .nav-item:hover{ background:rgba(255,255,255,.06); color:#fff; }
+  .nav-item.active{ background:var(--indigo-600); color:#fff; font-weight:600; }
+  .sidebar-footer{ padding:12px; border-top:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:9px; }
+  .avatar-sm{ width:32px; height:32px; border-radius:8px; background:var(--indigo-600); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .footer-meta .name{ font-size:13px; font-weight:600; color:#fff; } .footer-meta .role{ font-size:11.5px; color:rgba(255,255,255,.45); }
+
+  .main{ flex:1; min-width:0; }
+  .topbar{ height:64px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:14px; padding:0 22px; position:sticky; top:0; z-index:20; }
+  .platform-tag{ display:flex; align-items:center; gap:6px; padding:5px 11px; border-radius:99px; background:var(--indigo-50); color:var(--indigo-600); font-size:11.5px; font-weight:700; }
+  .icon-btn{ width:36px; height:36px; border-radius:9px; background:transparent; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-600); flex-shrink:0; }
+  .icon-btn:hover{ background:var(--bg); }
+  .lang-toggle, .theme-toggle{ height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:700; color:var(--text-600); }
+  .topbar-right{ display:flex; align-items:center; gap:10px; margin-inline-start:auto; }
+
+  .content{ padding:24px 28px 60px; max-width:1440px; }
+  .breadcrumb{ font-size:12.5px; color:var(--text-400); margin-bottom:8px; }
+  .breadcrumb b{ color:var(--text-600); font-weight:600; }
+  .page-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .page-head h1{ font-size:20px; font-weight:800; letter-spacing:-.01em; }
+  .page-head p{ color:var(--text-600); font-size:13.5px; margin-top:3px; }
+  .btn{ display:inline-flex; align-items:center; gap:7px; padding:0 16px; height:38px; border-radius:9px; font-size:13.5px; font-weight:700; }
+  .btn-primary{ background:var(--indigo-600); color:#fff; } .btn-primary:hover{ background:#4338CA; }
+  .btn-outline{ background:var(--surface); border:1px solid var(--border); color:var(--text-600); } .btn-outline:hover{ background:var(--bg); }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); }
+
+  .stat-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:18px; }
+  .stat-card{ padding:18px; }
+  .stat-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+  .stat-icon{ width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .stat-label{ font-size:12.5px; color:var(--text-600); font-weight:600; margin-bottom:6px; }
+  .stat-value{ font-size:24px; font-weight:800; letter-spacing:-.02em; }
+  .stat-delta{ font-size:11.5px; font-weight:700; margin-top:8px; }
+  .stat-delta.up{ color:var(--success-600); } .stat-delta.down{ color:var(--danger-600); }
+  .stat-delta .muted{ color:var(--text-400); font-weight:500; }
+  .icon-blue{ background:#EAF1FF; color:#2563EB; } .icon-green{ background:var(--success-50); color:var(--success-600); }
+  .icon-purple{ background:#F1EAFE; color:#7C3AED; } .icon-amber{ background:var(--warning-50); color:var(--warning-600); }
+
+  .grid-mid{ display:grid; grid-template-columns:1.6fr 1fr; gap:16px; margin-bottom:18px; align-items:stretch; }
+  @media (max-width:1100px){ .grid-mid{ grid-template-columns:1fr; } }
+  .panel{ padding:18px; }
+  .panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .panel-head h3{ font-size:14.5px; font-weight:700; }
+
+  .plan-dist{ display:flex; flex-direction:column; gap:14px; }
+  .plan-row{ display:flex; align-items:center; gap:12px; }
+  .plan-name{ width:90px; font-size:12.5px; font-weight:700; flex-shrink:0; }
+  .plan-bar{ flex:1; height:9px; border-radius:99px; background:var(--border); overflow:hidden; }
+  .plan-bar > div{ height:100%; border-radius:99px; }
+  .plan-count{ width:36px; text-align:end; font-size:12.5px; font-weight:700; color:var(--text-600); }
+
+  .toolbar{ display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .search-box{ position:relative; flex:1; min-width:220px; max-width:320px; }
+  .search-box input{ width:100%; height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 14px 0 36px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
+  html[dir="rtl"] .search-box input{ padding:0 36px 0 14px; }
+  .search-box svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-400); }
+  html[dir="rtl"] .search-box svg{ left:auto; right:11px; }
+  .filter-chip{ display:flex; align-items:center; gap:6px; height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:13px; font-weight:600; color:var(--text-600); }
+  .filter-chip.on{ background:var(--indigo-50); border-color:var(--indigo-600); color:var(--indigo-600); }
+
+  table{ width:100%; border-collapse:collapse; }
+  thead th{ text-align:start; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--text-400); padding:12px 18px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  tbody td{ padding:13px 18px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--bg); }
+  .school-cell{ display:flex; align-items:center; gap:11px; }
+  .school-logo{ width:36px; height:36px; border-radius:9px; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
+  .school-name{ font-weight:700; } .school-sub{ font-size:11.5px; color:var(--text-400); }
+  .badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:11.5px; font-weight:700; }
+  .badge-success{ background:var(--success-50); color:var(--success-600); }
+  .badge-warning{ background:var(--warning-50); color:var(--warning-600); }
+  .badge-danger{ background:var(--danger-50); color:var(--danger-600); }
+  .badge-indigo{ background:var(--indigo-50); color:var(--indigo-600); }
+  .badge-slate{ background:var(--slate-50); color:var(--slate-600); }
+  .row-actions{ display:flex; align-items:center; gap:4px; }
+  .icon-btn-sm{ width:28px; height:28px; border-radius:7px; border:1px solid transparent; background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-400); }
+  .icon-btn-sm:hover{ background:var(--bg); color:var(--text-900); border-color:var(--border); }
+
+  .pagination{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; font-size:12.5px; color:var(--text-600); flex-wrap:wrap; gap:10px; }
+  .page-btns{ display:flex; align-items:center; gap:4px; }
+  .page-btn{ width:30px; height:30px; border-radius:7px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:600; color:var(--text-600); }
+  .page-btn.active{ background:var(--indigo-600); border-color:var(--indigo-600); color:#fff; }
+
+  .overlay{ position:fixed; inset:0; background:rgba(11,18,32,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .overlay.show{ display:flex; }
+  .modal{ background:var(--surface); border-radius:var(--radius-lg); width:100%; max-width:480px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-md); }
+  .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); }
+  .modal-head h3{ font-size:15.5px; font-weight:700; }
+  .modal-body{ padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .field label{ font-size:12.5px; font-weight:700; color:var(--text-600); display:block; margin-bottom:6px; }
+  .field input, .field select{ width:100%; height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 12px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
+  .field input:focus, .field select:focus{ outline:2px solid var(--indigo-500); outline-offset:1px; background:var(--surface); }
+  .field .err{ font-size:11px; color:var(--danger-600); display:none; margin-top:5px; }
+  .field.invalid input{ border-color:var(--danger-600); }
+  .field.invalid .err{ display:block; }
+  .modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 20px; border-top:1px solid var(--border); }
+
+  .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; }
+  .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); }
+
+  @media (max-width:900px){ .stat-strip{ grid-template-columns:1fr 1fr; } table{ min-width:760px; } .card{ overflow-x:auto; } }
+  @media (max-width:760px){ .sidebar{ display:none; } .content{ padding:16px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">E</div><div class="brand-text">EduSuite<span>Platform Admin</span></div></div>
+    <nav class="nav" id="navList"></nav>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">PA</div>
+      <div class="footer-meta"><div class="name" data-en="Rakan Al-Otaibi" data-ar="راكان العتيبي">Rakan Al-Otaibi</div><div class="role" data-en="Super Admin" data-ar="مدير المنصة">Super Admin</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
+      <div class="platform-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg><span data-en="Platform Level" data-ar="مستوى المنصة">Platform Level</span></div>
+      <div class="topbar-right">
+        <button class="lang-toggle" id="langToggle">العربية</button>
+        <button class="theme-toggle" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
+        <div class="avatar-sm" style="width:32px;height:32px;">PA</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb"><b data-en="Platform Dashboard" data-ar="لوحة تحكم المنصة">Platform Dashboard</b></div>
+      <div class="page-head">
+        <div>
+          <h1 data-en="Welcome back, Rakan 👋" data-ar="أهلاً بعودتك، راكان 👋">Welcome back, Rakan 👋</h1>
+          <p data-en="Here's how EduSuite is performing across all schools." data-ar="إليك أداء منصة EduSuite عبر جميع المدارس.">Here's how EduSuite is performing across all schools.</p>
+        </div>
+        <button class="btn btn-primary" id="addSchoolBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Add School" data-ar="إضافة مدرسة">Add School</span></button>
+      </div>
+
+      <div class="stat-strip">
+        <div class="card stat-card">
+          <div class="stat-top"><div><div class="stat-label" data-en="Total Schools" data-ar="إجمالي المدارس">Total Schools</div><div class="stat-value">1,248</div></div><div class="stat-icon icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></div></div>
+          <div class="stat-delta up">↑ 6.2% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-top"><div><div class="stat-label" data-en="Monthly Recurring Revenue" data-ar="الإيرادات المتكررة الشهرية">Monthly Recurring Revenue</div><div class="stat-value">$186.4K</div></div><div class="stat-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div>
+          <div class="stat-delta up">↑ 11.4% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-top"><div><div class="stat-label" data-en="Active Subscriptions" data-ar="الاشتراكات النشطة">Active Subscriptions</div><div class="stat-value">1,102</div></div><div class="stat-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div></div>
+          <div class="stat-delta up">↑ 3.8% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-top"><div><div class="stat-label" data-en="Churn Rate" data-ar="نسبة التسرب">Churn Rate</div><div class="stat-value">1.8%</div></div><div class="stat-icon icon-amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div></div>
+          <div class="stat-delta down">↓ 0.3% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+        </div>
+      </div>
+
+      <div class="grid-mid">
+        <div class="card panel">
+          <div class="panel-head">
+            <h3 data-en="Revenue & School Growth" data-ar="نمو الإيرادات والمدارس">Revenue & School Growth</h3>
+            <select style="font-size:12px;font-weight:600;border:1px solid var(--border);border-radius:7px;padding:5px 9px;background:var(--surface);color:var(--text-600);"><option data-en="Last 6 Months" data-ar="آخر 6 أشهر">Last 6 Months</option></select>
+          </div>
+          <canvas id="growthChart" height="150"></canvas>
+        </div>
+        <div class="card panel">
+          <div class="panel-head"><h3 data-en="Plan Distribution" data-ar="توزيع الباقات">Plan Distribution</h3></div>
+          <div class="plan-dist">
+            <div class="plan-row"><div class="plan-name" data-en="Starter" data-ar="أساسية">Starter</div><div class="plan-bar"><div style="width:48%;background:#94A0B2;"></div></div><div class="plan-count">598</div></div>
+            <div class="plan-row"><div class="plan-name" data-en="Professional" data-ar="احترافية">Professional</div><div class="plan-bar"><div style="width:38%;background:#4F46E5;"></div></div><div class="plan-count">474</div></div>
+            <div class="plan-row"><div class="plan-name" data-en="Enterprise" data-ar="مؤسسية">Enterprise</div><div class="plan-bar"><div style="width:14%;background:#16A34A;"></div></div><div class="plan-count">176</div></div>
+          </div>
+          <div style="margin-top:22px; padding-top:16px; border-top:1px solid var(--border);">
+            <div class="panel-head" style="margin-bottom:10px;"><h3 style="font-size:13px;" data-en="Trial Accounts" data-ar="الحسابات التجريبية">Trial Accounts</h3></div>
+            <div style="display:flex; align-items:baseline; gap:8px;">
+              <span style="font-size:22px;font-weight:800;">64</span>
+              <span style="font-size:12px;color:var(--text-400);" data-en="schools in trial period" data-ar="مدرسة في الفترة التجريبية">schools in trial period</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="searchInput" data-ph-en="Search schools…" data-ph-ar="ابحث عن مدرسة…" placeholder="Search schools…">
+          </div>
+          <button class="filter-chip on" data-f="all" data-en="All" data-ar="الكل">All</button>
+          <button class="filter-chip" data-f="active" data-en="Active" data-ar="نشط">Active</button>
+          <button class="filter-chip" data-f="trial" data-en="Trial" data-ar="تجريبي">Trial</button>
+          <button class="filter-chip" data-f="overdue" data-en="Overdue" data-ar="متأخر">Overdue</button>
+        </div>
+        <table>
+          <thead><tr>
+            <th data-en="School" data-ar="المدرسة">School</th>
+            <th data-en="Plan" data-ar="الباقة">Plan</th>
+            <th data-en="Students" data-ar="الطلاب">Students</th>
+            <th data-en="MRR" data-ar="الإيراد الشهري">MRR</th>
+            <th data-en="Status" data-ar="الحالة">Status</th>
+            <th></th>
+          </tr></thead>
+          <tbody id="schoolBody"></tbody>
+        </table>
+        <div class="pagination">
+          <span data-en="Showing 1–8 of 1,248 schools" data-ar="عرض 1–8 من أصل 1,248 مدرسة">Showing 1–8 of 1,248 schools</span>
+          <div class="page-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">›</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 data-en="Add New School" data-ar="إضافة مدرسة جديدة">Add New School</h3>
+      <button class="icon-btn" id="closeModal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form id="schoolForm">
+      <div class="modal-body">
+        <div class="field" id="f-name">
+          <label data-en="School Name" data-ar="اسم المدرسة">School Name</label>
+          <input type="text" id="schoolName" data-ph-en="e.g. Jeddah Modern Academy" data-ph-ar="مثال: أكاديمية جدة الحديثة" placeholder="e.g. Jeddah Modern Academy">
+          <span class="err" data-en="School name is required" data-ar="اسم المدرسة مطلوب">School name is required</span>
+        </div>
+        <div class="field" id="f-email">
+          <label data-en="Admin Email" data-ar="بريد المسؤول">Admin Email</label>
+          <input type="email" id="schoolEmail" data-ph-en="admin@school.com" data-ph-ar="admin@school.com" placeholder="admin@school.com">
+          <span class="err" data-en="Enter a valid email address" data-ar="أدخل بريدًا إلكترونيًا صحيحًا">Enter a valid email address</span>
+        </div>
+        <div class="field">
+          <label data-en="Plan" data-ar="الباقة">Plan</label>
+          <select><option data-en="Starter" data-ar="أساسية">Starter</option><option data-en="Professional" data-ar="احترافية">Professional</option><option data-en="Enterprise" data-ar="مؤسسية">Enterprise</option></select>
+        </div>
+        <div class="field">
+          <label data-en="Billing Cycle" data-ar="دورة الفوترة">Billing Cycle</label>
+          <select><option data-en="Monthly" data-ar="شهري">Monthly</option><option data-en="Annual (save 20%)" data-ar="سنوي (وفّر 20%)">Annual (save 20%)</option></select>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" id="cancelModal" data-en="Cancel" data-ar="إلغاء">Cancel</button>
+        <button type="submit" class="btn btn-primary" data-en="Create School" data-ar="إنشاء المدرسة">Create School</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const state = { lang:'en', theme:'light' };
+
+const navSections = [
+  { g:{en:'Platform',ar:'المنصة'}, items:[
+    {en:'Dashboard',ar:'لوحة التحكم', active:true, icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'},
+    {en:'Schools',ar:'المدارس', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
+    {en:'Platform Analytics',ar:'تحليلات المنصة', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
+  ]},
+  { g:{en:'Billing',ar:'الفوترة'}, items:[
+    {en:'Subscriptions',ar:'الاشتراكات', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
+    {en:'Plans',ar:'الباقات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
+    {en:'Billing History',ar:'سجل الفوترة', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'},
+  ]},
+  { g:{en:'Management',ar:'الإدارة'}, items:[
+    {en:'Platform Users',ar:'مستخدمو المنصة', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+    {en:'Support Tickets',ar:'تذاكر الدعم', icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'},
+    {en:'System Logs',ar:'سجلات النظام', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
+    {en:'Platform Settings',ar:'إعدادات المنصة', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
+  ]},
+];
+const navList = document.getElementById('navList');
+navSections.forEach(sec=>{
+  const t = document.createElement('div'); t.className='nav-section-title'; t.setAttribute('data-en',sec.g.en); t.setAttribute('data-ar',sec.g.ar); t.textContent=sec.g.en; navList.appendChild(t);
+  sec.items.forEach(it=>{
+    const a = document.createElement('a'); a.href='#'; a.className='nav-item'+(it.active?' active':'');
+    a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
+    navList.appendChild(a);
+  });
+});
+
+const schools = [
+  { en:'Riyadh International School', ar:'مدرسة الرياض العالمية', students:1245, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'active', color:'#4F46E5' },
+  { en:'Jeddah Modern Academy', ar:'أكاديمية جدة الحديثة', students:860, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#16A34A' },
+  { en:'Dammam Future School', ar:'مدرسة الدمام المستقبلية', students:312, plan:'Starter', planAr:'أساسية', mrr:99, status:'trial', color:'#D97706' },
+  { en:'Al-Noor Private School', ar:'مدرسة النور الأهلية', students:1580, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'overdue', color:'#DC2626' },
+  { en:'Makkah Excellence Academy', ar:'أكاديمية مكة للتميز', students:640, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#2563EB' },
+  { en:'Taif Horizon School', ar:'مدرسة آفاق الطائف', students:205, plan:'Starter', planAr:'أساسية', mrr:99, status:'trial', color:'#7C3AED' },
+  { en:'Abha Green Valley School', ar:'مدرسة الوادي الأخضر بأبها', students:940, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#0EA5E9' },
+  { en:'Medina Legacy Academy', ar:'أكاديمية المدينة للتراث', students:1120, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'active', color:'#16A34A' },
+];
+const statusMeta = { active:{en:'Active',ar:'نشط',cls:'badge-success'}, trial:{en:'Trial',ar:'تجريبي',cls:'badge-indigo'}, overdue:{en:'Overdue',ar:'متأخر',cls:'badge-danger'} };
+
+function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+const tbody = document.getElementById('schoolBody');
+function renderSchools(filter){
+  tbody.innerHTML = '';
+  schools.filter(s=> filter==='all' || s.status===filter).forEach(s=>{
+    const sm = statusMeta[s.status];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="school-cell">
+          <div class="school-logo" style="background:${s.color}">${initials(s.en)}</div>
+          <div><div class="school-name" data-en="${s.en}" data-ar="${s.ar}">${s.en}</div><div class="school-sub" data-en="${s.students} students" data-ar="${s.students} طالب">${s.students} students</div></div>
+        </div>
+      </td>
+      <td><span class="badge badge-slate" data-en="${s.plan}" data-ar="${s.planAr}">${s.plan}</span></td>
+      <td>${s.students.toLocaleString()}</td>
+      <td style="font-weight:700;">$${s.mrr}<span style="color:var(--text-400);font-weight:500;">/mo</span></td>
+      <td><span class="badge ${sm.cls}" data-en="${sm.en}" data-ar="${sm.ar}">${sm.en}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn-sm" title="View"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="icon-btn-sm" title="Billing"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></button>
+          <button class="icon-btn-sm" title="Suspend" style="color:var(--danger-600)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  applyLang(state.lang);
+}
+renderSchools('all');
+
+document.querySelectorAll('.filter-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+    renderSchools(chip.dataset.f);
+  });
+});
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#schoolBody tr').forEach(tr=>{ tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+});
+
+new Chart(document.getElementById('growthChart'), {
+  type:'line',
+  data:{
+    labels:['Apr','May','Jun','Jul','Aug','Sep'],
+    datasets:[
+      { label:'Schools', data:[980,1040,1090,1150,1200,1248], borderColor:'#4F46E5', backgroundColor:'rgba(79,70,229,.08)', tension:.4, fill:true, pointRadius:0, borderWidth:2, yAxisID:'y' },
+      { label:'MRR ($K)', data:[142,151,160,169,178,186], borderColor:'#16A34A', backgroundColor:'rgba(22,163,74,.06)', tension:.4, fill:true, pointRadius:0, borderWidth:2, yAxisID:'y1' },
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{ legend:{ display:true, position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, font:{size:11} } } },
+    scales:{
+      y:{ position:'left', grid:{color:'rgba(148,160,178,.15)'} },
+      y1:{ position:'right', grid:{display:false} },
+      x:{ grid:{display:false} }
+    }
+  }
+});
+
+const modalOverlay = document.getElementById('modalOverlay');
+document.getElementById('addSchoolBtn').addEventListener('click', ()=> modalOverlay.classList.add('show'));
+document.getElementById('closeModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
+document.getElementById('cancelModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
+modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) modalOverlay.classList.remove('show'); });
+
+document.getElementById('schoolForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const nameField = document.getElementById('f-name');
+  const emailField = document.getElementById('f-email');
+  const name = document.getElementById('schoolName').value.trim();
+  const email = document.getElementById('schoolEmail').value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  nameField.classList.toggle('invalid', !name); if(!name) valid=false;
+  emailField.classList.toggle('invalid', !emailOk); if(!emailOk) valid=false;
+  if(!valid) return;
+  modalOverlay.classList.remove('show');
+  showToast(state.lang==='ar' ? 'تم إنشاء المدرسة بنجاح' : 'School created successfully');
+  e.target.reset();
+});
+
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2800);
+}
+
+function applyLang(lang){
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v = lang==='ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    if(v!==null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el=>{ el.placeholder = lang==='ar' ? el.getAttribute('data-ph-ar') : el.getAttribute('data-ph-en'); });
+  document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
+}
+document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+function applyTheme(theme){
+  state.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
+  btn.setAttribute('data-ar', theme==='dark'?'فاتح':'داكن');
+  btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
+}
+document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+</script>
+</body>
+</html>
