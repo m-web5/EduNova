@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduSuite — Exams & Grading</title>
+<title>EduNova — Exams & Grading</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
+
   :root{
     --navy-900:#0B1220; --navy-800:#0F172A; --navy-700:#1E293B;
     --indigo-600:#4F46E5; --indigo-500:#6366F1; --indigo-50:#EEF0FF;
@@ -19,7 +20,7 @@
     --radius-md:10px; --radius-lg:14px;
     --shadow-sm:0 1px 2px rgba(15,23,42,.04);
     --shadow-md:0 8px 30px rgba(15,23,42,.12);
-    --font-en:'Plus Jakarta Sans', sans-serif; --font-ar:'Tajawal', sans-serif;
+    --font-en:'Merriweather', serif; --font-ar:'Merriweather', 'Tajawal', serif;
   }
   [data-theme="dark"]{
     --surface:#111827; --bg:#0B1220; --border:#1F2937;
@@ -129,7 +130,7 @@
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="brand"><div class="brand-mark">E</div><div class="brand-text">EduSuite<span>School ERP</span></div></div>
+    <a href="edusuite-dashboard.html" class="brand"><div class="brand-mark">E</div><div class="brand-text">EduNova<span>School ERP</span></div></a>
     <nav class="nav" id="navList"></nav>
     <div class="sidebar-footer">
       <div class="avatar-sm">SM</div>
@@ -261,11 +262,20 @@ const navSections = [
     {en:'Settings',ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
   ]},
 ];
+const pageMap = {
+  'Dashboard':'edusuite-dashboard.html',
+  'Students':'edusuite-students.html',
+  'Attendance':'edusuite-attendance.html',
+  'Exams':'edusuite-exams.html',
+  'Fees & Payments':'edusuite-fees.html',
+  'Library':'edusuite-library.html',
+  'Transport':'edusuite-transport.html',
+};
 const navList = document.getElementById('navList');
 navSections.forEach(sec=>{
   const t = document.createElement('div'); t.className='nav-section-title'; t.setAttribute('data-en',sec.g.en); t.setAttribute('data-ar',sec.g.ar); t.textContent=sec.g.en; navList.appendChild(t);
   sec.items.forEach(it=>{
-    const a = document.createElement('a'); a.href='#'; a.className='nav-item'+(it.active?' active':'');
+    const a = document.createElement('a'); a.href = pageMap[it.en] || '#'; a.className='nav-item'+(it.active?' active':'');
     a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
     navList.appendChild(a);
   });
