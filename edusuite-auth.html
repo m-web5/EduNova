@@ -46,8 +46,12 @@
   }
   .brand-panel > *{ position:relative; z-index:1; }
   .brand-row{ display:flex; align-items:center; gap:10px; }
-  .brand-mark{ width:36px; height:36px; border-radius:9px; background:#fff; color:var(--navy-800); display:flex; align-items:center; justify-content:center; font-weight:800; }
-  .brand-row b{ font-size:16px; font-weight:700; }
+  .brand-logo{ position:relative; width:36px; height:36px; border-radius:50%; flex-shrink:0; background:#fff; overflow:hidden; border:2px solid rgba(255,255,255,.35); display:flex; align-items:center; justify-content:center; }
+  .brand-logo img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .brand-logo-fallback{ color:var(--navy-800); font-weight:800; font-size:14px; }
+  .brand-word{ font-size:16px; font-weight:800; letter-spacing:-.03em; line-height:1; font-family:'Merriweather', serif; display:inline-flex; }
+  .brand-word .bw-1{ color:#fff; margin-inline-end:-1px; }
+  .brand-word .bw-2{ color:var(--indigo-500); }
   .brand-quote{ max-width:420px; }
   .brand-quote h2{ font-size:26px; font-weight:800; line-height:1.35; letter-spacing:-.01em; margin-bottom:16px; }
   .brand-quote p{ font-size:13.5px; color:rgba(255,255,255,.65); line-height:1.7; }
@@ -111,7 +115,13 @@
 <body>
 <div class="shell">
   <div class="brand-panel">
-    <a href="index.html" class="brand-row" style="color:inherit;"><div class="brand-mark">E</div><b>EduNova</b></a>
+    <a href="index.html" class="brand-row" style="color:inherit;">
+      <div class="brand-logo" title="EduNova">
+        <img src="can3.jpg" alt="EduNova" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="this.style.display='block'; this.nextElementSibling.style.display='none';">
+        <span class="brand-logo-fallback">E</span>
+      </div>
+      <span class="brand-word"><span class="bw-1">Edu</span><span class="bw-2">Nova</span></span>
+    </a>
     <div class="brand-quote">
       <h2 data-en="One platform for your entire school, from admissions to graduation." data-ar="منصة واحدة لمدرستك بأكملها، من القبول حتى التخرج.">One platform for your entire school, from admissions to graduation.</h2>
       <p data-en="Attendance, grades, fees, and communication — all in one place, built for modern schools." data-ar="الحضور، الدرجات، الرسوم، والتواصل — كل ذلك في مكان واحد، مصمم للمدارس الحديثة.">Attendance, grades, fees, and communication — all in one place, built for modern schools.</p>

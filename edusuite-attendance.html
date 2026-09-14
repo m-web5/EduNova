@@ -37,9 +37,15 @@
 
   .sidebar{ width:248px; flex-shrink:0; background:var(--surface); border-inline-end:1px solid var(--border); display:flex; flex-direction:column; height:100vh; position:sticky; top:0; }
   .brand{ display:flex; align-items:center; gap:10px; padding:20px 18px; border-bottom:1px solid var(--border); }
-  .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--navy-800); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; flex-shrink:0; }
+  .brand-logo{ position:relative; width:34px; height:34px; border-radius:50%; flex-shrink:0; background:var(--navy-800); overflow:hidden; border:2px solid var(--indigo-50); display:flex; align-items:center; justify-content:center; }
+  .brand-logo img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .brand-logo-fallback{ color:#fff; font-weight:800; font-size:13px; }
   .brand-text{ font-weight:700; font-size:15px; letter-spacing:-.01em; }
   .brand-text span{ display:block; font-size:11px; font-weight:500; color:var(--text-400); }
+  .brand-text .brand-word{ display:inline-flex; font-size:15px; font-weight:800; letter-spacing:-.03em; line-height:1; font-family:'Merriweather', serif; }
+  .brand-text .brand-word span{ display:inline; font-size:inherit; font-weight:inherit; color:inherit; }
+  .brand-text .brand-word .bw-1{ color:var(--navy-900); margin-inline-end:-1px; }
+  .brand-text .brand-word .bw-2{ color:var(--indigo-600); }
   .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
   .nav-section-title{ font-size:11px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.04em; padding:14px 10px 6px; }
   .nav-item{ display:flex; align-items:center; gap:11px; padding:9px 11px; border-radius:9px; color:var(--text-600); font-size:13.5px; font-weight:500; margin-bottom:1px; white-space:nowrap; }
@@ -136,11 +142,12 @@
 <body>
 <div class="app">
   <aside class="sidebar">
-    <a href="edusuite-dashboard.html" class="brand"><div class="brand-mark">E</div><div class="brand-text">EduNova<span>School ERP</span></div></a>
+    <a href="edusuite-dashboard.html" class="brand"><div class="brand-logo" title="EduNova"><img src="can3.jpg" alt="EduNova" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="this.style.display='block'; this.nextElementSibling.style.display='none';"><span class="brand-logo-fallback">E</span></div><div class="brand-text"><span class="brand-word"><span class="bw-1">Edu</span><span class="bw-2">Nova</span></span><span>School ERP</span></div></a>
     <nav class="nav" id="navList"></nav>
     <div class="sidebar-footer">
       <div class="avatar-sm">SM</div>
       <div class="footer-meta"><div class="name" data-en="Sara Al-Mutairi" data-ar="سارة المطيري">Sara Al-Mutairi</div><div class="role" data-en="School Admin" data-ar="مدير المدرسة">School Admin</div></div>
+      <a href="edusuite-auth.html" class="icon-btn" title="Sign out" aria-label="Sign out" style="margin-inline-start:auto;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></a>
     </div>
   </aside>
 
