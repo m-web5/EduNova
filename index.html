@@ -567,7 +567,7 @@ roles.forEach((r,i)=>{
   const card = document.createElement('div');
   card.className = 'role-card reveal';
   card.style.transitionDelay = (i*0.08)+'s';
-  card.innerHTML = `<div class="role-avatar" style="background:${r.color}"><img id="${r.id}" src="images/${r.id}.jpg" alt="${r.en}"></div>
+  card.innerHTML = `<div class="role-avatar" style="background:${r.color}"><img id="${r.id}" src="${r.id}.jpg" alt="${r.en}"></div>
     <h4 data-en="${r.en}" data-ar="${r.ar}">${r.en}</h4>
     <p data-en="${r.enD}" data-ar="${r.arD}">${r.enD}</p>`;
   rolesGrid.appendChild(card);
