@@ -148,6 +148,41 @@
   .float-badge .dot{ width:9px; height:9px; border-radius:50%; background:var(--success-600); }
   @media (max-width:600px){ .float-badge{ display:none; } }
 
+  /* ---- LIVELY BACKGROUND BLOBS (hero) ---- */
+  .blob{ position:absolute; border-radius:50%; filter:blur(60px); z-index:0; opacity:.55; pointer-events:none; }
+  .blob-1{ width:360px; height:360px; top:-120px; inset-inline-start:-80px; background:radial-gradient(circle, rgba(99,102,241,.55), transparent 70%); animation:blobFloat 13s ease-in-out infinite; }
+  .blob-2{ width:280px; height:280px; bottom:-100px; inset-inline-end:8%; background:radial-gradient(circle, rgba(22,163,74,.35), transparent 70%); animation:blobFloat 16s ease-in-out infinite reverse; }
+  .blob-3{ width:220px; height:220px; top:40%; inset-inline-start:45%; background:radial-gradient(circle, rgba(217,119,6,.28), transparent 70%); animation:blobFloat 19s ease-in-out infinite; }
+  @keyframes blobFloat{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    33%{ transform:translate(24px,-18px) scale(1.08); }
+    66%{ transform:translate(-18px,14px) scale(.94); }
+  }
+  @media (prefers-reduced-motion: reduce){ .blob{ animation:none !important; } }
+  @media (max-width:600px){ .blob{ opacity:.35; filter:blur(40px); } }
+
+  /* ---- CURSOR-GLOW HOVER (feature / price / testimonial cards) ---- */
+  .feature-card, .price-card, .testimonial-card{ position:relative; overflow:hidden; }
+  .feature-card::before, .price-card::before, .testimonial-card::before{
+    content:''; position:absolute; inset:0; border-radius:inherit; opacity:0; pointer-events:none; z-index:0;
+    background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(79,70,229,.14), transparent 70%);
+    transition:opacity .35s ease;
+  }
+  .feature-card:hover::before, .price-card:hover::before, .testimonial-card:hover::before{ opacity:1; }
+  .feature-card > *, .price-card > *, .testimonial-card > *{ position:relative; z-index:1; }
+  .feature-icon{ transition:transform .4s var(--ease-premium, ease), background .3s ease; }
+  .feature-card:hover .feature-icon{ transform:rotate(-8deg) scale(1.08); background:var(--indigo-600); color:#fff; }
+
+  /* ---- BUTTON MICRO-INTERACTIONS ---- */
+  .btn, .mini-btn, .btn-ghost{ transition:transform .18s ease, background .2s ease, box-shadow .2s ease, filter .2s ease; }
+  .btn:active, .mini-btn:active{ transform:scale(.96); }
+  .btn-primary{ box-shadow:0 8px 20px -6px rgba(79,70,229,.55); }
+  .btn-primary:hover{ box-shadow:0 10px 26px -6px rgba(79,70,229,.7); transform:translateY(-1px); }
+  .btn-white:hover, .btn-outline-white:hover{ transform:translateY(-1px); filter:brightness(1.04); }
+
+  /* ---- ANIMATED COUNTER NUMBERS ---- */
+  .trust-row .stat b{ font-variant-numeric:tabular-nums; }
+
   .logos{ padding:34px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
   .logos p{ text-align:center; font-size:12px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.06em; margin-bottom:20px; }
   .logos-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; opacity:.55; font-weight:800; font-size:15px; color:var(--text-600); }
@@ -180,8 +215,8 @@
   .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
   @media (max-width:900px){ .feature-grid{ grid-template-columns:1fr 1fr; } }
   @media (max-width:600px){ .feature-grid{ grid-template-columns:1fr; } }
-  .feature-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:box-shadow .2s ease, transform .2s ease; }
-  .feature-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-3px); }
+  .feature-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:box-shadow .35s var(--ease-premium), transform .35s var(--ease-premium); }
+  .feature-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px) scale(1.01); }
   .feature-icon{ width:42px; height:42px; border-radius:11px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
   .feature-card h3{ font-size:15.5px; font-weight:700; margin-bottom:8px; }
   .feature-card p{ font-size:13px; color:var(--text-600); }
@@ -189,7 +224,8 @@
   /* ---- ROLES ---- */
   .roles-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
   @media (max-width:900px){ .roles-grid{ grid-template-columns:1fr 1fr; } }
-  .role-card{ text-align:center; padding:26px 18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); }
+  .role-card{ text-align:center; padding:26px 18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); transition:box-shadow .35s var(--ease-premium), transform .35s var(--ease-premium); }
+  .role-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px) scale(1.01); }
   .role-avatar{ width:52px; height:52px; border-radius:14px; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; color:#fff; overflow:hidden; }
   .role-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
   .role-card h4{ font-size:14.5px; font-weight:700; margin-bottom:5px; }
@@ -198,7 +234,8 @@
   /* ---- PRICING ---- */
   .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; align-items:stretch; }
   @media (max-width:900px){ .pricing-grid{ grid-template-columns:1fr; } }
-  .price-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; display:flex; flex-direction:column; }
+  .price-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; display:flex; flex-direction:column; transition:box-shadow .35s var(--ease-premium), transform .35s var(--ease-premium); }
+  .price-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px) scale(1.01); }
   .price-card.featured{ border-color:var(--indigo-600); box-shadow:var(--shadow-md); position:relative; }
   .price-badge{ position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--indigo-600); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:99px; }
   .price-card h3{ font-size:16px; font-weight:700; margin-bottom:4px; }
@@ -208,6 +245,18 @@
   .price-features{ list-style:none; margin:20px 0 24px; display:flex; flex-direction:column; gap:10px; flex:1; }
   .price-features li{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--text-600); }
   .price-features svg{ color:var(--success-600); flex-shrink:0; }
+
+  /* ---- TESTIMONIALS ---- */
+  .testimonials-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  @media (max-width:900px){ .testimonials-grid{ grid-template-columns:1fr; } }
+  .testimonial-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:26px; transition:box-shadow .35s var(--ease-premium,ease), transform .35s var(--ease-premium,ease); }
+  .testimonial-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px) scale(1.01); }
+  .testimonial-stars{ display:flex; gap:2px; color:#F59E0B; margin-bottom:14px; }
+  .testimonial-quote{ font-size:14px; color:var(--text-600); line-height:1.85; margin-bottom:20px; }
+  .testimonial-person{ display:flex; align-items:center; gap:11px; }
+  .testimonial-avatar{ width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; flex-shrink:0; }
+  .testimonial-name{ font-size:13.5px; font-weight:700; }
+  .testimonial-role{ font-size:12px; color:var(--text-400); }
 
   /* ---- CTA ---- */
   .cta-band{ background:var(--navy-800); color:#fff; border-radius:24px; padding:56px 40px; text-align:center; position:relative; overflow:hidden; }
@@ -268,16 +317,60 @@
   .hero .trust-divider{ background:rgba(255,255,255,.3); }
   .hero .btn:not(.btn-primary){ background:rgba(255,255,255,.92)!important; }
 
-  /* ---- SCROLL REVEAL ---- */
+  /* ---- MOTION SYSTEM ---- */
+  :root{ --ease-premium: cubic-bezier(0.22, 1, 0.36, 1); }
+
+  /* Tier 1 — generic blocks & cards: fade + rise + slight scale + soft blur */
   .reveal{
-    opacity:0; transform:translateY(56px);
-    transition:opacity 1.1s cubic-bezier(.16,.84,.44,1), transform 1.1s cubic-bezier(.16,.84,.44,1);
+    opacity:0; transform:translateY(40px) scale(.97); filter:blur(4px);
+    transition:opacity .8s var(--ease-premium), transform .8s var(--ease-premium), filter .8s var(--ease-premium);
+    will-change:opacity, transform, filter;
+  }
+  .reveal.visible{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+
+  /* Tier 2 — headings, paragraphs, small UI rows: quick, light, no blur/scale */
+  .reveal-soft{
+    opacity:0; transform:translateY(22px);
+    transition:opacity .55s var(--ease-premium), transform .55s var(--ease-premium);
     will-change:opacity, transform;
   }
-  .reveal.visible{ opacity:1; transform:translateY(0); }
+  .reveal-soft.visible{ opacity:1; transform:translateY(0); }
+
+  /* Tier 3 — imagery: slightly smaller + softer blur, settles into place */
+  .reveal-img{
+    opacity:0; transform:translateY(30px) scale(.96); filter:blur(6px);
+    transition:opacity .9s var(--ease-premium), transform .9s var(--ease-premium), filter .9s var(--ease-premium);
+    will-change:opacity, transform, filter;
+  }
+  .reveal-img.visible{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+
+  /* Mobile: lighter — drop blur/scale, keep a simple rise */
+  @media (max-width:768px){
+    .reveal, .reveal-img{ filter:none !important; transform:translateY(20px) !important; }
+    .reveal.visible, .reveal-img.visible{ transform:translateY(0) !important; }
+  }
+
+  /* Respect reduced-motion preference: show content immediately, no motion */
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .reveal-soft, .reveal-img{
+      opacity:1 !important; transform:none !important; filter:none !important; transition:none !important;
+    }
+    .hero-bg-img, .roles-bg-img{ transform:none !important; }
+  }
+
+  /* ---- SCROLL PROGRESS INDICATOR ---- */
+  .scroll-progress{
+    position:fixed; top:0; inset-inline-start:0; height:2.5px; width:0%;
+    background:var(--indigo-600); z-index:70; transition:width .1s linear;
+  }
+
+  /* ---- Parallax-ready background layers ---- */
+  .hero-bg-img, .roles-bg-img{ will-change:transform; }
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
 
 <nav class="nav">
   <div class="wrap nav-inner">
@@ -312,28 +405,31 @@
 <header class="hero">
   <div class="hero-bg-img" style="background-image:url('can1.jpg');"></div>
   <div class="hero-overlay"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
   <div class="wrap hero-inner" style="grid-template-columns:1fr; max-width:640px;">
     <div>
-      <div class="eyebrow reveal"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg><span data-en="Built for modern schools" data-ar="مصممة للمدارس الحديثة">Built for modern schools</span></div>
-      <h1 class="reveal" style="transition-delay:.08s" data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></h1>
-      <p class="reveal" style="transition-delay:.16s" data-en="Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents." data-ar="الحضور، الدرجات، الرسوم، الجداول، والتواصل — كل ذلك في نظام واحد مترابط، مصمم للإداريين والمعلمين والطلاب وأولياء الأمور.">Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents.</p>
-      <div class="hero-ctas reveal" style="transition-delay:.24s">
+      <div class="eyebrow reveal-soft"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg><span data-en="Built for modern schools" data-ar="مصممة للمدارس الحديثة">Built for modern schools</span></div>
+      <h1 class="reveal-soft" style="transition-delay:.08s" data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></h1>
+      <p class="reveal-soft" style="transition-delay:.16s" data-en="Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents." data-ar="الحضور، الدرجات، الرسوم، الجداول، والتواصل — كل ذلك في نظام واحد مترابط، مصمم للإداريين والمعلمين والطلاب وأولياء الأمور.">Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents.</p>
+      <div class="hero-ctas reveal-soft" style="transition-delay:.24s">
         <a href="#" class="btn btn-primary" data-en="Start Free Trial" data-ar="ابدأ تجربة مجانية">Start Free Trial</a>
         <a href="#" class="btn" style="background:var(--surface);border:1px solid var(--border);color:var(--text-900);" data-en="Book a Demo" data-ar="احجز عرضًا توضيحيًا">Book a Demo</a>
       </div>
-      <div class="trust-row reveal" style="transition-delay:.32s">
-        <div class="stat"><b>1,200+</b><span data-en="Schools" data-ar="مدرسة">Schools</span></div>
+      <div class="trust-row reveal-soft" style="transition-delay:.32s">
+        <div class="stat"><b data-count="1200" data-suffix="+" data-decimals="0">0</b><span data-en="Schools" data-ar="مدرسة">Schools</span></div>
         <div class="trust-divider"></div>
-        <div class="stat"><b>340K+</b><span data-en="Students managed" data-ar="طالب تتم إدارتهم">Students managed</span></div>
+        <div class="stat"><b data-count="340" data-suffix="K+" data-decimals="0">0</b><span data-en="Students managed" data-ar="طالب تتم إدارتهم">Students managed</span></div>
         <div class="trust-divider"></div>
-        <div class="stat"><b>99.9%</b><span data-en="Uptime" data-ar="نسبة التشغيل">Uptime</span></div>
+        <div class="stat"><b data-count="99.9" data-suffix="%" data-decimals="1">0</b><span data-en="Uptime" data-ar="نسبة التشغيل">Uptime</span></div>
       </div>
     </div>
   </div>
 </header>
 
 <div class="logos">
-  <div class="wrap">
+  <div class="wrap reveal-soft">
     <p data-en="Trusted by education groups across the region" data-ar="موثوقة من قبل مجموعات تعليمية في المنطقة">Trusted by education groups across the region</p>
     <div class="logos-row">
       <span>Al-Noor Group</span><span>Future Learning</span><span>Horizon Schools</span><span>Legacy Academies</span><span>Green Valley Ed.</span>
@@ -343,7 +439,7 @@
 
 <section class="section" id="features">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal-soft">
       <div class="section-tag" data-en="Features" data-ar="المزايا">Features</div>
       <h2 data-en="Everything your school needs, connected" data-ar="كل ما تحتاجه مدرستك، في مكان واحد">Everything your school needs, connected</h2>
       <p data-en="From daily attendance to financial reports, EduNova replaces spreadsheets and scattered tools with one clean system." data-ar="من الحضور اليومي إلى التقارير المالية، تستبدل EduNova جداول البيانات والأدوات المتفرقة بنظام واحد منظم.">From daily attendance to financial reports, EduNova replaces spreadsheets and scattered tools with one clean system.</p>
@@ -353,10 +449,10 @@
 </section>
 
 <section class="section roles-bg-wrap" id="roles" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="roles-bg-img" style="background-image:url('can2.jpg');"></div>
+  <div class="roles-bg-img" style="background-image:url('can2.jpg');"></div></div>
   <div class="roles-bg-overlay"></div>
   <div class="wrap roles-bg-content">
-    <div class="section-head reveal">
+    <div class="section-head reveal-soft">
       <div class="section-tag" data-en="For Everyone" data-ar="لكل الأدوار">For Everyone</div>
       <h2 data-en="One login, a tailored view for every role" data-ar="تسجيل دخول واحد، وواجهة مخصصة لكل دور">One login, a tailored view for every role</h2>
     </div>
@@ -364,9 +460,20 @@
   </div>
 </section>
 
+<section class="section" id="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal-soft">
+      <div class="section-tag" data-en="Testimonials" data-ar="آراء العملاء">Testimonials</div>
+      <h2 data-en="Trusted by schools across the region" data-ar="موثوقة من مدارس في أنحاء المنطقة">Trusted by schools across the region</h2>
+      <p data-en="Real feedback from the administrators and teachers using EduNova every day." data-ar="آراء حقيقية من الإداريين والمعلمين الذين يستخدمون EduNova يوميًا.">Real feedback from the administrators and teachers using EduNova every day.</p>
+    </div>
+    <div class="testimonials-grid" id="testimonialsGrid"></div>
+  </div>
+</section>
+
 <section class="section" id="pricing">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal-soft">
       <div class="section-tag" data-en="Pricing" data-ar="الأسعار">Pricing</div>
       <h2 data-en="Simple pricing that scales with your school" data-ar="أسعار بسيطة تنمو مع مدرستك">Simple pricing that scales with your school</h2>
       <p data-en="All plans include core academic, attendance, and communication tools." data-ar="جميع الباقات تشمل الأدوات الأساسية للشؤون الأكاديمية والحضور والتواصل.">All plans include core academic, attendance, and communication tools.</p>
@@ -377,25 +484,25 @@
 
 <section class="section" id="story">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal-soft">
       <div class="section-tag" data-en="Why EduNova" data-ar="لماذا EduNova">Why EduNova</div>
       <h2 data-en="Built around how schools actually work" data-ar="مصممة على أساس الطريقة التي تعمل بها المدارس فعليًا">Built around how schools actually work</h2>
     </div>
     <div class="story-block">
-      <p data-en="Most schools don't struggle because they lack tools — they struggle because their tools don't talk to each other. Attendance lives in one spreadsheet, grades in another, fees in a third system entirely, and by the time anyone needs a full picture of a student, half the morning is gone piecing it together." data-ar="لا تعاني معظم المدارس من نقص في الأدوات، بل من كون هذه الأدوات لا تتواصل مع بعضها البعض. الحضور في جدول بيانات، والدرجات في مكان آخر، والرسوم في نظام ثالث تمامًا، وعندما يحتاج أحدهم إلى صورة كاملة عن حالة الطالب يضيع نصف الصباح في تجميع المعلومات.">Most schools don't struggle because they lack tools — they struggle because their tools don't talk to each other. Attendance lives in one spreadsheet, grades in another, fees in a third system entirely, and by the time anyone needs a full picture of a student, half the morning is gone piecing it together.</p>
-      <p data-en="EduNova was designed to close that gap. Every module — attendance, exams, fees, library, transport — reads from the same student record, so a change made by one staff member is instantly visible to everyone else who needs it: teachers, administrators, and parents alike. Nothing is duplicated, and nothing gets lost between departments." data-ar="صُممت EduNova لسد هذه الفجوة. كل وحدة — الحضور، الامتحانات، الرسوم، المكتبة، النقل — تقرأ من نفس سجل الطالب، بحيث يكون أي تعديل يجريه أحد الموظفين مرئيًا فورًا لكل من يحتاجه: المعلمون، الإداريون، وأولياء الأمور على حدٍ سواء. لا يوجد ازدواجية، ولا تضيع أي معلومة بين الأقسام.">EduNova was designed to close that gap. Every module — attendance, exams, fees, library, transport — reads from the same student record, so a change made by one staff member is instantly visible to everyone else who needs it: teachers, administrators, and parents alike. Nothing is duplicated, and nothing gets lost between departments.</p>
-      <p data-en="The result is a platform that feels less like ten different apps stitched together, and more like a single, calm system that grows with the school — from a single campus with a few hundred students, to a multi-branch institution managing thousands." data-ar="والنتيجة منصة لا تشعرك بأنها عشرة تطبيقات مختلفة تم لصقها ببعضها، بل نظام واحد هادئ ينمو مع المدرسة — بدءًا من فرع واحد بضع مئات من الطلاب، وصولًا إلى مؤسسة متعددة الفروع تدير آلاف الطلاب.">The result is a platform that feels less like ten different apps stitched together, and more like a single, calm system that grows with the school — from a single campus with a few hundred students, to a multi-branch institution managing thousands.</p>
+      <p class="reveal-soft" data-en="Most schools don't struggle because they lack tools — they struggle because their tools don't talk to each other. Attendance lives in one spreadsheet, grades in another, fees in a third system entirely, and by the time anyone needs a full picture of a student, half the morning is gone piecing it together." data-ar="لا تعاني معظم المدارس من نقص في الأدوات، بل من كون هذه الأدوات لا تتواصل مع بعضها البعض. الحضور في جدول بيانات، والدرجات في مكان آخر، والرسوم في نظام ثالث تمامًا، وعندما يحتاج أحدهم إلى صورة كاملة عن حالة الطالب يضيع نصف الصباح في تجميع المعلومات.">Most schools don't struggle because they lack tools — they struggle because their tools don't talk to each other. Attendance lives in one spreadsheet, grades in another, fees in a third system entirely, and by the time anyone needs a full picture of a student, half the morning is gone piecing it together.</p>
+      <p class="reveal-soft" style="transition-delay:.08s" data-en="EduNova was designed to close that gap. Every module — attendance, exams, fees, library, transport — reads from the same student record, so a change made by one staff member is instantly visible to everyone else who needs it: teachers, administrators, and parents alike. Nothing is duplicated, and nothing gets lost between departments." data-ar="صُممت EduNova لسد هذه الفجوة. كل وحدة — الحضور، الامتحانات، الرسوم، المكتبة، النقل — تقرأ من نفس سجل الطالب، بحيث يكون أي تعديل يجريه أحد الموظفين مرئيًا فورًا لكل من يحتاجه: المعلمون، الإداريون، وأولياء الأمور على حدٍ سواء. لا يوجد ازدواجية، ولا تضيع أي معلومة بين الأقسام.">EduNova was designed to close that gap. Every module — attendance, exams, fees, library, transport — reads from the same student record, so a change made by one staff member is instantly visible to everyone else who needs it: teachers, administrators, and parents alike. Nothing is duplicated, and nothing gets lost between departments.</p>
+      <p class="reveal-soft" style="transition-delay:.16s" data-en="The result is a platform that feels less like ten different apps stitched together, and more like a single, calm system that grows with the school — from a single campus with a few hundred students, to a multi-branch institution managing thousands." data-ar="والنتيجة منصة لا تشعرك بأنها عشرة تطبيقات مختلفة تم لصقها ببعضها، بل نظام واحد هادئ ينمو مع المدرسة — بدءًا من فرع واحد بضع مئات من الطلاب، وصولًا إلى مؤسسة متعددة الفروع تدير آلاف الطلاب.">The result is a platform that feels less like ten different apps stitched together, and more like a single, calm system that grows with the school — from a single campus with a few hundred students, to a multi-branch institution managing thousands.</p>
     </div>
     <div class="story-columns">
-      <div class="story-col">
+      <div class="story-col reveal">
         <h4 data-en="Built with educators" data-ar="بُنيت مع تربويين">Built with educators</h4>
         <p data-en="Every screen was shaped by feedback from real teachers and school administrators, not designed in isolation." data-ar="كل شاشة تشكلت بناءً على ملاحظات معلمين وإداريي مدارس حقيقيين، وليست مصممة بمعزل عن الواقع.">Every screen was shaped by feedback from real teachers and school administrators, not designed in isolation.</p>
       </div>
-      <div class="story-col">
+      <div class="story-col reveal" style="transition-delay:.08s">
         <h4 data-en="Secure by default" data-ar="آمنة افتراضيًا">Secure by default</h4>
         <p data-en="Role-based access means a teacher, a parent, and an accountant each see only what's relevant to them." data-ar="الصلاحيات المبنية على الدور تعني أن المعلم وولي الأمر والمحاسب يرى كل منهم فقط ما يخصه.">Role-based access means a teacher, a parent, and an accountant each see only what's relevant to them.</p>
       </div>
-      <div class="story-col">
+      <div class="story-col reveal" style="transition-delay:.16s">
         <h4 data-en="Real onboarding support" data-ar="دعم حقيقي للتأسيس">Real onboarding support</h4>
         <p data-en="A dedicated team helps import existing records and trains staff, so the switch takes days, not months." data-ar="فريق مخصص يساعد على استيراد السجلات الحالية وتدريب الموظفين، حتى يستغرق الانتقال أيامًا لا أشهرًا.">A dedicated team helps import existing records and trains staff, so the switch takes days, not months.</p>
       </div>
@@ -405,33 +512,33 @@
 
 <section class="section" id="faq" style="border-top:1px solid var(--border);">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal-soft">
       <div class="section-tag" data-en="FAQ" data-ar="الأسئلة الشائعة">FAQ</div>
       <h2 data-en="Common questions from schools" data-ar="أسئلة شائعة من المدارس">Common questions from schools</h2>
       <p data-en="Can't find what you're looking for? Reach out and our team will walk you through it." data-ar="لم تجد ما تبحث عنه؟ تواصل معنا وسيشرح لك فريقنا كل التفاصيل.">Can't find what you're looking for? Reach out and our team will walk you through it.</p>
     </div>
     <div class="faq-list">
-      <details class="faq-item">
+      <details class="faq-item reveal" style="transition-delay:0.0s">
         <summary data-en="How long does it take to set up EduNova?" data-ar="كم يستغرق تجهيز EduNova؟">How long does it take to set up EduNova?</summary>
         <p data-en="Most single-campus schools are fully live within one to two weeks. Our onboarding team imports your existing student, staff, and fee records, and configures classes and roles alongside you." data-ar="تصبح معظم المدارس ذات الفرع الواحد جاهزة بالكامل خلال أسبوع إلى أسبوعين. يقوم فريق التأسيس لدينا باستيراد سجلات الطلاب والموظفين والرسوم الحالية، وضبط الفصول والصلاحيات معكم خطوة بخطوة.">Most single-campus schools are fully live within one to two weeks. Our onboarding team imports your existing student, staff, and fee records, and configures classes and roles alongside you.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item reveal" style="transition-delay:0.06s">
         <summary data-en="Can we migrate data from our current system or spreadsheets?" data-ar="هل يمكننا نقل بياناتنا من نظامنا الحالي أو من جداول البيانات؟">Can we migrate data from our current system or spreadsheets?</summary>
         <p data-en="Yes. We accept CSV and Excel exports for students, staff, and financial records, and our team validates the data before it goes live to avoid duplicates or mismatches." data-ar="نعم. نستقبل ملفات CSV وExcel الخاصة بالطلاب والموظفين والسجلات المالية، ويتحقق فريقنا من صحة البيانات قبل تفعيلها لتجنب التكرار أو الأخطاء.">Yes. We accept CSV and Excel exports for students, staff, and financial records, and our team validates the data before it goes live to avoid duplicates or mismatches.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item reveal" style="transition-delay:0.12s">
         <summary data-en="Does EduNova support multiple branches or campuses?" data-ar="هل تدعم EduNova عدة فروع أو مقرات؟">Does EduNova support multiple branches or campuses?</summary>
         <p data-en="Yes. Larger institutions can manage several campuses from one account, with separate classes, staff, and fee structures per branch, while administrators keep a unified view across all of them." data-ar="نعم. يمكن للمؤسسات الكبيرة إدارة عدة فروع من حساب واحد، بفصول وموظفين وهياكل رسوم منفصلة لكل فرع، مع احتفاظ الإداريين برؤية موحدة لكل الفروع.">Yes. Larger institutions can manage several campuses from one account, with separate classes, staff, and fee structures per branch, while administrators keep a unified view across all of them.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item reveal" style="transition-delay:0.18s">
         <summary data-en="Do parents get their own access?" data-ar="هل يحصل أولياء الأمور على صلاحية دخول خاصة بهم؟">Do parents get their own access?</summary>
         <p data-en="Every plan includes a parent portal where guardians can view attendance, grades, fee balances, and school announcements for each of their children, without needing to contact the school directly." data-ar="تتضمن كل باقة بوابة خاصة بأولياء الأمور يمكنهم من خلالها متابعة الحضور والدرجات وأرصدة الرسوم وإعلانات المدرسة لكل طفل من أبنائهم، دون الحاجة للتواصل المباشر مع المدرسة.">Every plan includes a parent portal where guardians can view attendance, grades, fee balances, and school announcements for each of their children, without needing to contact the school directly.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item reveal" style="transition-delay:0.24s">
         <summary data-en="Is our school's data kept private and secure?" data-ar="هل تُحفظ بيانات مدرستنا بخصوصية وأمان؟">Is our school's data kept private and secure?</summary>
         <p data-en="Data is encrypted in transit and at rest, access is controlled by role-based permissions, and each school's records are logically isolated from every other school on the platform." data-ar="تُشفَّر البيانات أثناء نقلها وتخزينها، ويُتحكم في الوصول إليها عبر صلاحيات مبنية على الأدوار، وتُعزل سجلات كل مدرسة منطقيًا عن باقي المدارس على المنصة.">Data is encrypted in transit and at rest, access is controlled by role-based permissions, and each school's records are logically isolated from every other school on the platform.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item reveal" style="transition-delay:0.3s">
         <summary data-en="What kind of support is included after launch?" data-ar="ما نوع الدعم المتوفر بعد الإطلاق؟">What kind of support is included after launch?</summary>
         <p data-en="All plans include email and chat support during business hours, with priority response times and a dedicated account manager on the higher-tier plans." data-ar="تشمل جميع الباقات دعمًا عبر البريد الإلكتروني والمحادثة خلال ساعات العمل، مع أولوية في الرد ومدير حساب مخصص في الباقات الأعلى.">All plans include email and chat support during business hours, with priority response times and a dedicated account manager on the higher-tier plans.</p>
       </details>
@@ -442,9 +549,9 @@
 <section class="section">
   <div class="wrap">
     <div class="cta-band">
-      <h2 data-en="Ready to modernize your school?" data-ar="جاهز لتحديث مدرستك؟">Ready to modernize your school?</h2>
-      <p data-en="Join 1,200+ schools already running on EduNova." data-ar="انضم إلى أكثر من 1,200 مدرسة تعمل بالفعل على EduNova.">Join 1,200+ schools already running on EduNova.</p>
-      <div class="cta-btns">
+      <h2 class="reveal-soft" data-en="Ready to modernize your school?" data-ar="جاهز لتحديث مدرستك؟">Ready to modernize your school?</h2>
+      <p class="reveal-soft" style="transition-delay:.08s" data-en="Join 1,200+ schools already running on EduNova." data-ar="انضم إلى أكثر من 1,200 مدرسة تعمل بالفعل على EduNova.">Join 1,200+ schools already running on EduNova.</p>
+      <div class="cta-btns reveal-soft" style="transition-delay:.16s">
         <a href="#" class="btn btn-white" data-en="Start Free Trial" data-ar="ابدأ تجربة مجانية">Start Free Trial</a>
         <a href="#" class="btn btn-outline-white" data-en="Talk to Sales" data-ar="تحدث مع المبيعات">Talk to Sales</a>
       </div>
@@ -573,6 +680,29 @@ roles.forEach((r,i)=>{
   rolesGrid.appendChild(card);
 });
 
+const testimonials = [
+  { initials:'LA', color:'#4F46E5', en:'"EduNova replaced four different spreadsheets overnight. Attendance and fees finally talk to each other, and our staff actually enjoy using it."', ar:'"استبدلت EduNova أربعة جداول بيانات مختلفة بين ليلة وضحاها. الحضور والرسوم أصبحا مترابطين أخيرًا، وموظفونا يستمتعون فعلًا باستخدامها."', name:'Lina Awad', nameAr:'لينا عوض', role:'Principal, Al-Noor Group', roleAr:'مديرة، مجموعة النور' },
+  { initials:'OM', color:'#16A34A', en:'"Setup took less than two weeks, including migrating three years of student records. Support was with us at every step."', ar:'"استغرق التجهيز أقل من أسبوعين، بما في ذلك ترحيل سجلات ثلاث سنوات كاملة. كان فريق الدعم معنا في كل خطوة."', name:'Omar Mansour', nameAr:'عمر منصور', role:'IT Director, Horizon Schools', roleAr:'مدير تقنية المعلومات، مدارس هورايزون' },
+  { initials:'SH', color:'#D97706', en:'"Parents love the portal. We get far fewer phone calls asking about grades or fee balances since everything is visible to them directly."', ar:'"يحب أولياء الأمور البوابة الخاصة بهم. أصبحنا نتلقى مكالمات أقل بكثير للسؤال عن الدرجات أو أرصدة الرسوم لأن كل شيء أصبح مرئيًا لهم مباشرة."', name:'Sara Haddad', nameAr:'سارة حداد', role:'Vice Principal, Legacy Academies', roleAr:'نائبة المدير، أكاديميات ليغاسي' },
+];
+const testimonialsGrid = document.getElementById('testimonialsGrid');
+const starSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>';
+testimonials.forEach((t,i)=>{
+  const card = document.createElement('div');
+  card.className = 'testimonial-card reveal';
+  card.style.transitionDelay = (i*0.08)+'s';
+  card.innerHTML = `<div class="testimonial-stars">${starSvg.repeat(5)}</div>
+    <p class="testimonial-quote" data-en='${t.en}' data-ar='${t.ar}'>${t.en}</p>
+    <div class="testimonial-person">
+      <div class="testimonial-avatar" style="background:${t.color}">${t.initials}</div>
+      <div>
+        <div class="testimonial-name" data-en="${t.name}" data-ar="${t.nameAr}">${t.name}</div>
+        <div class="testimonial-role" data-en="${t.role}" data-ar="${t.roleAr}">${t.role}</div>
+      </div>
+    </div>`;
+  testimonialsGrid.appendChild(card);
+});
+
 const plans = [
   { en:'Starter', ar:'أساسية', enSub:'For small schools', arSub:'للمدارس الصغيرة', price:99, featured:false,
     feats:[ ['Up to 300 students','حتى 300 طالب'], ['Attendance & Grading','الحضور والدرجات'], ['Email support','دعم عبر البريد'] ] },
@@ -622,10 +752,12 @@ document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme
 
 /* ---- Hero / roles backgrounds are static images: can1.jpg, can2.jpg ---- */
 
-/* ---- Scroll reveal: elements rise from bottom to top slowly on scroll ---- */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- Scroll reveal: fade + rise (+ subtle scale/blur for cards & images) on first entry ---- */
 function initScrollReveal(){
-  const revealEls = document.querySelectorAll('.reveal');
-  if(!('IntersectionObserver' in window)){
+  const revealEls = document.querySelectorAll('.reveal, .reveal-soft, .reveal-img');
+  if(prefersReducedMotion || !('IntersectionObserver' in window)){
     revealEls.forEach(el=> el.classList.add('visible'));
     return;
   }
@@ -640,6 +772,100 @@ function initScrollReveal(){
   revealEls.forEach(el=> io.observe(el));
 }
 initScrollReveal();
+
+/* ---- Scroll progress indicator ---- */
+function initScrollProgress(){
+  const bar = document.getElementById('scrollProgress');
+  if(!bar) return;
+  let ticking = false;
+  function update(){
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, { passive:true });
+  update();
+}
+initScrollProgress();
+
+/* ---- Subtle scroll parallax for the hero & roles background photos ---- */
+function initParallax(){
+  if(prefersReducedMotion || window.innerWidth <= 768) return;
+  const layers = [
+    { el: document.querySelector('.hero-bg-img'), speed:.15 },
+    { el: document.querySelector('.roles-bg-img'), speed:.12 },
+  ].filter(l => l.el);
+  if(!layers.length) return;
+  let ticking = false;
+  function update(){
+    layers.forEach(l=>{
+      const rect = l.el.parentElement.getBoundingClientRect();
+      const offset = rect.top * l.speed;
+      l.el.style.transform = `translate3d(0, ${offset}px, 0) scale(1.12)`;
+    });
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, { passive:true });
+  update();
+}
+initParallax();
+
+/* ---- Animated count-up for trust-row numbers ---- */
+function initCounters(){
+  const counters = document.querySelectorAll('[data-count]');
+  if(!counters.length) return;
+  function formatNum(num, decimals){
+    return decimals > 0 ? num.toFixed(decimals) : Math.round(num).toLocaleString('en-US');
+  }
+  function animate(el){
+    const target = parseFloat(el.getAttribute('data-count'));
+    const suffix = el.getAttribute('data-suffix') || '';
+    const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    if(prefersReducedMotion){ el.textContent = formatNum(target, decimals) + suffix; return; }
+    const duration = 1400;
+    const start = performance.now();
+    function tick(now){
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = formatNum(target * eased, decimals) + suffix;
+      if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if(!('IntersectionObserver' in window)){
+    counters.forEach(animate);
+    return;
+  }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        animate(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.6 });
+  counters.forEach(el=> io.observe(el));
+}
+initCounters();
+
+/* ---- Cursor-follow glow on feature / price / testimonial cards ---- */
+function initCardGlow(){
+  if(window.matchMedia('(hover: none)').matches) return;
+  document.querySelectorAll('.feature-card, .price-card, .testimonial-card').forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
+  });
+}
+initCardGlow();
 </script>
 </body>
 </html>
