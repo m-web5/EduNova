@@ -136,6 +136,7 @@
   <div class="form-panel">
     <div class="form-wrap">
       <div class="top-controls">
+        <a href="index.html" class="mini-btn" id="homeLink" data-en="Home" data-ar="الرئيسية" style="display:inline-flex;align-items:center;">Home</a>
         <button class="mini-btn" id="langToggle">العربية</button>
         <button class="mini-btn" id="themeToggle" data-en="Dark" data-ar="داكن">Dark</button>
       </div>
@@ -249,10 +250,11 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
-const state = { lang:'en', theme:'light' };
+const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: localStorage.getItem('edunova-theme') || 'light' };
 
 function applyLang(lang){
   state.lang = lang;
+  localStorage.setItem('edunova-lang', lang);
   document.documentElement.lang = lang;
   document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
   document.querySelectorAll('[data-en]').forEach(el=>{
@@ -266,6 +268,7 @@ document.getElementById('langToggle').addEventListener('click', ()=> applyLang(s
 
 function applyTheme(theme){
   state.theme = theme;
+  localStorage.setItem('edunova-theme', theme);
   document.documentElement.setAttribute('data-theme', theme);
   const btn = document.getElementById('themeToggle');
   btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
@@ -273,6 +276,9 @@ function applyTheme(theme){
   btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
 }
 document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+
+applyTheme(state.theme);
+applyLang(state.lang);
 
 // step switching (login <-> register)
 function showStep(id){

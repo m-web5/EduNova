@@ -250,7 +250,7 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
-const state = { lang:'en', theme:'light' };
+const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: localStorage.getItem('edunova-theme') || 'light' };
 
 const navSections = [
   { g:{en:'Overview',ar:'نظرة عامة'}, items:[{en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'}]},
@@ -284,6 +284,13 @@ navSections.forEach(sec=>{
     a.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${it.icon}"/></svg><span data-en="${it.en}" data-ar="${it.ar}">${it.en}</span>`;
     navList.appendChild(a);
   });
+});
+navList.addEventListener('click', (e)=>{
+  const link = e.target.closest('.nav-item');
+  if(link && link.getAttribute('href') === '#'){
+    e.preventDefault();
+    showToast(state.lang==='ar' ? 'هذا القسم قيد الإعداد — سيتوفر قريبًا' : 'This section is coming soon');
+  }
 });
 
 const vehicles = [
@@ -387,6 +394,7 @@ function showToast(msg){
 
 function applyLang(lang){
   state.lang = lang;
+  localStorage.setItem('edunova-lang', lang);
   document.documentElement.lang = lang;
   document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
   document.querySelectorAll('[data-en]').forEach(el=>{
@@ -400,6 +408,7 @@ document.getElementById('langToggle').addEventListener('click', ()=> applyLang(s
 
 function applyTheme(theme){
   state.theme = theme;
+  localStorage.setItem('edunova-theme', theme);
   document.documentElement.setAttribute('data-theme', theme);
   const btn = document.getElementById('themeToggle');
   btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
@@ -407,6 +416,9 @@ function applyTheme(theme){
   btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
 }
 document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+
+applyTheme(state.theme);
+applyLang(state.lang);
 </script>
 </body>
 </html>

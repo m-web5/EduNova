@@ -648,7 +648,7 @@
   }
 })();
 
-const state = { lang:'en', theme:'light' };
+const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: localStorage.getItem('edunova-theme') || 'light' };
 
 const features = [
   { icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', en:'Smart Attendance', ar:'حضور ذكي', enD:'Mark attendance in seconds with live stats and automatic parent alerts.', arD:'سجّل الحضور خلال ثوانٍ مع إحصائيات حية وتنبيهات تلقائية لأولياء الأمور.' },
@@ -736,6 +736,7 @@ plans.forEach((p,i)=>{
 
 function applyLang(lang){
   state.lang = lang;
+  localStorage.setItem('edunova-lang', lang);
   document.documentElement.lang = lang;
   document.documentElement.dir = lang==='ar' ? 'rtl':'ltr';
   document.querySelectorAll('[data-en]').forEach(el=>{
@@ -748,6 +749,7 @@ document.getElementById('langToggle').addEventListener('click', ()=> applyLang(s
 
 function applyTheme(theme){
   state.theme = theme;
+  localStorage.setItem('edunova-theme', theme);
   document.documentElement.setAttribute('data-theme', theme);
   const btn = document.getElementById('themeToggle');
   btn.setAttribute('data-en', theme==='dark'?'Light':'Dark');
@@ -755,6 +757,9 @@ function applyTheme(theme){
   btn.textContent = state.lang==='ar' ? btn.getAttribute('data-ar') : btn.getAttribute('data-en');
 }
 document.getElementById('themeToggle').addEventListener('click', ()=> applyTheme(state.theme==='light'?'dark':'light'));
+
+applyTheme(state.theme);
+applyLang(state.lang);
 
 /* ---- Hero / roles backgrounds are static images: can1.jpg, can2.jpg ---- */
 

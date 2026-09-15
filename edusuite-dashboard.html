@@ -264,6 +264,8 @@
     .content{ padding:16px; }
     .search-wrap{ display:none; }
   }
+  .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; display:flex; flex-direction:column; gap:8px; }
+  .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); }
 </style>
 </head>
 <body>
@@ -426,8 +428,10 @@
   </div>
 </div>
 
+<div class="toast-wrap" id="toastWrap"></div>
+
 <script>
-const state = { lang: 'en', theme: 'light' };
+const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: localStorage.getItem('edunova-theme') || 'light' };
 
 const navItems = [
   { group:{en:'Overview', ar:'نظرة عامة'}, items:[
@@ -485,6 +489,21 @@ navItems.forEach(section=>{
     navListEl.appendChild(a);
   });
 });
+navListEl.addEventListener('click', (e)=>{
+  const link = e.target.closest('.nav-item');
+  if(link && link.getAttribute('href') === '#'){
+    e.preventDefault();
+    showToast(state.lang==='ar' ? 'هذا القسم قيد الإعداد — سيتوفر قريبًا' : 'This section is coming soon');
+  }
+});
+
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>${msg}</span>`;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2800);
+}
 
 const events = [
   { m:{en:'MAY',ar:'مايو'}, d:'20', en:'Parent Meeting', ar:'اجتماع أولياء الأمور', enT:'May 20 · 10:00 AM', arT:'20 مايو · 10:00 ص' },
@@ -582,6 +601,7 @@ new Chart(feeCtx, {
 // ---- LANG / THEME TOGGLES ----
 function applyLang(lang){
   state.lang = lang;
+  localStorage.setItem('edunova-lang', lang);
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   document.querySelectorAll('[data-en]').forEach(el=>{
@@ -597,6 +617,7 @@ document.getElementById('langToggle').addEventListener('click', ()=> applyLang(s
 
 function applyTheme(theme){
   state.theme = theme;
+  localStorage.setItem('edunova-theme', theme);
   document.documentElement.setAttribute('data-theme', theme);
   const btn = document.getElementById('themeToggle');
   btn.setAttribute('data-en', theme === 'dark' ? 'Light' : 'Dark');
@@ -610,6 +631,9 @@ document.getElementById('sidebarToggle').addEventListener('click', ()=>{
   if(window.innerWidth <= 760){ sb.classList.toggle('mobile-open'); }
   else { sb.classList.toggle('collapsed'); }
 });
+
+applyTheme(state.theme);
+applyLang(state.lang);
 </script>
 </body>
 </html>
