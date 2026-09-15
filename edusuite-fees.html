@@ -45,6 +45,7 @@
   .brand-text .brand-word{ display:inline-flex; font-size:15px; font-weight:800; letter-spacing:-.03em; line-height:1; font-family:'Merriweather', serif; }
   .brand-text .brand-word span{ display:inline; font-size:inherit; font-weight:inherit; color:inherit; }
   .brand-text .brand-word .bw-1{ color:var(--navy-900); margin-inline-end:-1px; }
+  [data-theme="dark"] .brand-text .brand-word .bw-1{ color:#F1F5F9; }
   .brand-text .brand-word .bw-2{ color:var(--indigo-600); }
   .nav{ flex:1; overflow-y:auto; padding:14px 10px; }
   .nav-section-title{ font-size:11px; font-weight:700; color:var(--text-400); text-transform:uppercase; letter-spacing:.04em; padding:14px 10px 6px; }
@@ -422,7 +423,7 @@ document.getElementById('searchInput').addEventListener('input', (e)=>{
 new Chart(document.getElementById('feeChart'), {
   type:'doughnut',
   data:{ datasets:[{ data:[75,21,4], backgroundColor:['#4F46E5','#D97706','#DC2626'], borderWidth:0 }] },
-  options:{ cutout:'72%', plugins:{ legend:{display:false} } }
+  options:{ responsive:false, cutout:'72%', plugins:{ legend:{display:false} } }
 });
 
 const payOverlay = document.getElementById('payOverlay');

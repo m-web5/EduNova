@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduNova — Platform Admin</title>
+<title>EduNova — Plans</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -154,6 +154,21 @@
   @media (max-width:900px){ .stat-strip{ grid-template-columns:1fr 1fr; } table{ min-width:760px; } .card{ overflow-x:auto; } }
   @media (max-width:760px){ .sidebar{ display:none; } .content{ padding:16px; } }
 </style>
+<style>
+  .plan-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
+  @media (max-width:1000px){ .plan-grid{ grid-template-columns:1fr; } }
+  .plan-card{ padding:22px; display:flex; flex-direction:column; gap:14px; position:relative; }
+  .plan-card.featured{ border:2px solid var(--indigo-600); }
+  .plan-card-badge{ position:absolute; top:-11px; inset-inline-start:20px; background:var(--indigo-600); color:#fff; font-size:11px; font-weight:800; padding:3px 10px; border-radius:99px; }
+  .plan-card-name{ font-size:15px; font-weight:800; }
+  .plan-card-price{ font-size:28px; font-weight:800; letter-spacing:-.02em; }
+  .plan-card-price span{ font-size:13px; font-weight:600; color:var(--text-400); }
+  .plan-card-sub{ font-size:12.5px; color:var(--text-600); }
+  .plan-feat-list{ display:flex; flex-direction:column; gap:9px; margin:6px 0; }
+  .plan-feat-list div{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-600); }
+  .plan-feat-list svg{ flex-shrink:0; color:var(--success-600); width:15px; height:15px; }
+  .plan-card-foot{ display:flex; gap:8px; margin-top:auto; padding-top:8px; }
+</style>
 </head>
 <body>
 <div class="app">
@@ -185,85 +200,83 @@
     </div>
 
     <div class="content">
-      <div class="breadcrumb"><b data-en="Platform Dashboard" data-ar="لوحة تحكم المنصة">Platform Dashboard</b></div>
+      <div class="breadcrumb"><b data-en="Plans" data-ar="الباقات">Plans</b></div>
       <div class="page-head">
         <div>
-          <h1 data-en="Welcome back, Rakan 👋" data-ar="أهلاً بعودتك، راكان 👋">Welcome back, Rakan 👋</h1>
-          <p data-en="Here's how EduNova is performing across all schools." data-ar="إليك أداء منصة EduNova عبر جميع المدارس.">Here's how EduNova is performing across all schools.</p>
+          <h1 data-en="Subscription Plans" data-ar="باقات الاشتراك">Subscription Plans</h1>
+          <p data-en="Configure the pricing tiers available to schools on the platform." data-ar="تهيئة فئات التسعير المتاحة للمدارس على المنصة.">Configure the pricing tiers available to schools on the platform.</p>
         </div>
-        <button class="btn btn-primary" id="addSchoolBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Add School" data-ar="إضافة مدرسة">Add School</span></button>
+        <button class="btn btn-primary" id="addPlanBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="New Plan" data-ar="باقة جديدة">New Plan</span></button>
       </div>
 
-      <div class="stat-strip">
-        <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Total Schools" data-ar="إجمالي المدارس">Total Schools</div><div class="stat-value">1,248</div></div><div class="stat-icon icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></div></div>
-          <div class="stat-delta up">↑ 6.2% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
-        </div>
-        <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Monthly Recurring Revenue" data-ar="الإيرادات المتكررة الشهرية">Monthly Recurring Revenue</div><div class="stat-value">$186.4K</div></div><div class="stat-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div>
-          <div class="stat-delta up">↑ 11.4% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
-        </div>
-        <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Active Subscriptions" data-ar="الاشتراكات النشطة">Active Subscriptions</div><div class="stat-value">1,102</div></div><div class="stat-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div></div>
-          <div class="stat-delta up">↑ 3.8% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
-        </div>
-        <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Churn Rate" data-ar="نسبة التسرب">Churn Rate</div><div class="stat-value">1.8%</div></div><div class="stat-icon icon-amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div></div>
-          <div class="stat-delta down">↓ 0.3% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
-        </div>
-      </div>
-
-      <div class="grid-mid">
-        <div class="card panel">
-          <div class="panel-head">
-            <h3 data-en="Revenue & School Growth" data-ar="نمو الإيرادات والمدارس">Revenue & School Growth</h3>
-            <select style="font-size:12px;font-weight:600;border:1px solid var(--border);border-radius:7px;padding:5px 9px;background:var(--surface);color:var(--text-600);"><option data-en="Last 6 Months" data-ar="آخر 6 أشهر">Last 6 Months</option></select>
+      <div class="plan-grid">
+        <div class="card plan-card">
+          
+          <div class="plan-card-name" data-en="Starter" data-ar="أساسية">Starter</div>
+          <div class="plan-card-price">$99<span data-en="/month" data-ar="/شهريًا">/month</span></div>
+          <div class="plan-card-sub" data-en="For small schools just getting started" data-ar="للمدارس الصغيرة التي بدأت للتو">For small schools just getting started</div>
+          <div class="plan-feat-list"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Up to 300 students" data-ar="حتى 300 طالب">Up to 300 students</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Core academic modules" data-ar="الوحدات الأكاديمية الأساسية">Core academic modules</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Email support" data-ar="دعم عبر البريد الإلكتروني">Email support</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="1 GB storage" data-ar="1 جيجابايت تخزين">1 GB storage</span></div></div>
+          <div class="plan-card-foot">
+            <button class="btn btn-outline" style="flex:1;" data-en="Edit" data-ar="تعديل">Edit</button>
+            <button class="btn btn-outline" style="color:var(--text-400);" data-en="Archive" data-ar="أرشفة">Archive</button>
           </div>
-          <canvas id="growthChart" height="150"></canvas>
+          <div style="font-size:11.5px;color:var(--text-400);text-align:center;" data-en="598 active subscribers" data-ar="598 مشترك نشط">598 active subscribers</div>
         </div>
-        <div class="card panel">
-          <div class="panel-head"><h3 data-en="Plan Distribution" data-ar="توزيع الباقات">Plan Distribution</h3></div>
-          <div class="plan-dist">
-            <div class="plan-row"><div class="plan-name" data-en="Starter" data-ar="أساسية">Starter</div><div class="plan-bar"><div style="width:48%;background:#94A0B2;"></div></div><div class="plan-count">598</div></div>
-            <div class="plan-row"><div class="plan-name" data-en="Professional" data-ar="احترافية">Professional</div><div class="plan-bar"><div style="width:38%;background:#4F46E5;"></div></div><div class="plan-count">474</div></div>
-            <div class="plan-row"><div class="plan-name" data-en="Enterprise" data-ar="مؤسسية">Enterprise</div><div class="plan-bar"><div style="width:14%;background:#16A34A;"></div></div><div class="plan-count">176</div></div>
+        <div class="card plan-card featured">
+          <div class="plan-card-badge" data-en="Most Popular" data-ar="الأكثر شيوعًا">Most Popular</div>
+          <div class="plan-card-name" data-en="Professional" data-ar="احترافية">Professional</div>
+          <div class="plan-card-price">$249<span data-en="/month" data-ar="/شهريًا">/month</span></div>
+          <div class="plan-card-sub" data-en="For growing schools that need more power" data-ar="للمدارس المتنامية التي تحتاج إمكانيات أكبر">For growing schools that need more power</div>
+          <div class="plan-feat-list"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Up to 1,500 students" data-ar="حتى 1,500 طالب">Up to 1,500 students</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="All academic + finance modules" data-ar="كل الوحدات الأكاديمية والمالية">All academic + finance modules</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Priority support" data-ar="دعم ذو أولوية">Priority support</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="20 GB storage" data-ar="20 جيجابايت تخزين">20 GB storage</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Custom branding" data-ar="تخصيص الهوية البصرية">Custom branding</span></div></div>
+          <div class="plan-card-foot">
+            <button class="btn btn-outline" style="flex:1;" data-en="Edit" data-ar="تعديل">Edit</button>
+            <button class="btn btn-outline" style="color:var(--text-400);" data-en="Archive" data-ar="أرشفة">Archive</button>
           </div>
-          <div style="margin-top:22px; padding-top:16px; border-top:1px solid var(--border);">
-            <div class="panel-head" style="margin-bottom:10px;"><h3 style="font-size:13px;" data-en="Trial Accounts" data-ar="الحسابات التجريبية">Trial Accounts</h3></div>
-            <div style="display:flex; align-items:baseline; gap:8px;">
-              <span style="font-size:22px;font-weight:800;">64</span>
-              <span style="font-size:12px;color:var(--text-400);" data-en="schools in trial period" data-ar="مدرسة في الفترة التجريبية">schools in trial period</span>
-            </div>
+          <div style="font-size:11.5px;color:var(--text-400);text-align:center;" data-en="474 active subscribers" data-ar="474 مشترك نشط">474 active subscribers</div>
+        </div>
+        <div class="card plan-card">
+          
+          <div class="plan-card-name" data-en="Enterprise" data-ar="مؤسسية">Enterprise</div>
+          <div class="plan-card-price">$499<span data-en="/month" data-ar="/شهريًا">/month</span></div>
+          <div class="plan-card-sub" data-en="For large institutions and multi-campus groups" data-ar="للمؤسسات الكبيرة ومجموعات الحرم المتعدد">For large institutions and multi-campus groups</div>
+          <div class="plan-feat-list"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Unlimited students" data-ar="عدد طلاب غير محدود">Unlimited students</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="All modules + API access" data-ar="كل الوحدات مع الوصول لواجهة برمجية">All modules + API access</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Dedicated account manager" data-ar="مدير حساب مخصص">Dedicated account manager</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="Unlimited storage" data-ar="تخزين غير محدود">Unlimited storage</span></div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span data-en="SLA & advanced security" data-ar="اتفاقية مستوى خدمة وأمان متقدم">SLA & advanced security</span></div></div>
+          <div class="plan-card-foot">
+            <button class="btn btn-outline" style="flex:1;" data-en="Edit" data-ar="تعديل">Edit</button>
+            <button class="btn btn-outline" style="color:var(--text-400);" data-en="Archive" data-ar="أرشفة">Archive</button>
           </div>
+          <div style="font-size:11.5px;color:var(--text-400);text-align:center;" data-en="176 active subscribers" data-ar="176 مشترك نشط">176 active subscribers</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="toolbar">
-          <div class="search-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" data-ph-en="Search schools…" data-ph-ar="ابحث عن مدرسة…" placeholder="Search schools…">
-          </div>
-          <button class="filter-chip on" data-f="all" data-en="All" data-ar="الكل">All</button>
-          <button class="filter-chip" data-f="active" data-en="Active" data-ar="نشط">Active</button>
-          <button class="filter-chip" data-f="trial" data-en="Trial" data-ar="تجريبي">Trial</button>
-          <button class="filter-chip" data-f="overdue" data-en="Overdue" data-ar="متأخر">Overdue</button>
+        <div class="panel" style="padding:18px 18px 0;">
+          <div class="panel-head"><h3 data-en="All Plans" data-ar="كل الباقات">All Plans</h3></div>
         </div>
         <table>
           <thead><tr>
-            <th data-en="School" data-ar="المدرسة">School</th>
             <th data-en="Plan" data-ar="الباقة">Plan</th>
-            <th data-en="Students" data-ar="الطلاب">Students</th>
-            <th data-en="MRR" data-ar="الإيراد الشهري">MRR</th>
+            <th data-en="Price" data-ar="السعر">Price</th>
+            <th data-en="Subscribers" data-ar="المشتركون">Subscribers</th>
+            <th data-en="MRR Contribution" data-ar="مساهمة الإيراد الشهري">MRR Contribution</th>
             <th data-en="Status" data-ar="الحالة">Status</th>
-            <th></th>
           </tr></thead>
-          <tbody id="schoolBody"></tbody>
+          <tbody>
+            <tr><td><span class="badge badge-slate" data-en="Starter" data-ar="أساسية">Starter</span></td><td>$99/mo</td><td>598</td><td>$59.2K</td><td><span class="badge badge-success" data-en="Active" data-ar="نشط">Active</span></td></tr>
+            <tr><td><span class="badge badge-indigo" data-en="Professional" data-ar="احترافية">Professional</span></td><td>$249/mo</td><td>474</td><td>$118.0K</td><td><span class="badge badge-success" data-en="Active" data-ar="نشط">Active</span></td></tr>
+            <tr><td><span class="badge badge-success" data-en="Enterprise" data-ar="مؤسسية">Enterprise</span></td><td>$499/mo</td><td>176</td><td>$87.8K</td><td><span class="badge badge-success" data-en="Active" data-ar="نشط">Active</span></td></tr>
+          </tbody>
         </table>
-        <div class="pagination">
-          <span data-en="Showing 1–8 of 1,248 schools" data-ar="عرض 1–8 من أصل 1,248 مدرسة">Showing 1–8 of 1,248 schools</span>
-          <div class="page-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">›</button></div>
-        </div>
       </div>
     </div>
   </div>
@@ -272,38 +285,32 @@
 <div class="overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-head">
-      <h3 data-en="Add New School" data-ar="إضافة مدرسة جديدة">Add New School</h3>
+      <h3 data-en="New Plan" data-ar="باقة جديدة">New Plan</h3>
       <button class="icon-btn" id="closeModal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
-    <form id="schoolForm">
+    <form id="planForm">
       <div class="modal-body">
         <div class="field" id="f-name">
-          <label data-en="School Name" data-ar="اسم المدرسة">School Name</label>
-          <input type="text" id="schoolName" data-ph-en="e.g. Jeddah Modern Academy" data-ph-ar="مثال: أكاديمية جدة الحديثة" placeholder="e.g. Jeddah Modern Academy">
-          <span class="err" data-en="School name is required" data-ar="اسم المدرسة مطلوب">School name is required</span>
-        </div>
-        <div class="field" id="f-email">
-          <label data-en="Admin Email" data-ar="بريد المسؤول">Admin Email</label>
-          <input type="email" id="schoolEmail" data-ph-en="admin@school.com" data-ph-ar="admin@school.com" placeholder="admin@school.com">
-          <span class="err" data-en="Enter a valid email address" data-ar="أدخل بريدًا إلكترونيًا صحيحًا">Enter a valid email address</span>
+          <label data-en="Plan Name" data-ar="اسم الباقة">Plan Name</label>
+          <input type="text" id="planName" data-ph-en="e.g. Growth" data-ph-ar="مثال: النمو" placeholder="e.g. Growth">
+          <span class="err" data-en="Plan name is required" data-ar="اسم الباقة مطلوب">Plan name is required</span>
         </div>
         <div class="field">
-          <label data-en="Plan" data-ar="الباقة">Plan</label>
-          <select><option data-en="Starter" data-ar="أساسية">Starter</option><option data-en="Professional" data-ar="احترافية">Professional</option><option data-en="Enterprise" data-ar="مؤسسية">Enterprise</option></select>
+          <label data-en="Monthly Price ($)" data-ar="السعر الشهري ($)">Monthly Price ($)</label>
+          <input type="number" id="planPrice" placeholder="199">
         </div>
         <div class="field">
-          <label data-en="Billing Cycle" data-ar="دورة الفوترة">Billing Cycle</label>
-          <select><option data-en="Monthly" data-ar="شهري">Monthly</option><option data-en="Annual (save 20%)" data-ar="سنوي (وفّر 20%)">Annual (save 20%)</option></select>
+          <label data-en="Student Limit" data-ar="حد الطلاب">Student Limit</label>
+          <input type="text" id="planLimit" data-ph-en="e.g. 800 or Unlimited" data-ph-ar="مثال: 800 أو غير محدود" placeholder="e.g. 800 or Unlimited">
         </div>
       </div>
       <div class="modal-foot">
         <button type="button" class="btn btn-outline" id="cancelModal" data-en="Cancel" data-ar="إلغاء">Cancel</button>
-        <button type="submit" class="btn btn-primary" data-en="Create School" data-ar="إنشاء المدرسة">Create School</button>
+        <button type="submit" class="btn btn-primary" data-en="Create Plan" data-ar="إنشاء الباقة">Create Plan</button>
       </div>
     </form>
   </div>
 </div>
-
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
@@ -311,13 +318,13 @@ const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: local
 
 const navSections = [
   { g:{en:'Platform',ar:'المنصة'}, items:[
-    {en:'Dashboard',ar:'لوحة التحكم', active:true, icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'},
+    {en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'},
     {en:'Schools',ar:'المدارس', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
     {en:'Platform Analytics',ar:'تحليلات المنصة', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
   ]},
   { g:{en:'Billing',ar:'الفوترة'}, items:[
     {en:'Subscriptions',ar:'الاشتراكات', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
-    {en:'Plans',ar:'الباقات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
+    {en:'Plans',ar:'الباقات', active:true, icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
     {en:'Billing History',ar:'سجل الفوترة', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'},
   ]},
   { g:{en:'Management',ar:'الإدارة'}, items:[
@@ -356,100 +363,20 @@ navList.addEventListener('click', (e)=>{
   }
 });
 
-const schools = [
-  { en:'Riyadh International School', ar:'مدرسة الرياض العالمية', students:1245, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'active', color:'#4F46E5' },
-  { en:'Jeddah Modern Academy', ar:'أكاديمية جدة الحديثة', students:860, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#16A34A' },
-  { en:'Dammam Future School', ar:'مدرسة الدمام المستقبلية', students:312, plan:'Starter', planAr:'أساسية', mrr:99, status:'trial', color:'#D97706' },
-  { en:'Al-Noor Private School', ar:'مدرسة النور الأهلية', students:1580, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'overdue', color:'#DC2626' },
-  { en:'Makkah Excellence Academy', ar:'أكاديمية مكة للتميز', students:640, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#2563EB' },
-  { en:'Taif Horizon School', ar:'مدرسة آفاق الطائف', students:205, plan:'Starter', planAr:'أساسية', mrr:99, status:'trial', color:'#7C3AED' },
-  { en:'Abha Green Valley School', ar:'مدرسة الوادي الأخضر بأبها', students:940, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#0EA5E9' },
-  { en:'Medina Legacy Academy', ar:'أكاديمية المدينة للتراث', students:1120, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'active', color:'#16A34A' },
-];
-const statusMeta = { active:{en:'Active',ar:'نشط',cls:'badge-success'}, trial:{en:'Trial',ar:'تجريبي',cls:'badge-indigo'}, overdue:{en:'Overdue',ar:'متأخر',cls:'badge-danger'} };
-
-function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
-const tbody = document.getElementById('schoolBody');
-function renderSchools(filter){
-  tbody.innerHTML = '';
-  schools.filter(s=> filter==='all' || s.status===filter).forEach(s=>{
-    const sm = statusMeta[s.status];
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <div class="school-cell">
-          <div class="school-logo" style="background:${s.color}">${initials(s.en)}</div>
-          <div><div class="school-name" data-en="${s.en}" data-ar="${s.ar}">${s.en}</div><div class="school-sub" data-en="${s.students} students" data-ar="${s.students} طالب">${s.students} students</div></div>
-        </div>
-      </td>
-      <td><span class="badge badge-slate" data-en="${s.plan}" data-ar="${s.planAr}">${s.plan}</span></td>
-      <td>${s.students.toLocaleString()}</td>
-      <td style="font-weight:700;">$${s.mrr}<span style="color:var(--text-400);font-weight:500;">/mo</span></td>
-      <td><span class="badge ${sm.cls}" data-en="${sm.en}" data-ar="${sm.ar}">${sm.en}</span></td>
-      <td>
-        <div class="row-actions">
-          <button class="icon-btn-sm" title="View"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-          <button class="icon-btn-sm" title="Billing"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></button>
-          <button class="icon-btn-sm" title="Suspend" style="color:var(--danger-600)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
-        </div>
-      </td>`;
-    tbody.appendChild(tr);
-  });
-  applyLang(state.lang);
-}
-renderSchools('all');
-
-document.querySelectorAll('.filter-chip').forEach(chip=>{
-  chip.addEventListener('click', ()=>{
-    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
-    chip.classList.add('on');
-    renderSchools(chip.dataset.f);
-  });
-});
-document.getElementById('searchInput').addEventListener('input', (e)=>{
-  const q = e.target.value.trim().toLowerCase();
-  document.querySelectorAll('#schoolBody tr').forEach(tr=>{ tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none'; });
-});
-
-new Chart(document.getElementById('growthChart'), {
-  type:'line',
-  data:{
-    labels:['Apr','May','Jun','Jul','Aug','Sep'],
-    datasets:[
-      { label:'Schools', data:[980,1040,1090,1150,1200,1248], borderColor:'#4F46E5', backgroundColor:'rgba(79,70,229,.08)', tension:.4, fill:true, pointRadius:0, borderWidth:2, yAxisID:'y' },
-      { label:'MRR ($K)', data:[142,151,160,169,178,186], borderColor:'#16A34A', backgroundColor:'rgba(22,163,74,.06)', tension:.4, fill:true, pointRadius:0, borderWidth:2, yAxisID:'y1' },
-    ]
-  },
-  options:{
-    responsive:true,
-    plugins:{ legend:{ display:true, position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, font:{size:11} } } },
-    scales:{
-      y:{ position:'left', grid:{color:'rgba(148,160,178,.15)'} },
-      y1:{ position:'right', grid:{display:false} },
-      x:{ grid:{display:false} }
-    }
-  }
-});
 
 const modalOverlay = document.getElementById('modalOverlay');
-document.getElementById('addSchoolBtn').addEventListener('click', ()=> modalOverlay.classList.add('show'));
+document.getElementById('addPlanBtn').addEventListener('click', ()=> modalOverlay.classList.add('show'));
 document.getElementById('closeModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
 document.getElementById('cancelModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
 modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) modalOverlay.classList.remove('show'); });
-
-document.getElementById('schoolForm').addEventListener('submit', (e)=>{
+document.getElementById('planForm').addEventListener('submit', (e)=>{
   e.preventDefault();
-  let valid = true;
   const nameField = document.getElementById('f-name');
-  const emailField = document.getElementById('f-email');
-  const name = document.getElementById('schoolName').value.trim();
-  const email = document.getElementById('schoolEmail').value.trim();
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  nameField.classList.toggle('invalid', !name); if(!name) valid=false;
-  emailField.classList.toggle('invalid', !emailOk); if(!emailOk) valid=false;
-  if(!valid) return;
+  const name = document.getElementById('planName').value.trim();
+  nameField.classList.toggle('invalid', !name);
+  if(!name) return;
   modalOverlay.classList.remove('show');
-  showToast(state.lang==='ar' ? 'تم إنشاء المدرسة بنجاح' : 'School created successfully');
+  showToast(state.lang==='ar' ? 'تم إنشاء الباقة بنجاح' : 'Plan created successfully');
   e.target.reset();
 });
 

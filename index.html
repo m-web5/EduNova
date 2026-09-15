@@ -119,9 +119,22 @@
   .hero-inner{ position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center; }
   @media (max-width:900px){ .hero-inner{ grid-template-columns:1fr; } }
   .eyebrow{ display:inline-flex; align-items:center; gap:7px; padding:6px 13px; border-radius:99px; background:var(--indigo-50); color:var(--indigo-600); font-size:12px; font-weight:700; margin-bottom:20px; }
-  .hero h1{ font-size:44px; font-weight:800; letter-spacing:-.02em; line-height:1.15; margin-bottom:18px; }
+  .hero h1{ font-size:44px; font-weight:800; letter-spacing:-.02em; line-height:1.15; margin-bottom:18px; overflow:hidden; }
   @media (max-width:600px){ .hero h1{ font-size:32px; } }
   .hero h1 span{ color:var(--indigo-600); }
+  .hero h1 .headline-inner{ display:block; }
+  .hero h1 .headline-inner.enter-up{ animation: headlineEnterUp .7s cubic-bezier(.22,1,.36,1) both; }
+  .hero h1 .headline-inner.exit-up{ animation: headlineExitUp .45s cubic-bezier(.55,0,1,.45) both; }
+  .hero h1 .headline-inner.enter-side{ animation: headlineEnterSide .7s cubic-bezier(.22,1,.36,1) both; }
+  .hero h1 .headline-inner.exit-side{ animation: headlineExitSide .45s cubic-bezier(.55,0,1,.45) both; }
+  @keyframes headlineEnterUp{ from{ opacity:0; transform:translateY(60%); filter:blur(6px); } to{ opacity:1; transform:translateY(0); filter:blur(0); } }
+  @keyframes headlineExitUp{ from{ opacity:1; transform:translateY(0); filter:blur(0); } to{ opacity:0; transform:translateY(-60%); filter:blur(6px); } }
+  @keyframes headlineEnterSide{ from{ opacity:0; transform:translateX(-40px); filter:blur(6px); } to{ opacity:1; transform:translateX(0); filter:blur(0); } }
+  @keyframes headlineExitSide{ from{ opacity:1; transform:translateX(0); filter:blur(0); } to{ opacity:0; transform:translateX(40px); filter:blur(6px); } }
+  [dir="rtl"] .hero h1 .headline-inner.enter-side{ animation-name: headlineEnterSideRtl; }
+  [dir="rtl"] .hero h1 .headline-inner.exit-side{ animation-name: headlineExitSideRtl; }
+  @keyframes headlineEnterSideRtl{ from{ opacity:0; transform:translateX(40px); filter:blur(6px); } to{ opacity:1; transform:translateX(0); filter:blur(0); } }
+  @keyframes headlineExitSideRtl{ from{ opacity:1; transform:translateX(0); filter:blur(0); } to{ opacity:0; transform:translateX(-40px); filter:blur(6px); } }
   .hero p{ font-size:16px; color:var(--text-600); max-width:480px; margin-bottom:28px; }
   .hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:34px; }
   .hero-ctas .btn{ height:46px; padding:0 22px; font-size:14px; }
@@ -170,8 +183,6 @@
   }
   .feature-card:hover::before, .price-card:hover::before, .testimonial-card:hover::before{ opacity:1; }
   .feature-card > *, .price-card > *, .testimonial-card > *{ position:relative; z-index:1; }
-  .feature-icon{ transition:transform .4s var(--ease-premium, ease), background .3s ease; }
-  .feature-card:hover .feature-icon{ transform:rotate(-8deg) scale(1.08); background:var(--indigo-600); color:#fff; }
 
   /* ---- BUTTON MICRO-INTERACTIONS ---- */
   .btn, .mini-btn, .btn-ghost{ transition:transform .18s ease, background .2s ease, box-shadow .2s ease, filter .2s ease; }
@@ -215,9 +226,10 @@
   .feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
   @media (max-width:900px){ .feature-grid{ grid-template-columns:1fr 1fr; } }
   @media (max-width:600px){ .feature-grid{ grid-template-columns:1fr; } }
-  .feature-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:box-shadow .35s var(--ease-premium), transform .35s var(--ease-premium); }
-  .feature-card:hover{ box-shadow:var(--shadow-md); transform:translateY(-4px) scale(1.01); }
-  .feature-icon{ width:42px; height:42px; border-radius:11px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .feature-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; transition:box-shadow .55s cubic-bezier(.34,1.56,.64,1), transform .55s cubic-bezier(.34,1.56,.64,1), border-color .35s ease; transform-origin:center center; will-change:transform; }
+  .feature-card:hover, .feature-card.touch-active{ box-shadow:0 22px 45px -12px rgba(79,70,229,.35), var(--shadow-lg, var(--shadow-md)); border-color:var(--indigo-600); transform:translateY(-8px) scale(1.16) rotate(2deg); z-index:5; }
+  .feature-icon{ width:42px; height:42px; border-radius:11px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; margin-bottom:16px; transition:transform .55s cubic-bezier(.34,1.56,.64,1), background .3s ease; }
+  .feature-card:hover .feature-icon, .feature-card.touch-active .feature-icon{ transform:rotate(-12deg) scale(1.08); background:var(--indigo-600); color:#fff; }
   .feature-card h3{ font-size:15.5px; font-weight:700; margin-bottom:8px; }
   .feature-card p{ font-size:13px; color:var(--text-600); }
 
@@ -315,7 +327,7 @@
   .hero .trust-row .stat b{ color:#fff; }
   .hero .trust-row .stat span{ color:rgba(255,255,255,.75); }
   .hero .trust-divider{ background:rgba(255,255,255,.3); }
-  .hero .btn:not(.btn-primary){ background:rgba(255,255,255,.92)!important; }
+  .hero .btn:not(.btn-primary){ background:rgba(255,255,255,.92)!important; color:#0F172A!important; }
 
   /* ---- MOTION SYSTEM ---- */
   :root{ --ease-premium: cubic-bezier(0.22, 1, 0.36, 1); }
@@ -411,7 +423,7 @@
   <div class="wrap hero-inner" style="grid-template-columns:1fr; max-width:640px;">
     <div>
       <div class="eyebrow reveal-soft"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg><span data-en="Built for modern schools" data-ar="مصممة للمدارس الحديثة">Built for modern schools</span></div>
-      <h1 class="reveal-soft" style="transition-delay:.08s" data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></h1>
+      <h1 class="reveal-soft" style="transition-delay:.08s"><span class="headline-inner" data-en='One platform for your entire school, <span>from admissions to graduation.</span>' data-ar='منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>'>One platform for your entire school, <span>from admissions to graduation.</span></span></h1>
       <p class="reveal-soft" style="transition-delay:.16s" data-en="Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents." data-ar="الحضور، الدرجات، الرسوم، الجداول، والتواصل — كل ذلك في نظام واحد مترابط، مصمم للإداريين والمعلمين والطلاب وأولياء الأمور.">Attendance, grades, fees, timetables, and communication — all in one connected system built for administrators, teachers, students, and parents.</p>
       <div class="hero-ctas reveal-soft" style="transition-delay:.24s">
         <a href="edusuite-auth.html" class="btn btn-primary" data-en="Start Free Trial" data-ar="ابدأ تجربة مجانية">Start Free Trial</a>
@@ -680,24 +692,31 @@ roles.forEach((r,i)=>{
   const card = document.createElement('div');
   card.className = 'role-card reveal';
   card.style.transitionDelay = (i*0.08)+'s';
-  card.innerHTML = `<div class="role-avatar" style="background:${r.color}"><img id="${r.id}" src="${r.id}.jpg" alt="${r.en}"></div>
+  card.innerHTML = `<div class="role-avatar" style="background:${r.color}"><img id="${r.id}" src="${r.id}.jpg" alt="${r.en}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;">${r.en.charAt(0)}</div></div>
     <h4 data-en="${r.en}" data-ar="${r.ar}">${r.en}</h4>
     <p data-en="${r.enD}" data-ar="${r.arD}">${r.enD}</p>`;
   rolesGrid.appendChild(card);
 });
 
 const testimonials = [
-  { initials:'LA', color:'#4F46E5', en:'"EduNova replaced four different spreadsheets overnight. Attendance and fees finally talk to each other, and our staff actually enjoy using it."', ar:'"استبدلت EduNova أربعة جداول بيانات مختلفة بين ليلة وضحاها. الحضور والرسوم أصبحا مترابطين أخيرًا، وموظفونا يستمتعون فعلًا باستخدامها."', name:'Lina Awad', nameAr:'لينا عوض', role:'Principal, Al-Noor Group', roleAr:'مديرة، مجموعة النور' },
-  { initials:'OM', color:'#16A34A', en:'"Setup took less than two weeks, including migrating three years of student records. Support was with us at every step."', ar:'"استغرق التجهيز أقل من أسبوعين، بما في ذلك ترحيل سجلات ثلاث سنوات كاملة. كان فريق الدعم معنا في كل خطوة."', name:'Omar Mansour', nameAr:'عمر منصور', role:'IT Director, Horizon Schools', roleAr:'مدير تقنية المعلومات، مدارس هورايزون' },
-  { initials:'SH', color:'#D97706', en:'"Parents love the portal. We get far fewer phone calls asking about grades or fee balances since everything is visible to them directly."', ar:'"يحب أولياء الأمور البوابة الخاصة بهم. أصبحنا نتلقى مكالمات أقل بكثير للسؤال عن الدرجات أو أرصدة الرسوم لأن كل شيء أصبح مرئيًا لهم مباشرة."', name:'Sara Haddad', nameAr:'سارة حداد', role:'Vice Principal, Legacy Academies', roleAr:'نائبة المدير، أكاديميات ليغاسي' },
+  { initials:'LA', color:'#4F46E5', rating:5, en:'"EduNova replaced four different spreadsheets overnight. Attendance and fees finally talk to each other, and our staff actually enjoy using it."', ar:'"استبدلت EduNova أربعة جداول بيانات مختلفة بين ليلة وضحاها. الحضور والرسوم أصبحا مترابطين أخيرًا، وموظفونا يستمتعون فعلًا باستخدامها."', name:'Lina Awad', nameAr:'لينا عوض', role:'Principal, Al-Noor Group', roleAr:'مديرة، مجموعة النور' },
+  { initials:'OM', color:'#16A34A', rating:5, en:'"Setup took less than two weeks, including migrating three years of student records. Support was with us at every step."', ar:'"استغرق التجهيز أقل من أسبوعين، بما في ذلك ترحيل سجلات ثلاث سنوات كاملة. كان فريق الدعم معنا في كل خطوة."', name:'Omar Mansour', nameAr:'عمر منصور', role:'IT Director, Horizon Schools', roleAr:'مدير تقنية المعلومات، مدارس هورايزون' },
+  { initials:'SH', color:'#D97706', rating:4, en:'"Parents love the portal. We get far fewer phone calls asking about grades or fee balances since everything is visible to them directly."', ar:'"يحب أولياء الأمور البوابة الخاصة بهم. أصبحنا نتلقى مكالمات أقل بكثير للسؤال عن الدرجات أو أرصدة الرسوم لأن كل شيء أصبح مرئيًا لهم مباشرة."', name:'Sara Haddad', nameAr:'سارة حداد', role:'Vice Principal, Legacy Academies', roleAr:'نائبة المدير، أكاديميات ليغاسي' },
+  { initials:'KZ', color:'#DB2777', rating:5, en:'"The timetable builder alone saved our coordinators a full week every semester. No more conflicting classrooms or double-booked teachers."', ar:'"أداة بناء الجدول الدراسي وحدها وفّرت على منسقينا أسبوعًا كاملاً كل فصل دراسي. لا مزيد من تعارض القاعات أو ازدواجية جداول المعلمين."', name:'Karim Ziadeh', nameAr:'كريم زيادة', role:'Academic Coordinator, Cedar Valley School', roleAr:'منسق أكاديمي، مدرسة وادي الأرز' },
+  { initials:'RN', color:'#0891B2', rating:5, en:'"Rolling out EduNova to 40 teachers took a single training session. The interface is intuitive enough that most of them needed no follow-up help."', ar:'"نشر EduNova على 40 معلمًا استغرق جلسة تدريب واحدة فقط. الواجهة بديهية لدرجة أن معظمهم لم يحتج لمساعدة إضافية بعدها."', name:'Rania Nasser', nameAr:'رانيا ناصر', role:'Head of IT, Beacon International Schools', roleAr:'رئيسة تقنية المعلومات، مدارس بيكون الدولية' },
+  { initials:'YT', color:'#7C3AED', rating:4, en:'"Fee collection went from chasing paper receipts to a dashboard that shows exactly who has paid and who is overdue, in real time."', ar:'"تحصيل الرسوم تحوّل من مطاردة الإيصالات الورقية إلى لوحة تحكم تُظهر بدقة من دفع ومن تأخر، لحظة بلحظة."', name:'Yousef Tarabishi', nameAr:'يوسف طرابيشي', role:'Finance Manager, Al-Fanar Academy', roleAr:'مدير مالي، أكاديمية الفنار' },
+  { initials:'MB', color:'#EA580C', rating:5, en:'"Our exam season used to mean stacks of paper report cards. Now grades sync automatically and parents see results the moment they are entered."', ar:'"موسم الامتحانات كان يعني أكوامًا من كشوف الدرجات الورقية. الآن تُزامن الدرجات تلقائيًا ويرى أولياء الأمور النتائج لحظة إدخالها."', name:'Maya Barghouti', nameAr:'مايا برغوثي', role:'Registrar, Sunrise International School', roleAr:'مسؤولة القيد، مدرسة صنرايز الدولية' },
 ];
 const testimonialsGrid = document.getElementById('testimonialsGrid');
 const starSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>';
+const starOutlineSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>';
 testimonials.forEach((t,i)=>{
   const card = document.createElement('div');
   card.className = 'testimonial-card reveal';
-  card.style.transitionDelay = (i*0.08)+'s';
-  card.innerHTML = `<div class="testimonial-stars">${starSvg.repeat(5)}</div>
+  card.style.transitionDelay = (Math.min(i,5)*0.08)+'s';
+  const rating = t.rating || 5;
+  const stars = starSvg.repeat(rating) + starOutlineSvg.repeat(5-rating);
+  card.innerHTML = `<div class="testimonial-stars">${stars}</div>
     <p class="testimonial-quote" data-en='${t.en}' data-ar='${t.ar}'>${t.en}</p>
     <div class="testimonial-person">
       <div class="testimonial-avatar" style="background:${t.color}">${t.initials}</div>
@@ -746,6 +765,35 @@ function applyLang(lang){
   document.getElementById('langToggle').textContent = lang==='ar' ? 'English' : 'العربية';
 }
 document.getElementById('langToggle').addEventListener('click', ()=> applyLang(state.lang==='en'?'ar':'en'));
+
+// ---- ROTATING HERO HEADLINE ----
+const heroPhrases = [
+  { en:'One platform for your entire school, <span>from admissions to graduation.</span>', ar:'منصة واحدة لمدرستك بأكملها، <span>من القبول حتى التخرج.</span>' },
+  { en:'Attendance, grades, and fees — <span>unified in one connected system.</span>', ar:'الحضور والدرجات والرسوم — <span>موحّدة في نظام واحد مترابط.</span>' },
+  { en:'One login for everyone, <span>a tailored view for every role.</span>', ar:'تسجيل دخول واحد للجميع، <span>وواجهة مخصصة لكل دور.</span>' },
+  { en:'Built for administrators, teachers, <span>students, and parents alike.</span>', ar:'مصممة للإداريين والمعلمين، <span>والطلاب وأولياء الأمور على حدٍ سواء.</span>' },
+  { en:'Real-time reports and insights, <span>whenever your school needs them.</span>', ar:'تقارير ورؤى فورية، <span>متى ما احتاجتها مدرستك.</span>' },
+  { en:'Secure, cloud-based, and built <span>to scale with your school.</span>', ar:'آمنة، سحابية، ومصممة <span>لتنمو مع مدرستك.</span>' }
+];
+let heroIndex = 0;
+const heroInner = document.querySelector('.hero h1 .headline-inner');
+if(heroInner){
+  setInterval(()=>{
+    heroIndex = (heroIndex + 1) % heroPhrases.length;
+    const phrase = heroPhrases[heroIndex];
+    // alternate between "rise from below" and "slide in from the side" for variety
+    const style = heroIndex % 2 === 0 ? 'up' : 'side';
+    heroInner.classList.remove('enter-up','enter-side');
+    heroInner.classList.add(style === 'up' ? 'exit-up' : 'exit-side');
+    setTimeout(()=>{
+      heroInner.setAttribute('data-en', phrase.en);
+      heroInner.setAttribute('data-ar', phrase.ar);
+      heroInner.innerHTML = state.lang === 'ar' ? phrase.ar : phrase.en;
+      heroInner.classList.remove('exit-up','exit-side');
+      heroInner.classList.add(style === 'up' ? 'enter-up' : 'enter-side');
+    }, 420);
+  }, 2600);
+}
 
 function applyTheme(theme){
   state.theme = theme;
@@ -877,6 +925,20 @@ function initCardGlow(){
   });
 }
 initCardGlow();
+
+/* ---- Touch "spiral bubble" grow for feature cards on tap (devices without hover) ---- */
+function initFeatureTouchBubble(){
+  document.querySelectorAll('.feature-card').forEach(card=>{
+    card.addEventListener('touchstart', ()=>{
+      document.querySelectorAll('.feature-card.touch-active').forEach(c=>{ if(c!==card) c.classList.remove('touch-active'); });
+      card.classList.add('touch-active');
+    }, { passive:true });
+    card.addEventListener('touchend', ()=>{
+      setTimeout(()=> card.classList.remove('touch-active'), 500);
+    }, { passive:true });
+  });
+}
+initFeatureTouchBubble();
 </script>
 </body>
 </html>

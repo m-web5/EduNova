@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduNova — Platform Admin</title>
+<title>EduNova — System Logs</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -185,56 +185,31 @@
     </div>
 
     <div class="content">
-      <div class="breadcrumb"><b data-en="Platform Dashboard" data-ar="لوحة تحكم المنصة">Platform Dashboard</b></div>
+      <div class="breadcrumb"><b data-en="System Logs" data-ar="سجلات النظام">System Logs</b></div>
       <div class="page-head">
         <div>
-          <h1 data-en="Welcome back, Rakan 👋" data-ar="أهلاً بعودتك، راكان 👋">Welcome back, Rakan 👋</h1>
-          <p data-en="Here's how EduNova is performing across all schools." data-ar="إليك أداء منصة EduNova عبر جميع المدارس.">Here's how EduNova is performing across all schools.</p>
+          <h1 data-en="System Logs" data-ar="سجلات النظام">System Logs</h1>
+          <p data-en="Monitor platform events, errors, and API activity in real time." data-ar="مراقبة أحداث المنصة والأخطاء ونشاط الواجهة البرمجية لحظيًا.">Monitor platform events, errors, and API activity in real time.</p>
         </div>
-        <button class="btn btn-primary" id="addSchoolBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Add School" data-ar="إضافة مدرسة">Add School</span></button>
+        <button class="btn btn-outline" id="exportBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-en="Export Logs" data-ar="تصدير السجلات">Export Logs</span></button>
       </div>
 
       <div class="stat-strip">
         <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Total Schools" data-ar="إجمالي المدارس">Total Schools</div><div class="stat-value">1,248</div></div><div class="stat-icon icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></div></div>
-          <div class="stat-delta up">↑ 6.2% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+          <div class="stat-top"><div><div class="stat-label" data-en="Errors (24h)" data-ar="أخطاء (24 ساعة)">Errors (24h)</div><div class="stat-value">12</div></div><div class="stat-icon icon-amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div></div>
+          <div class="stat-delta down">↓ 3 <span class="muted" data-en="vs yesterday" data-ar="مقارنة بالأمس">vs yesterday</span></div>
         </div>
         <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Monthly Recurring Revenue" data-ar="الإيرادات المتكررة الشهرية">Monthly Recurring Revenue</div><div class="stat-value">$186.4K</div></div><div class="stat-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div>
-          <div class="stat-delta up">↑ 11.4% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+          <div class="stat-top"><div><div class="stat-label" data-en="Warnings (24h)" data-ar="تحذيرات (24 ساعة)">Warnings (24h)</div><div class="stat-value">47</div></div><div class="stat-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div></div>
+          <div class="stat-delta up">↑ 5 <span class="muted" data-en="vs yesterday" data-ar="مقارنة بالأمس">vs yesterday</span></div>
         </div>
         <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Active Subscriptions" data-ar="الاشتراكات النشطة">Active Subscriptions</div><div class="stat-value">1,102</div></div><div class="stat-icon icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div></div>
-          <div class="stat-delta up">↑ 3.8% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
+          <div class="stat-top"><div><div class="stat-label" data-en="API Calls (24h)" data-ar="طلبات الواجهة البرمجية (24 ساعة)">API Calls (24h)</div><div class="stat-value">892K</div></div><div class="stat-icon icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">M3 3v18h18M18 17V9M13 17V5M8 17v-3</svg></div></div>
+          <div class="stat-delta up">↑ 6.3% <span class="muted" data-en="vs yesterday" data-ar="مقارنة بالأمس">vs yesterday</span></div>
         </div>
         <div class="card stat-card">
-          <div class="stat-top"><div><div class="stat-label" data-en="Churn Rate" data-ar="نسبة التسرب">Churn Rate</div><div class="stat-value">1.8%</div></div><div class="stat-icon icon-amber"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div></div>
-          <div class="stat-delta down">↓ 0.3% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
-        </div>
-      </div>
-
-      <div class="grid-mid">
-        <div class="card panel">
-          <div class="panel-head">
-            <h3 data-en="Revenue & School Growth" data-ar="نمو الإيرادات والمدارس">Revenue & School Growth</h3>
-            <select style="font-size:12px;font-weight:600;border:1px solid var(--border);border-radius:7px;padding:5px 9px;background:var(--surface);color:var(--text-600);"><option data-en="Last 6 Months" data-ar="آخر 6 أشهر">Last 6 Months</option></select>
-          </div>
-          <canvas id="growthChart" height="150"></canvas>
-        </div>
-        <div class="card panel">
-          <div class="panel-head"><h3 data-en="Plan Distribution" data-ar="توزيع الباقات">Plan Distribution</h3></div>
-          <div class="plan-dist">
-            <div class="plan-row"><div class="plan-name" data-en="Starter" data-ar="أساسية">Starter</div><div class="plan-bar"><div style="width:48%;background:#94A0B2;"></div></div><div class="plan-count">598</div></div>
-            <div class="plan-row"><div class="plan-name" data-en="Professional" data-ar="احترافية">Professional</div><div class="plan-bar"><div style="width:38%;background:#4F46E5;"></div></div><div class="plan-count">474</div></div>
-            <div class="plan-row"><div class="plan-name" data-en="Enterprise" data-ar="مؤسسية">Enterprise</div><div class="plan-bar"><div style="width:14%;background:#16A34A;"></div></div><div class="plan-count">176</div></div>
-          </div>
-          <div style="margin-top:22px; padding-top:16px; border-top:1px solid var(--border);">
-            <div class="panel-head" style="margin-bottom:10px;"><h3 style="font-size:13px;" data-en="Trial Accounts" data-ar="الحسابات التجريبية">Trial Accounts</h3></div>
-            <div style="display:flex; align-items:baseline; gap:8px;">
-              <span style="font-size:22px;font-weight:800;">64</span>
-              <span style="font-size:12px;color:var(--text-400);" data-en="schools in trial period" data-ar="مدرسة في الفترة التجريبية">schools in trial period</span>
-            </div>
-          </div>
+          <div class="stat-top"><div><div class="stat-label" data-en="Uptime" data-ar="وقت التشغيل">Uptime</div><div class="stat-value">99.97%</div></div><div class="stat-icon icon-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div></div>
+          <div class="stat-delta up">↑ 0.01% <span class="muted" data-en="vs last month" data-ar="مقارنة بالشهر الماضي">vs last month</span></div>
         </div>
       </div>
 
@@ -242,65 +217,25 @@
         <div class="toolbar">
           <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" data-ph-en="Search schools…" data-ph-ar="ابحث عن مدرسة…" placeholder="Search schools…">
+            <input type="text" id="searchInput" data-ph-en="Search logs…" data-ph-ar="ابحث في السجلات…" placeholder="Search logs…">
           </div>
           <button class="filter-chip on" data-f="all" data-en="All" data-ar="الكل">All</button>
-          <button class="filter-chip" data-f="active" data-en="Active" data-ar="نشط">Active</button>
-          <button class="filter-chip" data-f="trial" data-en="Trial" data-ar="تجريبي">Trial</button>
-          <button class="filter-chip" data-f="overdue" data-en="Overdue" data-ar="متأخر">Overdue</button>
+          <button class="filter-chip" data-f="info" data-en="Info" data-ar="معلومة">Info</button>
+          <button class="filter-chip" data-f="warning" data-en="Warning" data-ar="تحذير">Warning</button>
+          <button class="filter-chip" data-f="error" data-en="Error" data-ar="خطأ">Error</button>
+          <button class="filter-chip" data-f="critical" data-en="Critical" data-ar="حرج">Critical</button>
         </div>
         <table>
           <thead><tr>
-            <th data-en="School" data-ar="المدرسة">School</th>
-            <th data-en="Plan" data-ar="الباقة">Plan</th>
-            <th data-en="Students" data-ar="الطلاب">Students</th>
-            <th data-en="MRR" data-ar="الإيراد الشهري">MRR</th>
-            <th data-en="Status" data-ar="الحالة">Status</th>
-            <th></th>
+            <th data-en="Timestamp" data-ar="الوقت">Timestamp</th>
+            <th data-en="Level" data-ar="المستوى">Level</th>
+            <th data-en="Event" data-ar="الحدث">Event</th>
+            <th data-en="Source" data-ar="المصدر">Source</th>
           </tr></thead>
-          <tbody id="schoolBody"></tbody>
+          <tbody id="logBody"></tbody>
         </table>
-        <div class="pagination">
-          <span data-en="Showing 1–8 of 1,248 schools" data-ar="عرض 1–8 من أصل 1,248 مدرسة">Showing 1–8 of 1,248 schools</span>
-          <div class="page-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">›</button></div>
-        </div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="overlay" id="modalOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 data-en="Add New School" data-ar="إضافة مدرسة جديدة">Add New School</h3>
-      <button class="icon-btn" id="closeModal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <form id="schoolForm">
-      <div class="modal-body">
-        <div class="field" id="f-name">
-          <label data-en="School Name" data-ar="اسم المدرسة">School Name</label>
-          <input type="text" id="schoolName" data-ph-en="e.g. Jeddah Modern Academy" data-ph-ar="مثال: أكاديمية جدة الحديثة" placeholder="e.g. Jeddah Modern Academy">
-          <span class="err" data-en="School name is required" data-ar="اسم المدرسة مطلوب">School name is required</span>
-        </div>
-        <div class="field" id="f-email">
-          <label data-en="Admin Email" data-ar="بريد المسؤول">Admin Email</label>
-          <input type="email" id="schoolEmail" data-ph-en="admin@school.com" data-ph-ar="admin@school.com" placeholder="admin@school.com">
-          <span class="err" data-en="Enter a valid email address" data-ar="أدخل بريدًا إلكترونيًا صحيحًا">Enter a valid email address</span>
-        </div>
-        <div class="field">
-          <label data-en="Plan" data-ar="الباقة">Plan</label>
-          <select><option data-en="Starter" data-ar="أساسية">Starter</option><option data-en="Professional" data-ar="احترافية">Professional</option><option data-en="Enterprise" data-ar="مؤسسية">Enterprise</option></select>
-        </div>
-        <div class="field">
-          <label data-en="Billing Cycle" data-ar="دورة الفوترة">Billing Cycle</label>
-          <select><option data-en="Monthly" data-ar="شهري">Monthly</option><option data-en="Annual (save 20%)" data-ar="سنوي (وفّر 20%)">Annual (save 20%)</option></select>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button type="button" class="btn btn-outline" id="cancelModal" data-en="Cancel" data-ar="إلغاء">Cancel</button>
-        <button type="submit" class="btn btn-primary" data-en="Create School" data-ar="إنشاء المدرسة">Create School</button>
-      </div>
-    </form>
   </div>
 </div>
 
@@ -311,7 +246,7 @@ const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: local
 
 const navSections = [
   { g:{en:'Platform',ar:'المنصة'}, items:[
-    {en:'Dashboard',ar:'لوحة التحكم', active:true, icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'},
+    {en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'},
     {en:'Schools',ar:'المدارس', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
     {en:'Platform Analytics',ar:'تحليلات المنصة', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
   ]},
@@ -323,7 +258,7 @@ const navSections = [
   { g:{en:'Management',ar:'الإدارة'}, items:[
     {en:'Platform Users',ar:'مستخدمو المنصة', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
     {en:'Support Tickets',ar:'تذاكر الدعم', icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'},
-    {en:'System Logs',ar:'سجلات النظام', icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
+    {en:'System Logs',ar:'سجلات النظام', active:true, icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
     {en:'Platform Settings',ar:'إعدادات المنصة', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
   ]},
 ];
@@ -356,102 +291,46 @@ navList.addEventListener('click', (e)=>{
   }
 });
 
-const schools = [
-  { en:'Riyadh International School', ar:'مدرسة الرياض العالمية', students:1245, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'active', color:'#4F46E5' },
-  { en:'Jeddah Modern Academy', ar:'أكاديمية جدة الحديثة', students:860, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#16A34A' },
-  { en:'Dammam Future School', ar:'مدرسة الدمام المستقبلية', students:312, plan:'Starter', planAr:'أساسية', mrr:99, status:'trial', color:'#D97706' },
-  { en:'Al-Noor Private School', ar:'مدرسة النور الأهلية', students:1580, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'overdue', color:'#DC2626' },
-  { en:'Makkah Excellence Academy', ar:'أكاديمية مكة للتميز', students:640, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#2563EB' },
-  { en:'Taif Horizon School', ar:'مدرسة آفاق الطائف', students:205, plan:'Starter', planAr:'أساسية', mrr:99, status:'trial', color:'#7C3AED' },
-  { en:'Abha Green Valley School', ar:'مدرسة الوادي الأخضر بأبها', students:940, plan:'Professional', planAr:'احترافية', mrr:249, status:'active', color:'#0EA5E9' },
-  { en:'Medina Legacy Academy', ar:'أكاديمية المدينة للتراث', students:1120, plan:'Enterprise', planAr:'مؤسسية', mrr:499, status:'active', color:'#16A34A' },
-];
-const statusMeta = { active:{en:'Active',ar:'نشط',cls:'badge-success'}, trial:{en:'Trial',ar:'تجريبي',cls:'badge-indigo'}, overdue:{en:'Overdue',ar:'متأخر',cls:'badge-danger'} };
 
-function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
-const tbody = document.getElementById('schoolBody');
-function renderSchools(filter){
-  tbody.innerHTML = '';
-  schools.filter(s=> filter==='all' || s.status===filter).forEach(s=>{
-    const sm = statusMeta[s.status];
+const logs = [
+  { ts:'2026-09-15 09:42:11', level:'error', event:'Payment gateway timeout', eventAr:'انتهاء مهلة بوابة الدفع', source:'Al-Noor Private School' },
+  { ts:'2026-09-15 09:38:02', level:'warning', event:'High memory usage on report worker', eventAr:'استهلاك ذاكرة مرتفع في معالج التقارير', source:'System' },
+  { ts:'2026-09-15 09:20:47', level:'info', event:'New school onboarded', eventAr:'تسجيل مدرسة جديدة', source:'Dammam Future School' },
+  { ts:'2026-09-15 08:55:16', level:'critical', event:'Database replica lag exceeded threshold', eventAr:'تأخر نسخة قاعدة البيانات تجاوز الحد المسموح', source:'System' },
+  { ts:'2026-09-15 08:41:33', level:'warning', event:'API rate limit approaching for tenant', eventAr:'اقتراب حد معدل الطلبات لأحد المستأجرين', source:'Jeddah Modern Academy' },
+  { ts:'2026-09-15 08:12:09', level:'info', event:'Scheduled backup completed', eventAr:'اكتملت النسخة الاحتياطية المجدولة', source:'System' },
+  { ts:'2026-09-15 07:58:44', level:'error', event:'Failed SMS delivery to 12 recipients', eventAr:'فشل إرسال رسائل نصية لـ 12 مستلمًا', source:'Riyadh International School' },
+  { ts:'2026-09-15 07:30:02', level:'info', event:'Subscription renewed automatically', eventAr:'تم تجديد الاشتراك تلقائيًا', source:'Makkah Excellence Academy' },
+];
+const logMeta = { info:{en:'Info',ar:'معلومة',cls:'badge-indigo'}, warning:{en:'Warning',ar:'تحذير',cls:'badge-warning'}, error:{en:'Error',ar:'خطأ',cls:'badge-danger'}, critical:{en:'Critical',ar:'حرج',cls:'badge-danger'} };
+const logBody = document.getElementById('logBody');
+function renderLogs(filter){
+  logBody.innerHTML='';
+  logs.filter(l=> filter==='all' || l.level===filter).forEach(l=>{
+    const lm = logMeta[l.level];
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>
-        <div class="school-cell">
-          <div class="school-logo" style="background:${s.color}">${initials(s.en)}</div>
-          <div><div class="school-name" data-en="${s.en}" data-ar="${s.ar}">${s.en}</div><div class="school-sub" data-en="${s.students} students" data-ar="${s.students} طالب">${s.students} students</div></div>
-        </div>
-      </td>
-      <td><span class="badge badge-slate" data-en="${s.plan}" data-ar="${s.planAr}">${s.plan}</span></td>
-      <td>${s.students.toLocaleString()}</td>
-      <td style="font-weight:700;">$${s.mrr}<span style="color:var(--text-400);font-weight:500;">/mo</span></td>
-      <td><span class="badge ${sm.cls}" data-en="${sm.en}" data-ar="${sm.ar}">${sm.en}</span></td>
-      <td>
-        <div class="row-actions">
-          <button class="icon-btn-sm" title="View"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-          <button class="icon-btn-sm" title="Billing"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></button>
-          <button class="icon-btn-sm" title="Suspend" style="color:var(--danger-600)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
-        </div>
-      </td>`;
-    tbody.appendChild(tr);
+      <td style="font-family:monospace;font-size:12px;color:var(--text-600);">${l.ts}</td>
+      <td><span class="badge ${lm.cls}" data-en="${lm.en}" data-ar="${lm.ar}">${lm.en}</span></td>
+      <td data-en="${l.event}" data-ar="${l.eventAr}">${l.event}</td>
+      <td>${l.source}</td>`;
+    logBody.appendChild(tr);
   });
   applyLang(state.lang);
 }
-renderSchools('all');
-
+renderLogs('all');
 document.querySelectorAll('.filter-chip').forEach(chip=>{
   chip.addEventListener('click', ()=>{
     document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('on'));
     chip.classList.add('on');
-    renderSchools(chip.dataset.f);
+    renderLogs(chip.dataset.f);
   });
 });
 document.getElementById('searchInput').addEventListener('input', (e)=>{
   const q = e.target.value.trim().toLowerCase();
-  document.querySelectorAll('#schoolBody tr').forEach(tr=>{ tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+  document.querySelectorAll('#logBody tr').forEach(tr=>{ tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none'; });
 });
-
-new Chart(document.getElementById('growthChart'), {
-  type:'line',
-  data:{
-    labels:['Apr','May','Jun','Jul','Aug','Sep'],
-    datasets:[
-      { label:'Schools', data:[980,1040,1090,1150,1200,1248], borderColor:'#4F46E5', backgroundColor:'rgba(79,70,229,.08)', tension:.4, fill:true, pointRadius:0, borderWidth:2, yAxisID:'y' },
-      { label:'MRR ($K)', data:[142,151,160,169,178,186], borderColor:'#16A34A', backgroundColor:'rgba(22,163,74,.06)', tension:.4, fill:true, pointRadius:0, borderWidth:2, yAxisID:'y1' },
-    ]
-  },
-  options:{
-    responsive:true,
-    plugins:{ legend:{ display:true, position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, font:{size:11} } } },
-    scales:{
-      y:{ position:'left', grid:{color:'rgba(148,160,178,.15)'} },
-      y1:{ position:'right', grid:{display:false} },
-      x:{ grid:{display:false} }
-    }
-  }
-});
-
-const modalOverlay = document.getElementById('modalOverlay');
-document.getElementById('addSchoolBtn').addEventListener('click', ()=> modalOverlay.classList.add('show'));
-document.getElementById('closeModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
-document.getElementById('cancelModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
-modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) modalOverlay.classList.remove('show'); });
-
-document.getElementById('schoolForm').addEventListener('submit', (e)=>{
-  e.preventDefault();
-  let valid = true;
-  const nameField = document.getElementById('f-name');
-  const emailField = document.getElementById('f-email');
-  const name = document.getElementById('schoolName').value.trim();
-  const email = document.getElementById('schoolEmail').value.trim();
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  nameField.classList.toggle('invalid', !name); if(!name) valid=false;
-  emailField.classList.toggle('invalid', !emailOk); if(!emailOk) valid=false;
-  if(!valid) return;
-  modalOverlay.classList.remove('show');
-  showToast(state.lang==='ar' ? 'تم إنشاء المدرسة بنجاح' : 'School created successfully');
-  e.target.reset();
-});
+document.getElementById('exportBtn').addEventListener('click', ()=> showToast(state.lang==='ar' ? 'جاري تصدير السجلات' : 'Exporting logs'));
 
 function showToast(msg){
   const wrap = document.getElementById('toastWrap');
