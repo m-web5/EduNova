@@ -261,31 +261,54 @@
 const state = { lang: localStorage.getItem('edunova-lang') || 'en', theme: localStorage.getItem('edunova-theme') || 'light' };
 
 const navSections = [
-  { g:{en:'Overview',ar:'نظرة عامة'}, items:[{en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'}]},
+  { g:{en:'Overview',ar:'نظرة عامة'}, items:[
+    {en:'Dashboard',ar:'لوحة التحكم', icon:'M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10'},
+  ]},
   { g:{en:'People',ar:'الأشخاص'}, items:[
     {en:'Students',ar:'الطلاب', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
     {en:'Teachers',ar:'المعلمون', icon:'M22 10v6M2 10l10-5 10 5-10 5-10-5z'},
+    {en:'Parents',ar:'أولياء الأمور', icon:'M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87m5-4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
   ]},
   { g:{en:'Academics',ar:'الشؤون الأكاديمية'}, items:[
     {en:'Classes',ar:'الفصول', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
+    {en:'Subjects',ar:'المواد', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
     {en:'Attendance',ar:'الحضور والغياب', active:true, icon:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
-    {en:'Exams',ar:'الامتحانات', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'},
+    {en:'Exams',ar:'الامتحانات', icon:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M9 15h6 M9 11h6'},
+    {en:'Assignments',ar:'الواجبات', icon:'M9 11l3 3L22 4 M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11'},
     {en:'Timetable',ar:'الجدول الدراسي', icon:'M21 8a9 9 0 1 1-9-9M21 3v5h-5'},
   ]},
   { g:{en:'Operations',ar:'العمليات'}, items:[
     {en:'Fees & Payments',ar:'الرسوم والمدفوعات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
+    {en:'Library',ar:'المكتبة', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
+    {en:'Transport',ar:'النقل المدرسي', icon:'M3 17h1m16 0h1M5 17a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0M3 10h18l-2-6H5l-2 6zm0 0v7h18v-7'},
+    {en:'Events',ar:'الفعاليات', icon:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z'},
+  ]},
+  { g:{en:'Insights',ar:'الرؤى'}, items:[
+    {en:'Communication',ar:'التواصل', icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'},
     {en:'Reports',ar:'التقارير', icon:'M3 3v18h18M18 17V9M13 17V5M8 17v-3'},
-    {en:'Settings',ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'},
+    {en:'Staff',ar:'الموظفون', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+    {en:'Settings',ar:'الإعدادات', icon:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'},
   ]},
 ];
 const pageMap = {
   'Dashboard':'edusuite-dashboard.html',
   'Students':'edusuite-students.html',
+  'Teachers':'edusuite-teachers.html',
+  'Parents':'edusuite-parents.html',
+  'Classes':'edusuite-classes.html',
+  'Subjects':'edusuite-subjects.html',
   'Attendance':'edusuite-attendance.html',
   'Exams':'edusuite-exams.html',
+  'Assignments':'edusuite-assignments.html',
+  'Timetable':'edusuite-timetable.html',
   'Fees & Payments':'edusuite-fees.html',
   'Library':'edusuite-library.html',
   'Transport':'edusuite-transport.html',
+  'Events':'edusuite-events.html',
+  'Communication':'edusuite-communication.html',
+  'Reports':'edusuite-reports.html',
+  'Staff':'edusuite-staff.html',
+  'Settings':'edusuite-settings.html',
 };
 const navList = document.getElementById('navList');
 navSections.forEach(sec=>{

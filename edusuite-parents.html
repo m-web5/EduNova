@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduNova — Transportation</title>
+<title>EduNova — Parents</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
@@ -81,46 +81,45 @@
   .icon-amber{ background:var(--warning-50); color:var(--warning-600); } .icon-red{ background:var(--danger-50); color:var(--danger-600); }
   .stat-label{ font-size:12px; color:var(--text-600); font-weight:600; } .stat-value{ font-size:19px; font-weight:800; }
 
-  .tabs-row{ display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); }
-  .tab-link{ padding:10px 4px; margin-inline-end:22px; font-size:13.5px; font-weight:600; color:var(--text-400); border-bottom:2px solid transparent; }
-  .tab-link.active{ color:var(--indigo-600); border-color:var(--indigo-600); }
-  .tab-panel{ display:none; } .tab-panel.active{ display:block; }
-
-  .vehicle-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-  @media (max-width:1100px){ .vehicle-grid{ grid-template-columns:1fr 1fr; } }
-  @media (max-width:700px){ .vehicle-grid{ grid-template-columns:1fr; } }
-  .vehicle-card{ padding:18px; }
-  .vehicle-top{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-  .vehicle-icon{ width:42px; height:42px; border-radius:10px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; }
-  .vehicle-name{ font-size:15px; font-weight:700; } .vehicle-sub{ font-size:12px; color:var(--text-400); margin-top:2px; }
-  .badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:11px; font-weight:700; }
-  .badge-success{ background:var(--success-50); color:var(--success-600); }
-  .badge-slate{ background:var(--slate-50); color:var(--slate-600); }
-  .vehicle-meta{ display:flex; flex-direction:column; gap:7px; font-size:12.5px; color:var(--text-600); margin-top:12px; }
-  .vehicle-meta div{ display:flex; align-items:center; justify-content:space-between; }
-  .capacity-bar{ height:6px; border-radius:99px; background:var(--border); overflow:hidden; margin-top:10px; }
-  .capacity-bar > div{ height:100%; background:var(--indigo-600); }
-
   .toolbar{ display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
   .search-box{ position:relative; flex:1; min-width:220px; max-width:320px; }
   .search-box input{ width:100%; height:38px; border-radius:9px; border:1px solid var(--border); background:var(--bg); padding:0 14px 0 36px; font-size:13.5px; color:var(--text-900); font-family:inherit; }
   html[dir="rtl"] .search-box input{ padding:0 36px 0 14px; }
   .search-box svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-400); }
   html[dir="rtl"] .search-box svg{ left:auto; right:11px; }
+  .filter-chip{ display:flex; align-items:center; gap:6px; height:38px; padding:0 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface); font-size:13px; font-weight:600; color:var(--text-600); }
+  .filter-chip.on{ background:var(--indigo-50); border-color:var(--indigo-600); color:var(--indigo-600); }
+  .toolbar-right{ margin-inline-start:auto; }
 
   table{ width:100%; border-collapse:collapse; }
   thead th{ text-align:start; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--text-400); padding:12px 18px; border-bottom:1px solid var(--border); white-space:nowrap; }
   tbody td{ padding:13px 18px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:middle; }
   tbody tr:last-child td{ border-bottom:none; }
   tbody tr:hover{ background:var(--bg); }
-  .stop-list{ display:flex; flex-wrap:wrap; gap:5px; max-width:280px; }
-  .stop-chip{ background:var(--slate-50); color:var(--text-600); font-size:11px; font-weight:600; padding:3px 8px; border-radius:99px; }
-  .route-cell{ display:flex; align-items:center; gap:10px; }
-  .route-icon{ width:32px; height:32px; border-radius:8px; background:var(--indigo-50); color:var(--indigo-600); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .book-cell{ display:flex; align-items:center; gap:11px; }
+  .book-cover{ width:34px; height:44px; border-radius:5px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px; }
+  .book-title{ font-weight:700; } .book-sub{ font-size:11.5px; color:var(--text-400); }
+  .badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:11.5px; font-weight:700; }
+  .badge-success{ background:var(--success-50); color:var(--success-600); }
+  .badge-warning{ background:var(--warning-50); color:var(--warning-600); }
+  .badge-danger{ background:var(--danger-50); color:var(--danger-600); }
+  .avail-pill{ font-size:12.5px; }
+  .avail-pill b{ color:var(--text-900); }
+  .row-actions{ display:flex; align-items:center; gap:4px; }
+  .icon-btn-sm{ width:28px; height:28px; border-radius:7px; border:1px solid transparent; background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-400); }
+  .icon-btn-sm:hover{ background:var(--bg); color:var(--text-900); border-color:var(--border); }
+  .btn-mini{ height:28px; padding:0 10px; border-radius:7px; font-size:11.5px; font-weight:700; border:1px solid var(--border); background:var(--surface); color:var(--text-600); }
+  .btn-mini:hover{ background:var(--bg); }
+  .btn-mini.disabled{ opacity:.45; cursor:not-allowed; }
+
+  .pagination{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; font-size:12.5px; color:var(--text-600); flex-wrap:wrap; gap:10px; }
+  .page-btns{ display:flex; align-items:center; gap:4px; }
+  .page-btn{ width:30px; height:30px; border-radius:7px; border:1px solid var(--border); background:var(--surface); font-size:12.5px; font-weight:600; color:var(--text-600); }
+  .page-btn.active{ background:var(--indigo-600); border-color:var(--indigo-600); color:#fff; }
 
   .overlay{ position:fixed; inset:0; background:rgba(11,18,32,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
   .overlay.show{ display:flex; }
-  .modal{ background:var(--surface); border-radius:var(--radius-lg); width:100%; max-width:500px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-md); }
+  .modal{ background:var(--surface); border-radius:var(--radius-lg); width:100%; max-width:520px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-md); }
   .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border); }
   .modal-head h3{ font-size:15.5px; font-weight:700; }
   .modal-body{ padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
@@ -133,10 +132,11 @@
   .field.invalid .err{ display:block; }
   .modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 20px; border-top:1px solid var(--border); }
 
+  .empty-state{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; text-align:center; color:var(--text-400); }
   .toast-wrap{ position:fixed; bottom:20px; inset-inline-end:20px; z-index:60; }
   .toast{ display:flex; align-items:center; gap:10px; background:var(--navy-800); color:#fff; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-md); }
 
-  @media (max-width:900px){ .stat-strip{ grid-template-columns:1fr 1fr; } .modal-body{ grid-template-columns:1fr; } table{ min-width:640px; } .card{ overflow-x:auto; } }
+  @media (max-width:900px){ .stat-strip{ grid-template-columns:1fr 1fr; } .modal-body{ grid-template-columns:1fr; } table{ min-width:720px; } .card{ overflow-x:auto; } }
   @media (max-width:760px){ .sidebar{ display:none; } .content{ padding:16px; } }
 </style>
 </head>
@@ -162,88 +162,40 @@
       </div>
     </div>
 
-    <div class="content">
-      <div class="breadcrumb"><span data-en="Dashboard" data-ar="لوحة التحكم">Dashboard</span> / <b data-en="Transportation" data-ar="النقل المدرسي">Transportation</b></div>
-      <div class="page-head">
-        <div>
-          <h1 data-en="Transportation" data-ar="النقل المدرسي">Transportation</h1>
-          <p data-en="Manage vehicles, drivers, and student routes." data-ar="إدارة المركبات، السائقين، وخطوط سير الطلاب.">Manage vehicles, drivers, and student routes.</p>
-        </div>
-        <button class="btn btn-primary" id="addVehicleBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Add Vehicle" data-ar="إضافة مركبة">Add Vehicle</span></button>
-      </div>
-
-      <div class="stat-strip">
-        <div class="card stat-card"><div class="stat-icon icon-blue"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17h1m16 0h1M5 17a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0M3 10h18l-2-6H5l-2 6zm0 0v7h18v-7"/></svg></div><div><div class="stat-label" data-en="Active Vehicles" data-ar="المركبات النشطة">Active Vehicles</div><div class="stat-value">18</div></div></div>
-        <div class="card stat-card"><div class="stat-icon icon-green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg></div><div><div class="stat-label" data-en="Active Routes" data-ar="خطوط السير النشطة">Active Routes</div><div class="stat-value">12</div></div></div>
-        <div class="card stat-card"><div class="stat-icon icon-amber"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="stat-label" data-en="Students on Transport" data-ar="طلاب مستخدمو النقل">Students on Transport</div><div class="stat-value">642</div></div></div>
-        <div class="card stat-card"><div class="stat-icon icon-red"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div><div class="stat-label" data-en="Drivers" data-ar="السائقون">Drivers</div><div class="stat-value">18</div></div></div>
-      </div>
-
-      <div class="tabs-row">
-        <div class="tab-link active" data-tab="vehicles" data-en="Vehicles" data-ar="المركبات">Vehicles</div>
-        <div class="tab-link" data-tab="routes" data-en="Routes" data-ar="خطوط السير">Routes</div>
-      </div>
-
-      <div class="tab-panel active" data-panel="vehicles">
-        <div class="vehicle-grid" id="vehicleGrid"></div>
-      </div>
-
-      <div class="tab-panel" data-panel="routes">
-        <div class="card">
-          <div class="toolbar">
-            <div class="search-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" data-ph-en="Search routes…" data-ph-ar="ابحث في خطوط السير…" placeholder="Search routes…">
-            </div>
-          </div>
-          <table>
-            <thead><tr>
-              <th data-en="Route" data-ar="خط السير">Route</th>
-              <th data-en="Driver" data-ar="السائق">Driver</th>
-              <th data-en="Vehicle" data-ar="المركبة">Vehicle</th>
-              <th data-en="Stops" data-ar="المحطات">Stops</th>
-              <th data-en="Students" data-ar="الطلاب">Students</th>
-            </tr></thead>
-            <tbody id="routeBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <div class="content"><div class="breadcrumb"><span data-en="Dashboard" data-ar="لوحة التحكم">Dashboard</span> / <b data-en="Parents" data-ar="أولياء الأمور">Parents</b></div>
+<div class="page-head">
+  <div>
+    <h1 data-en="Parents" data-ar="أولياء الأمور">Parents</h1>
+    <p data-en="View parent accounts and their linked children." data-ar="عرض حسابات أولياء الأمور وأبنائهم المرتبطين.">View parent accounts and their linked children.</p>
   </div>
+  <button class="btn btn-primary" id="addBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span data-en="Invite Parent" data-ar="دعوة ولي أمر">Invite Parent</span></button>
 </div>
-
-<div class="overlay" id="modalOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 data-en="Add Vehicle" data-ar="إضافة مركبة">Add Vehicle</h3>
-      <button class="icon-btn" id="closeModal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+<div class="stat-strip">
+  <div class="card stat-card"><div class="stat-icon icon-blue"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg></div><div><div class="stat-label" data-en="Total Parents" data-ar="إجمالي أولياء الأمور">Total Parents</div><div class="stat-value">612</div></div></div>
+  <div class="card stat-card"><div class="stat-icon icon-green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><div class="stat-label" data-en="Linked Accounts" data-ar="حسابات مرتبطة">Linked Accounts</div><div class="stat-value">598</div></div></div>
+  <div class="card stat-card"><div class="stat-icon icon-amber"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10zM12 6v6l4 2"/></svg></div><div><div class="stat-label" data-en="Pending Invites" data-ar="دعوات معلّقة">Pending Invites</div><div class="stat-value">14</div></div></div>
+  <div class="card stat-card"><div class="stat-icon icon-red"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M18 17V9M13 17V5M8 17v-3"/></svg></div><div><div class="stat-label" data-en="Active This Week" data-ar="نشط هذا الأسبوع">Active This Week</div><div class="stat-value">340</div></div></div>
+</div>
+<div class="card">
+    <div class="toolbar">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" data-ph-en="Search by parent or child name…" data-ph-ar="ابحث باسم ولي الأمر أو الابن…" placeholder="Search by parent or child name…">
+      </div>
     </div>
-    <form id="vehicleForm">
-      <div class="modal-body">
-        <div class="field" id="f-num">
-          <label data-en="Vehicle Number" data-ar="رقم المركبة">Vehicle Number</label>
-          <input type="text" id="vehicleNum" data-ph-en="e.g. BUS-19" data-ph-ar="مثال: BUS-19" placeholder="e.g. BUS-19">
-          <span class="err" data-en="Vehicle number is required" data-ar="رقم المركبة مطلوب">Vehicle number is required</span>
-        </div>
-        <div class="field" id="f-driver">
-          <label data-en="Driver Name" data-ar="اسم السائق">Driver Name</label>
-          <input type="text" id="driverName" data-ph-en="e.g. Ahmad Fares" data-ph-ar="مثال: أحمد فارس" placeholder="e.g. Ahmad Fares">
-          <span class="err" data-en="Driver name is required" data-ar="اسم السائق مطلوب">Driver name is required</span>
-        </div>
-        <div class="field">
-          <label data-en="Capacity" data-ar="السعة">Capacity</label>
-          <input type="number" value="30" min="1">
-        </div>
-        <div class="field">
-          <label data-en="Status" data-ar="الحالة">Status</label>
-          <select><option data-en="Active" data-ar="نشط">Active</option><option data-en="Maintenance" data-ar="صيانة">Maintenance</option></select>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button type="button" class="btn btn-outline" id="cancelModal" data-en="Cancel" data-ar="إلغاء">Cancel</button>
-        <button type="submit" class="btn btn-primary" data-en="Save Vehicle" data-ar="حفظ المركبة">Save Vehicle</button>
-      </div>
-    </form>
+  <table>
+    <thead><tr>
+      <th data-en="Parent" data-ar="ولي الأمر">Parent</th>
+      <th data-en="Child(ren)" data-ar="الأبناء">Child(ren)</th>
+      <th data-en="Contact" data-ar="التواصل">Contact</th>
+      <th data-en="Status" data-ar="الحالة">Status</th>
+      <th></th>
+    </tr></thead>
+    <tbody id="listBody"></tbody>
+  </table>
+  <div class="pagination"><span data-en="Showing 1–8 of 612 parents" data-ar="عرض 1–8 من أصل 612 ولي أمر">Showing 1–8 of 612 parents</span></div>
+</div>
+    </div>
   </div>
 </div>
 
@@ -259,7 +211,7 @@ const navSections = [
   { g:{en:'People',ar:'الأشخاص'}, items:[
     {en:'Students',ar:'الطلاب', icon:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
     {en:'Teachers',ar:'المعلمون', icon:'M22 10v6M2 10l10-5 10 5-10 5-10-5z'},
-    {en:'Parents',ar:'أولياء الأمور', icon:'M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87m5-4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
+    {en:'Parents',ar:'أولياء الأمور', active:true, icon:'M20 21v-2a4 4 0 0 0-3-3.87M4 21v-2a4 4 0 0 1 3-3.87m5-4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'},
   ]},
   { g:{en:'Academics',ar:'الشؤون الأكاديمية'}, items:[
     {en:'Classes',ar:'الفصول', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
@@ -272,7 +224,7 @@ const navSections = [
   { g:{en:'Operations',ar:'العمليات'}, items:[
     {en:'Fees & Payments',ar:'الرسوم والمدفوعات', icon:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'},
     {en:'Library',ar:'المكتبة', icon:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z'},
-    {en:'Transport',ar:'النقل المدرسي', active:true, icon:'M3 17h1m16 0h1M5 17a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0M3 10h18l-2-6H5l-2 6zm0 0v7h18v-7'},
+    {en:'Transport',ar:'النقل المدرسي', icon:'M3 17h1m16 0h1M5 17a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0M3 10h18l-2-6H5l-2 6zm0 0v7h18v-7'},
     {en:'Events',ar:'الفعاليات', icon:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z'},
   ]},
   { g:{en:'Insights',ar:'الرؤى'}, items:[
@@ -319,96 +271,33 @@ navList.addEventListener('click', (e)=>{
   }
 });
 
-const vehicles = [
-  { num:'BUS-11', driverEn:'Ahmad Fares', driverAr:'أحمد فارس', capacity:32, used:28, status:'active' },
-  { num:'BUS-12', driverEn:'Khalid Nour', driverAr:'خالد نور', capacity:28, used:26, status:'active' },
-  { num:'BUS-13', driverEn:'Yasin Omar', driverAr:'ياسين عمر', capacity:30, used:14, status:'maintenance' },
-  { num:'VAN-04', driverEn:'Salem Adel', driverAr:'سالم عادل', capacity:14, used:12, status:'active' },
-  { num:'BUS-14', driverEn:'Fahad Rami', driverAr:'فهد رامي', capacity:32, used:30, status:'active' },
-  { num:'VAN-05', driverEn:'Bilal Kareem', driverAr:'بلال كريم', capacity:14, used:9, status:'active' },
-];
-const statusMeta = { active:{en:'Active',ar:'نشط',cls:'badge-success'}, maintenance:{en:'Maintenance',ar:'صيانة',cls:'badge-slate'} };
+const rows = [{"en": "Sami Al-Harbi", "ar": "سامي الحربي", "childEn": "Reem Al-Harbi", "childAr": "ريم الحربي", "phone": "+966 55 123 4567", "statusEn": "Linked", "statusAr": "مرتبط", "cls": "badge-success", "color": "#4F46E5"}, {"en": "Huda Naser", "ar": "هدى ناصر", "childEn": "Adam Naser", "childAr": "آدم ناصر", "phone": "+966 55 234 5678", "statusEn": "Linked", "statusAr": "مرتبط", "cls": "badge-success", "color": "#16A34A"}, {"en": "Faisal Rashid", "ar": "فيصل راشد", "childEn": "Sara & Lina Rashid", "childAr": "سارة ولين راشد", "phone": "+966 55 345 6789", "statusEn": "Linked", "statusAr": "مرتبط", "cls": "badge-success", "color": "#D97706"}, {"en": "Amal Qahtani", "ar": "أمل قحطاني", "childEn": "Yazan Qahtani", "childAr": "يزن قحطاني", "phone": "+966 55 456 7890", "statusEn": "Pending", "statusAr": "معلّق", "cls": "badge-warning", "color": "#DC2626"}, {"en": "Bandar Otaibi", "ar": "بندر عتيبي", "childEn": "Nasser Otaibi", "childAr": "ناصر عتيبي", "phone": "+966 55 567 8901", "statusEn": "Linked", "statusAr": "مرتبط", "cls": "badge-success", "color": "#4F46E5"}, {"en": "Rania Saleh", "ar": "رانيا صالح", "childEn": "Tala Saleh", "childAr": "تالا صالح", "phone": "+966 55 678 9012", "statusEn": "Linked", "statusAr": "مرتبط", "cls": "badge-success", "color": "#16A34A"}, {"en": "Majid Fahad", "ar": "ماجد فهد", "childEn": "Rakan Fahad", "childAr": "راكان فهد", "phone": "+966 55 789 0123", "statusEn": "Pending", "statusAr": "معلّق", "cls": "badge-warning", "color": "#D97706"}, {"en": "Dalia Omar", "ar": "داليا عمر", "childEn": "Jana Omar", "childAr": "جنى عمر", "phone": "+966 55 890 1234", "statusEn": "Linked", "statusAr": "مرتبط", "cls": "badge-success", "color": "#DC2626"}];
 
-const vehicleGrid = document.getElementById('vehicleGrid');
-function renderVehicles(){
-  vehicleGrid.innerHTML = '';
-  vehicles.forEach(v=>{
-    const sm = statusMeta[v.status];
-    const pct = Math.round((v.used/v.capacity)*100);
-    const card = document.createElement('div');
-    card.className = 'card vehicle-card';
-    card.innerHTML = `
-      <div class="vehicle-top">
-        <div style="display:flex;gap:12px;align-items:center;">
-          <div class="vehicle-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17h1m16 0h1M5 17a2 2 0 1 0 4 0m6 0a2 2 0 1 0 4 0M3 10h18l-2-6H5l-2 6zm0 0v7h18v-7"/></svg></div>
-          <div><div class="vehicle-name">${v.num}</div><div class="vehicle-sub" data-en="${v.driverEn}" data-ar="${v.driverAr}">${v.driverEn}</div></div>
-        </div>
-        <span class="badge ${sm.cls}" data-en="${sm.en}" data-ar="${sm.ar}">${sm.en}</span>
-      </div>
-      <div class="vehicle-meta">
-        <div><span data-en="Capacity" data-ar="السعة">Capacity</span><b>${v.used}/${v.capacity}</b></div>
-      </div>
-      <div class="capacity-bar"><div style="width:${pct}%"></div></div>
-    `;
-    vehicleGrid.appendChild(card);
+const tbody = document.getElementById('listBody');
+function renderRows(){
+  tbody.innerHTML = '';
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><div class="book-cell"><div class="book-cover" style="background:${r.color}">${r.en[0]}</div><div><div class="book-title" data-en="${r.en}" data-ar="${r.ar}">${r.en}</div></div></div></td>
+        <td data-en="${r.childEn}" data-ar="${r.childAr}">${r.childEn}</td>
+        <td style="color:var(--text-600);">${r.phone}</td>
+        <td><span class="badge ${r.cls}" data-en="${r.statusEn}" data-ar="${r.statusAr}">${r.statusEn}</span></td>
+        <td><div class="row-actions"><button class="icon-btn-sm" title="View"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+`;
+    tbody.appendChild(tr);
   });
   applyLang(state.lang);
 }
-renderVehicles();
+renderRows();
 
-const routes = [
-  { nameEn:'North District Route', nameAr:'خط الحي الشمالي', driverEn:'Ahmad Fares', driverAr:'أحمد فارس', vehicle:'BUS-11', stops:6, students:28 },
-  { nameEn:'Downtown Route', nameAr:'خط وسط المدينة', driverEn:'Khalid Nour', driverAr:'خالد نور', vehicle:'BUS-12', stops:5, students:26 },
-  { nameEn:'East Villas Route', nameAr:'خط فلل الشرق', driverEn:'Fahad Rami', driverAr:'فهد رامي', vehicle:'BUS-14', stops:7, students:30 },
-  { nameEn:'West Compound Route', nameAr:'خط مجمع الغرب', driverEn:'Salem Adel', driverAr:'سالم عادل', vehicle:'VAN-04', stops:4, students:12 },
-];
-const routeBody = document.getElementById('routeBody');
-routes.forEach(r=>{
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>
-      <div class="route-cell">
-        <div class="route-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg></div>
-        <span data-en="${r.nameEn}" data-ar="${r.nameAr}">${r.nameEn}</span>
-      </div>
-    </td>
-    <td data-en="${r.driverEn}" data-ar="${r.driverAr}">${r.driverEn}</td>
-    <td>${r.vehicle}</td>
-    <td>${r.stops} <span data-en="stops" data-ar="محطات">stops</span></td>
-    <td>${r.students}</td>
-  `;
-  routeBody.appendChild(tr);
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#listBody tr').forEach(tr=>{ tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none'; });
 });
 
-document.querySelectorAll('.tab-link').forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab-link').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelector(`.tab-panel[data-panel="${tab.dataset.tab}"]`).classList.add('active');
-  });
-});
 
-const modalOverlay = document.getElementById('modalOverlay');
-document.getElementById('addVehicleBtn').addEventListener('click', ()=> modalOverlay.classList.add('show'));
-document.getElementById('closeModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
-document.getElementById('cancelModal').addEventListener('click', ()=> modalOverlay.classList.remove('show'));
-modalOverlay.addEventListener('click', (e)=>{ if(e.target===modalOverlay) modalOverlay.classList.remove('show'); });
-
-document.getElementById('vehicleForm').addEventListener('submit', (e)=>{
-  e.preventDefault();
-  let valid = true;
-  const numField = document.getElementById('f-num');
-  const driverField = document.getElementById('f-driver');
-  const num = document.getElementById('vehicleNum').value.trim();
-  const driver = document.getElementById('driverName').value.trim();
-  numField.classList.toggle('invalid', !num); if(!num) valid=false;
-  driverField.classList.toggle('invalid', !driver); if(!driver) valid=false;
-  if(!valid) return;
-  modalOverlay.classList.remove('show');
-  showToast(state.lang==='ar' ? 'تمت إضافة المركبة بنجاح' : 'Vehicle added successfully');
-  e.target.reset();
-});
+document.getElementById('addBtn').addEventListener('click', ()=> showToast(state.lang==='ar' ? 'نموذج الدعوة قيد الإعداد' : 'Invite form coming soon'));
 
 function showToast(msg){
   const wrap = document.getElementById('toastWrap');
